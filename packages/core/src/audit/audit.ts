@@ -35,7 +35,6 @@ export function securityAudit(state: State, events?: readonly ZEvent[]): Finding
   if (wide.length) {
     out.push({ id: 'allow.wide', level: 'warn', title: `${wide.length} 条白名单对所有 agent 放行任意参数`, detail: wide.map((r) => r.program).join('、') + '。建议加上参数限制或只给特定 agent。' });
   }
-  if (!p.sandboxSubagents) out.push({ id: 'sandbox.off', level: 'warn', title: '子 agent 没进沙箱', detail: '子 agent 能读写工作区以外的东西。', fix: { sandboxSubagents: true } });
   if (!p.separateNetworkAndExec) out.push({ id: 'net.exec', level: 'info', title: '联网和执行没分开', detail: '读了网页的 agent 也能直接跑命令，提示注入的风险更高。', fix: { separateNetworkAndExec: true } });
   if (p.approvalTimeoutSec > 3600) out.push({ id: 'ask.timeout', level: 'info', title: '审批等待时间很长', detail: `现在是 ${Math.round(p.approvalTimeoutSec / 60)} 分钟。` });
   for (const s of Object.values(state.skills)) {

@@ -56,12 +56,26 @@ export function placeWidget(layout: readonly Widget[], id: string, to: Rect): Wi
   });
 }
 
-/** 加一个模块：先按想要的大小找空位，找不到就逐步缩小。 */
+/**
+ * 加一个模块：先按想要的大小找空位，找不到就逐步缩小；
+ * 画布满了就把最大的模块从底部让出几行（像 iOS 主屏幕挤出位置）。
+ */
 export function addWidget(layout: readonly Widget[], w: Omit<Widget, 'x' | 'y'>): Widget[] | null {
   if (layout.some((x) => x.k === w.k)) return null;
-  for (const [ww, hh] of [[w.w, w.h], [4, 3], [MIN_W, MIN_H]] as const) {
+  const sizes = [[w.w, w.h], [4, 3], [MIN_W, MIN_H]] as const;
+  for (const [ww, hh] of sizes) {
     const s = findSpot(layout, { x: 0, y: 0, w: ww, h: hh });
     if (s) return [...layout, { ...w, ...s }];
+  }
+  const big = [...layout].sort((a, b) => b.w * b.h - a.w * a.h);
+  for (const v of big) {
+    for (let cut = MIN_H; v.h - cut >= MIN_H; cut++) {
+      const shrunk = layout.map((x) => (x.id === v.id ? { ...x, h: x.h - cut } : { ...x }));
+      for (const [ww, hh] of sizes) {
+        const s = findSpot(shrunk, { x: 0, y: 0, w: Math.min(ww, v.w), h: hh });
+        if (s) return [...shrunk, { ...w, ...s, w: Math.min(ww, v.w) }];
+      }
+    }
   }
   return null;
 }
@@ -79,12 +93,21 @@ export function validateLayout(layout: readonly Widget[]): string[] {
 }
 
 type Preset = [k: string, x: number, y: number, w: number, h: number][];
+/** 能放到画布上的模块。 */
+export const WIDGET_KINDS: Record<string, { label: string; w: number; h: number }> = {
+  coord: { label: '协调者', w: 5, h: 8 },
+  threads: { label: '讨论串', w: 7, h: 8 },
+  thread: { label: '当前讨论串', w: 6, h: 8 },
+  approvals: { label: '待批准', w: 4, h: 3 },
+  activity: { label: '动态', w: 4, h: 3 },
+};
+
 export const LAYOUT_PRESETS: Record<string, { label: string; widgets: Preset }> = {
   claude: { label: '协调者 + 讨论串（像 Claude）', widgets: [['coord', 0, 0, 5, 8], ['threads', 5, 0, 7, 8]] },
-  stack: { label: '左边上下两块 + 讨论串', widgets: [['coord', 0, 0, 5, 5], ['lib', 0, 5, 5, 3], ['threads', 5, 0, 7, 8]] },
-  quad: { label: '四宫格', widgets: [['coord', 0, 0, 6, 4], ['m:term', 0, 4, 6, 4], ['threads', 6, 0, 6, 5], ['m:preview', 6, 5, 6, 3]] },
-  workbench: { label: '讨论串 + 工作台模块', widgets: [['threads', 0, 0, 5, 8], ['mods', 5, 0, 7, 8]] },
-  three: { label: '协调者 + 讨论串 + 模块', widgets: [['coord', 0, 0, 4, 8], ['threads', 4, 0, 4, 8], ['mods', 8, 0, 4, 8]] },
+  stack: { label: '左边上下两块 + 讨论串', widgets: [['coord', 0, 0, 5, 5], ['approvals', 0, 5, 5, 3], ['threads', 5, 0, 7, 8]] },
+  quad: { label: '四宫格', widgets: [['coord', 0, 0, 6, 4], ['activity', 0, 4, 6, 4], ['threads', 6, 0, 6, 5], ['approvals', 6, 5, 6, 3]] },
+  workbench: { label: '讨论串列表 + 讨论串详情', widgets: [['threads', 0, 0, 4, 8], ['thread', 4, 0, 8, 8]] },
+  three: { label: '协调者 + 讨论串 + 详情', widgets: [['coord', 0, 0, 4, 8], ['threads', 4, 0, 3, 8], ['thread', 7, 0, 5, 8]] },
   threadsOnly: { label: '只看讨论串', widgets: [['threads', 0, 0, 12, 8]] },
 };
 

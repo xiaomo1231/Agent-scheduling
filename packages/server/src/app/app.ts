@@ -62,7 +62,7 @@ export class App {
     this.skills = new SkillService(this.ws, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'skills'), async () => this.helperModel());
     const builtin = new BuiltinRunner(
       async (t) => providerFor(t.model!.source, providerDeps),
-      { approvals: this.approvals, execShell: o.execShell ?? realExecShell, ...(o.fetch ? { fetch: o.fetch } : {}), allowed: ['read_file', 'write_file', 'edit_file', 'list_files', 'run_command', 'web_fetch'] },
+      { approvals: this.approvals, execShell: o.execShell ?? realExecShell, ...(o.fetch ? { fetch: o.fetch } : {}), allowed: ['read_file', 'write_file', 'edit_file', 'list_files', 'run_command', 'web_fetch'], separateNetworkAndExec: () => this.ws.current.policy.separateNetworkAndExec },
     );
     this.coordinator = new Coordinator({
       ws: this.ws, providers: providerDeps, execFile: this.exec,

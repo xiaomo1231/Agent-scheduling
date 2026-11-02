@@ -14,6 +14,10 @@ export interface ToolContext {
   fetch?: typeof fetch;
   /** 这个 agent 被允许用的工具；skill 不能扩大它 */
   allowed: readonly ToolName[];
+  /** 联网和执行分开：这一轮读过外部内容后，跑命令一律要批准 */
+  separateNetworkAndExec?: () => boolean;
+  /** 本次运行是否读过外部内容（运行器每次新建） */
+  taint?: { external: boolean };
   signal?: AbortSignal;
 }
 
@@ -89,7 +93,8 @@ export async function runTool(name: string, input: Record<string, unknown>, ctx:
         const cwd = within(ctx.workspaceRoot, str('cwd') || '.');
         if (!cwd) return { content: '只能在工作区里运行命令', isError: true };
         const command = str('command');
-        const g = await ctx.approvals.gate({ ...base, kind: 'command', target: command, cwd }, actor);
+        const forceAsk = ctx.taint?.external && ctx.separateNetworkAndExec?.() ? '这个 agent 刚读过外部内容，跑命令要你确认' : undefined;
+        const g = await ctx.approvals.gate({ ...base, kind: 'command', target: command, cwd }, actor, forceAsk ? { forceAsk } : {});
         if (!g.ok) return { content: `没有执行：${g.reason}`, isError: true };
         const r = await ctx.execShell(command, { cwd, timeoutMs: 10 * 60_000, ...(ctx.signal ? { signal: ctx.signal } : {}) });
         const out = [r.stdout, r.stderr && `[stderr]\n${r.stderr}`].filter(Boolean).join('\n');
@@ -101,6 +106,7 @@ export async function runTool(name: string, input: Record<string, unknown>, ctx:
         const g = await ctx.approvals.gate({ ...base, kind: 'network', target: url }, actor);
         if (!g.ok) return { content: `没有访问：${g.reason}`, isError: true };
         const res = await (ctx.fetch ?? fetch)(url, { redirect: 'follow', ...(ctx.signal ? { signal: ctx.signal } : {}) });
+        if (ctx.taint) ctx.taint.external = true;
         const body = (await res.text()).replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 40_000);
         return { content: wrapUntrusted(url, body) };
       }

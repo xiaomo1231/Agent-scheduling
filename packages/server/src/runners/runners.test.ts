@@ -69,3 +69,15 @@ describe('BuiltinRunner', () => {
     expect(toolTurn.role === 'tool' && toolTurn.results[0]!.content).toContain('README.md');
   });
 });
+
+describe('联网和执行分开', () => {
+  it('读过外部内容后，白名单命令也要批准', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'zs-'));
+    const c = { ...ctx(root), allowed: ['run_command' as const, 'web_fetch' as const], taint: { external: false }, separateNetworkAndExec: () => true,
+      fetch: (async () => new Response('<p>hi</p>')) as typeof fetch };
+    expect((await runTool('run_command', { command: 'ls' }, c)).isError).toBeFalsy();
+    await runTool('web_fetch', { url: 'https://example.com' }, c);
+    const r = await Promise.race([runTool('run_command', { command: 'ls' }, c), new Promise((r) => setTimeout(() => r('waiting'), 50))]);
+    expect(r).toBe('waiting');
+  });
+});

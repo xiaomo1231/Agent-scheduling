@@ -33,3 +33,13 @@ describe('画布布局', () => {
     expect(addWidget(presetLayout('claude', nid), { id: 'y', k: 'coord', w: 4, h: 3 })).toBeNull();
   });
 });
+
+describe('addWidget 挤位置', () => {
+  it('画布满了时从最大的模块底部让出位置', () => {
+    const full = presetLayout('claude', (() => { let i = 0; return () => `w${i++}`; })());
+    const next = addWidget(full, { id: 'a', k: 'approvals', w: 4, h: 3 })!;
+    expect(next).not.toBeNull();
+    expect(validateLayout(next)).toEqual([]);
+    expect(next.find((x) => x.k === 'approvals')).toBeTruthy();
+  });
+});

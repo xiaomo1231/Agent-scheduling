@@ -37,9 +37,14 @@ export class Approvals {
     if (stale.length) ws.commit(stale.map((a) => ({ type: 'approval.decided' as const, approvalId: a.id, state: 'invalidated' as const })), { kind: 'system', id: 'startup' });
   }
 
-  async gate(req: ActionRequest, actor: Actor): Promise<GateResult> {
+  /** forceAsk：本来能直接放行的也要问（比如读过外部内容之后要跑命令） */
+  async gate(req: ActionRequest, actor: Actor, opts: { forceAsk?: string } = {}): Promise<GateResult> {
     const st = this.ws.current;
     const d = decide(req, st.policy, { emergencyStop: st.emergencyStop });
+    if (d.decision === 'allow' && opts.forceAsk) {
+      d.decision = 'ask';
+      d.reasons = [opts.forceAsk];
+    }
     if (d.decision === 'allow') return { ok: true, reason: '' };
     if (d.decision === 'deny') return { ok: false, reason: d.reasons.join('；') || '策略不允许' };
     if (d.review && this.opts.reviewer) {
