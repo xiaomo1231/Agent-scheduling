@@ -662,6 +662,13 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
 .panes{display:grid;gap:12px;align-items:stretch;height:max(520px,calc(100vh - 150px))}
 .pane[data-w="1"] .lpane.mods{grid-template-columns:1fr}
 .pane>.ph .pctl select{max-width:130px}
+.pcol{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0}
+.pcol>.pane{min-height:0}
+.ph[draggable="true"]{cursor:grab}
+.ph .grip{color:var(--ink-3);font-size:12px;margin-right:-2px}
+.pane.dz-top{box-shadow:0 -3px 0 var(--accent)}
+.pane.dz-bot{box-shadow:0 3px 0 var(--accent)}
+.pane.dz-mid{outline:2px dashed var(--accent);outline-offset:-2px}
 .pane{background:var(--panel);border:1px solid var(--line);border-radius:6px;min-width:0;display:flex;flex-direction:column;overflow:hidden}
 .pane>.ph{display:flex;align-items:center;gap:6px;padding:6px 8px 6px 10px;border-bottom:1px solid var(--line-2);flex-wrap:wrap;background:var(--raise)}
 .pane>.ph .crumb{display:flex;align-items:center;gap:4px;font-size:13px;min-width:0}
@@ -728,7 +735,7 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
 .sw i.on{border-color:var(--ink)}
 .dualx{font-size:12px;color:var(--ink-2);background:var(--bg);border:1px solid var(--line-2);border-radius:6px;padding:8px 10px;margin-top:6px}
 .dualx p{margin:0 0 4px}
-@media (max-width:1100px){ .panes{grid-template-columns:1fr!important;height:auto} .pane{height:620px} }
+@media (max-width:1100px){ .panes{grid-template-columns:1fr!important;height:auto} .pcol>.pane{height:620px;flex:none!important} }
 @media (max-width:680px){ .pset .dlg{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);height:100%} .pset .pn{flex-direction:row;overflow:auto;border-right:0;border-bottom:1px solid var(--line-2);padding:8px} .pset .pn b{display:none} .pset .pn button{white-space:nowrap} .pset .fr{grid-template-columns:1fr} }
 </style>
 
@@ -897,8 +904,8 @@ app.whenReady().then(() =&gt; {
     <!-- 任务台 -->
     <section class="view" id="v-tasks">
       <div class="pjbar"><h1 id="pjTitle">shop-web 会员登录</h1>
-        <select class="s" id="pjLay" aria-label="布局"><option value="cl">协调者 + 讨论串（像 Claude）</option><option value="wb">讨论串 + 工作台模块</option><option value="all">协调者 + 讨论串 + 模块</option><option value="th">只看讨论串</option><option value="custom" hidden>自定义布局</option></select>
-        <button class="btn ghost" id="pjAdd">+ 加一栏</button>
+        <select class="s" id="pjLay" aria-label="布局"><option value="cl">协调者 + 讨论串（像 Claude）</option><option value="stack">左边上下两块 + 讨论串</option><option value="quad">四宫格</option><option value="side">讨论串 + 右边文件和终端</option><option value="wb">讨论串 + 工作台模块</option><option value="all">协调者 + 讨论串 + 模块</option><option value="th">只看讨论串</option><option value="custom" hidden>自定义布局</option></select>
+        <button class="btn ghost" id="pjAdd">+ 加一格</button>
         <span class="spacer" style="flex:1"></span>
         <button class="ib" id="pjThB" title="讨论串列表">讨论串 <span class="n alert" id="pjThN">2</span></button>
         <button class="ib" id="pjLib" title="资料库：项目里产出的文件、PR 和文档">资料库</button>
@@ -2244,45 +2251,77 @@ app.whenReady().then(() =&gt; {
     document.querySelectorAll('#levels .level').forEach(x=>x.setAttribute('aria-pressed',x===b));
     document.getElementById('lvlTop').textContent=b.dataset.l;
   });
-  // v17：项目页像 Claude Code 一样分栏，每一栏放什么由你定
-  const LAY={cl:['coord','threads'],wb:['threads','mods'],all:['coord','threads','mods'],th:['threads']};
-  let PANES=LAY.cl.map(k=>({k:k,w:1})), thMode='detail';
+  // v18：项目页布局更自由：最多三列，每列上下最多叠三个模块，拖栏头就能换位置
+  const LAY={cl:[['coord'],['threads']],stack:[['coord','lib'],['threads']],quad:[['coord','m:term'],['threads','m:preview']],wb:[['threads'],['mods']],all:[['coord'],['threads'],['mods']],side:[['threads'],['m:files','m:term']],th:[['threads']]};
+  const mkCols=L=>L.map(c=>({w:c.includes('mods')&&L.length<3?2:1,c:c.map(k=>({k:k,h:1}))}));
+  let COLS=mkCols(LAY.cl), thMode='detail', dragF=null;
   const panesEl=document.getElementById('panes'), stash=document.getElementById('paneStash');
   const coordBox=document.getElementById('coordBox'), libBox=document.getElementById('libBox'), modsCtl=document.getElementById('modsCtl');
   const vThreads=document.getElementById('v-threads'), rp=document.querySelector('#split .rpane'), thStEl=document.getElementById('thSt'), rpHead=rp.querySelector('header');
   const thWrap=document.createElement('div'); thWrap.className='thwrap'; thWrap.append(vThreads,rp); stash.appendChild(thWrap);
   const CL={};
+  const allCells=()=>COLS.flatMap((c,ci)=>c.c.map((x,ri)=>({x:x,ci:ci,ri:ri})));
   function modSel(k){ const h='<option value="coord">协调者</option><option value="threads">讨论串</option><option value="mods">工作台模块（按模板）</option><option value="lib">资料库</option><optgroup label="单个模块">'+Object.keys(MOD).map(m=>'<option value="m:'+m+'">'+MOD[m].t+'</option>').join('')+'</optgroup>'; return h.replace('value="'+k+'"','value="'+k+'" selected'); }
+  function freeMod(){ return ['lib','coord','threads','mods','m:term','m:preview','m:files','m:tests','m:usage'].find(k=>!allCells().some(c=>c.x.k===k))||'m:doc'; }
   function drawPanes(){
     rpHead.appendChild(thStEl); stash.append(thWrap,coordBox,libBox,modsCtl,modsEl);
     Object.values(CL).forEach(n=>stash.appendChild(n));
-    panesEl.innerHTML=''; panesEl.style.gridTemplateColumns=PANES.map(p=>p.w===2?'minmax(0,1.7fr)':'minmax(0,1fr)').join(' ');
-    PANES.forEach((p,i)=>{ const el=document.createElement('div'); el.className='pane'; el.dataset.i=i; el.dataset.k=p.k; el.dataset.w=p.w;
-      el.innerHTML='<div class="ph"><div class="crumb"></div><div class="pextra"></div><div class="pctl"><select class="s" data-pk aria-label="这一栏放什么">'+modSel(p.k)+'</select><button data-pmv="-1" title="往左挪">←</button><button data-pmv="1" title="往右挪">→</button><button data-pw title="改宽窄">'+(p.w===2?'窄':'宽')+'</button>'+(PANES.length>1?'<button data-px title="关掉这一栏">×</button>':'')+'</div></div><div class="pb"></div>';
-      const cr=el.querySelector('.crumb'), pb=el.querySelector('.pb');
-      if(p.k==='threads'){ if(thMode==='detail'){ cr.innerHTML='<button data-back>讨论串</button><span class="hint">›</span><b></b>'; cr.querySelector('b').textContent=TH[thI].n; cr.appendChild(thStEl); } else cr.innerHTML='<b>讨论串</b>';
-        vThreads.hidden=thMode!=='list'; rp.hidden=thMode!=='detail'; pb.appendChild(thWrap); }
-      else if(p.k==='mods'){ cr.innerHTML='<b>工作台模块</b>'; el.querySelector('.pextra').appendChild(modsCtl); pb.appendChild(modsEl); }
-      else if(p.k==='coord'){ cr.innerHTML='<b>协调者</b><span class="hint">项目对话</span>'; pb.appendChild(coordBox); }
-      else if(p.k==='lib'){ cr.innerHTML='<b>资料库</b>'; pb.appendChild(libBox); }
-      else { const m=p.k.slice(2); cr.innerHTML='<b></b>'; cr.querySelector('b').textContent=MOD[m].t; if(!CL[m]){ CL[m]=document.createElement('div'); CL[m].appendChild(body(m).cloneNode(true)); } pb.appendChild(CL[m]); }
-      panesEl.appendChild(el); });
-    const key=Object.keys(LAY).find(k=>LAY[k].join()===PANES.map(p=>p.k).join()); document.getElementById('pjLay').value=key||'custom';
-    document.getElementById('pjAdd').disabled=PANES.length>=3; }
-  function putPane(k,keep){ if(PANES.some(p=>p.k===k)) return; if(PANES.length<3) PANES.push({k:k,w:1}); else { let j=PANES.length-1; while(j>0&&PANES[j].k===keep) j--; PANES[j]={k:k,w:1}; } }
-  panesEl.addEventListener('change',e=>{ const s=e.target.closest('[data-pk]'); if(!s) return; const i=+s.closest('.pane').dataset.i, v=s.value, j=PANES.findIndex(p=>p.k===v);
-    if(j>=0&&j!==i){ PANES[j].k=PANES[i].k; } PANES[i].k=v; drawPanes(); say('这一栏换成了“'+s.selectedOptions[0].textContent+'”'); });
-  panesEl.addEventListener('click',e=>{ const pane=e.target.closest('.pane'); if(!pane) return; const i=+pane.dataset.i;
+    COLS=COLS.filter(c=>c.c.length);
+    const total=allCells().length;
+    panesEl.innerHTML=''; panesEl.style.gridTemplateColumns=COLS.map(c=>c.w===2?'minmax(0,1.7fr)':'minmax(0,1fr)').join(' ');
+    COLS.forEach((col,ci)=>{ const ce=document.createElement('div'); ce.className='pcol'; ce.dataset.ci=ci;
+      col.c.forEach((p,ri)=>{ const el=document.createElement('div'); el.className='pane'; el.dataset.ci=ci; el.dataset.ri=ri; el.dataset.k=p.k; el.dataset.w=col.w; el.style.flex=p.h+' 1 0';
+        const n=col.c.length;
+        el.innerHTML='<div class="ph" draggable="true" title="按住栏头可以拖到别的位置"><span class="grip" aria-hidden="true">⠿</span><div class="crumb"></div><div class="pextra"></div><div class="pctl"><select class="s" data-pk aria-label="这一格放什么">'+modSel(p.k)+'</select>'
+          +(ri>0?'<button data-pv="-1" title="往上挪">↑</button>':'')+(ri<n-1?'<button data-pv="1" title="往下挪">↓</button>':'')
+          +'<button data-pmv="-1" title="挪到左边一列">←</button><button data-pmv="1" title="挪到右边一列">→</button>'
+          +(n<3?'<button data-split title="在下面再放一个模块">＋下方</button>':'')+(n>1?'<button data-ph title="改高矮">'+(p.h===2?'矮':'高')+'</button>':'')
+          +'<button data-pw title="改这一列的宽窄">'+(col.w===2?'窄':'宽')+'</button>'+(total>1?'<button data-px title="关掉">×</button>':'')+'</div></div><div class="pb"></div>';
+        const cr=el.querySelector('.crumb'), pb=el.querySelector('.pb');
+        if(p.k==='threads'){ if(thMode==='detail'){ cr.innerHTML='<button data-back>讨论串</button><span class="hint">›</span><b></b>'; cr.querySelector('b').textContent=TH[thI].n; cr.appendChild(thStEl); } else cr.innerHTML='<b>讨论串</b>';
+          vThreads.hidden=thMode!=='list'; rp.hidden=thMode!=='detail'; pb.appendChild(thWrap); }
+        else if(p.k==='mods'){ cr.innerHTML='<b>工作台模块</b>'; el.querySelector('.pextra').appendChild(modsCtl); pb.appendChild(modsEl); }
+        else if(p.k==='coord'){ cr.innerHTML='<b>协调者</b><span class="hint">项目对话</span>'; pb.appendChild(coordBox); }
+        else if(p.k==='lib'){ cr.innerHTML='<b>资料库</b>'; pb.appendChild(libBox); }
+        else { const m=p.k.slice(2); cr.innerHTML='<b></b>'; cr.querySelector('b').textContent=MOD[m].t; if(!CL[m]){ CL[m]=document.createElement('div'); CL[m].appendChild(body(m).cloneNode(true)); } pb.appendChild(CL[m]); }
+        ce.appendChild(el); });
+      panesEl.appendChild(ce); });
+    const sig=L=>JSON.stringify(L), cur=COLS.map(c=>c.c.map(x=>x.k));
+    const key=Object.keys(LAY).find(k=>sig(LAY[k])===sig(cur)); document.getElementById('pjLay').value=key||'custom';
+    document.getElementById('pjAdd').disabled=COLS.length>=3&&COLS.every(c=>c.c.length>=3); }
+  function putPane(k,keep){ if(allCells().some(c=>c.x.k===k)) return; if(COLS.length<3){ COLS.push({w:1,c:[{k:k,h:1}]}); return; }
+    for(let ci=COLS.length-1;ci>=0;ci--){ const c=COLS[ci].c; for(let ri=c.length-1;ri>=0;ri--) if(c[ri].k!==keep){ c[ri]={k:k,h:c[ri].h}; return; } } }
+  const at=el=>[+el.dataset.ci,+el.dataset.ri];
+  panesEl.addEventListener('change',e=>{ const s=e.target.closest('[data-pk]'); if(!s) return; const [ci,ri]=at(s.closest('.pane')), v=s.value, me=COLS[ci].c[ri];
+    const o=allCells().find(c=>c.x.k===v&&!(c.ci===ci&&c.ri===ri)); if(o) o.x.k=me.k; me.k=v; drawPanes(); say('这一格换成了“'+s.selectedOptions[0].textContent+'”'); });
+  panesEl.addEventListener('click',e=>{ const pane=e.target.closest('.pane'); if(!pane) return; const [ci,ri]=at(pane), col=COLS[ci], cell=col.c[ri];
     if(e.target.closest('[data-back]')){ thMode='list'; drawPanes(); drawTov(); return; }
-    if(e.target.closest('[data-px]')){ PANES.splice(i,1); drawPanes(); return; }
-    if(e.target.closest('[data-pw]')){ PANES[i].w=PANES[i].w===2?1:2; drawPanes(); return; }
-    const mv=e.target.closest('[data-pmv]'); if(mv){ const j=i+(+mv.dataset.pmv); if(j<0||j>=PANES.length) return; [PANES[i],PANES[j]]=[PANES[j],PANES[i]]; drawPanes(); return; }
+    if(e.target.closest('[data-px]')){ col.c.splice(ri,1); drawPanes(); return; }
+    if(e.target.closest('[data-pw]')){ col.w=col.w===2?1:2; drawPanes(); return; }
+    if(e.target.closest('[data-ph]')){ cell.h=cell.h===2?1:2; drawPanes(); return; }
+    if(e.target.closest('[data-split]')){ col.c.splice(ri+1,0,{k:freeMod(),h:1}); drawPanes(); say('下面多了一格，在格头的下拉里换成你要的模块'); return; }
+    const pv=e.target.closest('[data-pv]'); if(pv){ const j=ri+(+pv.dataset.pv); [col.c[ri],col.c[j]]=[col.c[j],col.c[ri]]; drawPanes(); return; }
+    const mv=e.target.closest('[data-pmv]'); if(mv){ const d=+mv.dataset.pmv, t=ci+d;
+      if(t<0||t>=COLS.length){ if(col.c.length===1) return say('已经在最边上了'); if(COLS.length>=3) return say('最多三列，可以挪进旁边那一列'); col.c.splice(ri,1); const nc={w:1,c:[cell]}; d<0?COLS.unshift(nc):COLS.push(nc); }
+      else { if(COLS[t].c.length>=3) return say('那一列已经叠了三个'); col.c.splice(ri,1); COLS[t].c.push(cell); }
+      drawPanes(); return; }
     const tc=e.target.closest('[data-oth]'); if(tc){ switchTh(+tc.dataset.oth); } });
+  // 拖栏头：放到另一格的上半部分=插在它上面，下半部分=插在下面，中间=互换
+  panesEl.addEventListener('dragstart',e=>{ const ph=e.target.closest&&e.target.closest('.ph'); if(!ph) return; dragF=at(ph.closest('.pane')); e.dataTransfer.effectAllowed='move'; try{ e.dataTransfer.setData('text/plain','pane'); }catch(_){} });
+  function zone(pane,y){ const r=pane.getBoundingClientRect(), f=(y-r.top)/r.height; return f<.3?'top':f>.7?'bot':'mid'; }
+  panesEl.addEventListener('dragover',e=>{ const pane=e.target.closest('.pane'); if(!pane||!dragF) return; e.preventDefault(); panesEl.querySelectorAll('.pane').forEach(p=>p.classList.remove('dz-top','dz-bot','dz-mid')); pane.classList.add('dz-'+zone(pane,e.clientY)); });
+  panesEl.addEventListener('dragleave',e=>{ const pane=e.target.closest('.pane'); if(pane&&!pane.contains(e.relatedTarget)) pane.classList.remove('dz-top','dz-bot','dz-mid'); });
+  panesEl.addEventListener('drop',e=>{ const pane=e.target.closest('.pane'); if(!pane||!dragF) return; e.preventDefault(); const [tc,tr]=at(pane), [fc,fr]=dragF, z=zone(pane,e.clientY); dragF=null;
+    if(tc===fc&&tr===fr){ drawPanes(); return; } const src=COLS[fc].c[fr], dst=COLS[tc].c[tr];
+    if(z==='mid'){ COLS[fc].c[fr]=dst; COLS[tc].c[tr]=src; }
+    else { if(tc!==fc&&COLS[tc].c.length>=3){ say('那一列已经叠了三个'); drawPanes(); return; } COLS[fc].c[fr]=null; COLS[tc].c.splice(z==='top'?tr:tr+1,0,src); COLS[fc].c=COLS[fc].c.filter(Boolean); }
+    drawPanes(); });
+  panesEl.addEventListener('dragend',()=>{ dragF=null; panesEl.querySelectorAll('.pane').forEach(p=>p.classList.remove('dz-top','dz-bot','dz-mid')); });
   const _sw=switchTh;
   switchTh=function(i){ _sw(i); thMode='detail'; putPane('threads','coord'); drawPanes(); syncThMeta(); };
   window.__openTh=i=>switchTh(i);
-  document.getElementById('pjLay').onchange=e=>{ const v=e.target.value; if(!LAY[v]) return; PANES=LAY[v].map(k=>({k:k,w:k==='mods'&&LAY[v].length<3?2:1})); drawPanes(); };
-  document.getElementById('pjAdd').onclick=()=>{ const k=['coord','threads','mods','lib'].find(k=>!PANES.some(p=>p.k===k))||'m:preview'; PANES.push({k:k,w:1}); drawPanes(); say('加了一栏，在栏头的下拉里换成你要的模块'); };
+  document.getElementById('pjLay').onchange=e=>{ const v=e.target.value; if(!LAY[v]) return; COLS=mkCols(LAY[v]); drawPanes(); };
+  document.getElementById('pjAdd').onclick=()=>{ const k=freeMod(); if(COLS.length<3) COLS.push({w:1,c:[{k:k,h:1}]}); else { const c=COLS.reduce((a,b)=>b.c.length<a.c.length?b:a); c.c.push({k:k,h:1}); } drawPanes(); say('加了一格，在格头的下拉里换模块，按住格头能拖到别处'); };
   document.getElementById('pjThB').onclick=()=>{ thMode='list'; putPane('threads','coord'); drawPanes(); drawTov(); };
   document.getElementById('pjLib').onclick=()=>{ putPane('lib','coord'); drawPanes(); };
   const pjMenu=document.getElementById('pjMenu'), pjMore=document.getElementById('pjMore');
