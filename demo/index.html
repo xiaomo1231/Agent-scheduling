@@ -53,8 +53,9 @@ nav .sec{font-size:11px;color:var(--ink-3);letter-spacing:.08em;padding:10px 8px
 nav a{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:var(--r);color:var(--ink-2);text-decoration:none}
 nav a:hover{background:var(--line-2);color:var(--ink)}
 nav a.on{background:var(--accent-soft);color:var(--ink);font-weight:500}
-nav a .n{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
-nav a .n.alert{color:var(--warn);font-weight:600}
+.n{font-size:11px;line-height:16px;border-radius:9px;padding:0 6px;background:var(--line-2);color:var(--ink-2);font-weight:500;margin-left:6px;white-space:nowrap;display:inline-block}
+.n.alert{background:var(--warn);color:#fff}
+.n:empty{display:none}
 
 main{overflow:auto;min-width:0;background:var(--bg)}
 .view{padding:18px 22px 40px;display:none}
@@ -505,6 +506,86 @@ a.btn{text-decoration:none;color:inherit}
 .kindbar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
 @media (max-width:1100px){ .split{grid-template-columns:1fr} }
 @media (max-width:680px){ .files{grid-template-columns:1fr} .tree{border-right:0;border-bottom:1px solid var(--line-2);max-height:140px} .ptabs{padding:6px 8px 0} nav details{display:contents} nav details summary{display:none} nav{align-items:center;max-height:48px;overflow-y:hidden} nav .setb{margin-top:0;border-top:0;padding-top:6px} nav a{flex:none} nav .newb{margin:0} nav .sec{display:none} }
+
+
+
+/* v12 */
+.rslist div{padding:8px 12px;border-bottom:1px solid var(--line-2);cursor:pointer;font-size:13px}
+.rslist div.on{background:var(--accent-soft);font-weight:500}
+.rslist .m{font-size:11.5px;color:var(--ink-3);font-weight:400}
+.rstep .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+.rstep .two label{display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:var(--ink-3);min-width:0}
+.rstep .two .s{width:100%}
+.rstep .rh{display:flex;align-items:center;gap:6px}
+.rstep .rh input.inp{flex:1;min-width:0;font-size:12.5px;padding:2px 6px}
+.rstep .rh button{border:1px solid var(--line);background:var(--raise);border-radius:var(--r);font-size:11.5px;padding:1px 6px}
+.team .ag2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) auto;gap:6px;align-items:center;margin-bottom:6px}
+.team .ag2 .s{width:100%}
+.team .ag2 button{border:0;background:transparent;color:var(--ink-3)}
+.team .mode .hint{display:block;margin-top:4px;max-width:200px}
+.acct{cursor:pointer}
+.acct:hover,.cn[data-cfg]:hover{border-color:var(--accent)}
+.acct .more,.cn .more{font-size:12px;color:var(--accent)}
+.cfgd{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--panel);border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(0,0,0,.12);z-index:50;display:flex;flex-direction:column}
+.cfgd>header,.cfgd>footer{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line-2)}
+.cfgd>footer{border-bottom:0;border-top:1px solid var(--line-2)}
+.cfgb{padding:4px 16px 16px;overflow:auto;flex:1}
+.cfgb h3{font-size:13px;margin:14px 0 6px}
+.cfgb ol{margin:0;padding-left:20px;font-size:12.5px;line-height:1.7}
+.cfgf{display:flex;flex-direction:column;gap:10px}
+.cfgf .chk{display:flex;gap:10px;flex-wrap:wrap}
+@media (max-width:1100px){ #v-relays .twocol{grid-template-columns:1fr!important} }
+/* v11 来源两层 */
+#mk tr.sec td{background:var(--line-2);font-size:12px;color:var(--ink-2);font-weight:600}
+.stype{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;padding:10px 12px 4px;border-top:1px solid var(--line-2)}
+.stype:first-child{border-top:0}
+.srow{border-top:1px solid var(--line-2)}
+.srow>summary{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;cursor:pointer;list-style:none}
+.srow>summary::-webkit-details-marker{display:none}
+.srow>summary b::before{content:"▸ ";color:var(--ink-3);font-weight:400}
+.srow[open]>summary b::before{content:"▾ "}
+.srow .m{font-size:12px;color:var(--ink-3)}
+.multi{font-size:10.5px;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:0 5px;margin-left:6px;font-weight:400}
+.mlist{display:flex;flex-direction:column;padding:0 12px 8px 30px}
+.mlist label{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;font-size:12.5px;padding:3px 0;border-left:1px solid var(--line);padding-left:10px}
+.mlist .v{font-size:11px;color:var(--ink-3)}
+/* v10 分组按用途 */
+.role{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:10px;align-items:start;padding:9px 12px;border-bottom:1px solid var(--line-2)}
+.role .s{max-width:100%;width:100%}
+.role .bk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);margin-top:5px}
+.role .bk .s{font-size:12px;padding:2px 4px;flex:1;min-width:0}
+.role .bk span{white-space:nowrap}
+.role.sw{background:var(--warn-soft,var(--accent-soft))}
+/* v9 模块化工作台 + 模板 */
+.lpane.mods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:start;min-width:0}
+.mod{background:var(--panel);border:1px solid var(--line);border-radius:6px;min-width:0;display:flex;flex-direction:column}
+.mod.w2{grid-column:1/-1}
+.mod>.mh{display:flex;align-items:center;gap:6px;padding:7px 10px;border-bottom:1px solid var(--line-2);font-size:12.5px}
+.mod>.mh b{font-size:13px}
+.mod>.mh .spacer{flex:1}
+.mod>.mh .ctl{display:none;gap:2px}
+.mods.edit .mod>.mh .ctl{display:flex}
+.mods.edit .mod{border-style:dashed;cursor:grab}
+.mods.edit .mod>.mb{opacity:.55;pointer-events:none;max-height:120px;overflow:hidden}
+.mod.drop{outline:2px solid var(--accent);outline-offset:2px}
+.mod .ctl button{border:1px solid var(--line);background:var(--raise);border-radius:var(--r);font-size:11.5px;padding:1px 6px;color:var(--ink-2)}
+.mod .files{min-height:340px}
+.mod.w1 .files{grid-template-columns:1fr}
+.mod.w1 .tree{border-right:0;border-bottom:1px solid var(--line-2);max-height:150px}
+.palette{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px;border:1px dashed var(--accent);border-radius:6px;background:var(--accent-soft);font-size:12.5px}
+.palette .chip{cursor:pointer}
+.wbbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tplc{text-align:left;border:1px solid var(--line);background:var(--raise);border-radius:6px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tplc b{font-size:13px}
+.tplc span{font-size:11.5px;color:var(--ink-3)}
+.tplc[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;background:var(--accent-soft)}
+.mchips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.mchips .chip button{border:0;background:transparent;padding:0 0 0 4px;color:var(--ink-3);font-size:12px}
+.mini{width:100%;font-size:12.5px;border-collapse:collapse}
+.mini td{padding:6px 10px;border-bottom:1px solid var(--line-2)}
+.term{margin:0;padding:10px 12px;font-size:12px;line-height:1.6;background:#16181a;color:#cfd6cf;min-height:120px;border-radius:0 0 6px 6px;overflow:auto}
+@media (max-width:680px){ .lpane.mods{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
 </style>
 
@@ -521,7 +602,7 @@ a.btn{text-decoration:none;color:inherit}
   <nav id="nav">
     <a href="#home" data-v="home" class="newb btn">＋ 新建</a>
     <div class="sec">项目</div>
-    <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert">1</span></a>
+    <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert" title="1 项等你批准">1</span></a>
     <a href="#tasks" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
     <a href="#tasks" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
     <div class="sec">对话和任务</div>
@@ -530,17 +611,17 @@ a.btn{text-decoration:none;color:inherit}
     <a href="#chat" data-c="正则怎么匹配大陆手机号"><span class="lb">正则怎么匹配大陆手机号</span></a>
     <a href="#chat" data-c="帮我润色这周的周报"><span class="lb">帮我润色这周的周报</span></a>
     <a href="#chat" class="more">查看全部</a>
-    <a href="#accounts" class="setb" id="setb"><span class="lb">⚙ 设置</span><span class="n">2 更新</span></a>
+    <a href="#accounts" class="setb" id="setb"><span class="lb">⚙ 设置</span><span class="n" title="Agent 市场里有 2 个可更新">2 个更新</span></a>
   </nav>
 
   <main>
     <div class="ptabs" id="stabs" hidden>
       <span class="pn">设置</span>
-      <a href="#accounts" data-t="accounts">账号与模型</a><a href="#connect" data-t="connect">连接平台</a><a href="#market" data-t="market">Agent 市场 <span class="n">2 更新</span></a><a href="#control" data-t="control">调度控制</a><a href="#channels" data-t="channels">消息渠道</a><a href="#workspace" data-t="workspace">工作区与协作</a><a href="#perm" data-t="perm">权限与审批</a>
+      <a href="#accounts" data-t="accounts">账号与模型</a><a href="#connect" data-t="connect">连接平台</a><a href="#market" data-t="market">Agent 市场 <span class="n">2 个更新</span></a><a href="#control" data-t="control">调度控制</a><a href="#relays" data-t="relays">接力流程</a><a href="#channels" data-t="channels">消息渠道</a><a href="#workspace" data-t="workspace">工作区与协作</a><a href="#perm" data-t="perm">权限与审批</a>
     </div>
     <div class="ptabs" id="ptabs" hidden>
       <span class="pn" id="pjName">shop-web 会员登录</span>
-      <a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
+      <a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN" title="条消息等你放行">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
       <span class="spacer"></span><span class="conn">已连接 <span class="chip">GitHub</span><span class="chip">Linear</span></span>
     </div>
     <!-- 首页 -->
@@ -563,7 +644,8 @@ a.btn{text-decoration:none;color:inherit}
           <header><strong>新建项目</strong><span class="spacer"></span><button class="btn ghost" id="wizClose">取消</button></header>
           <div class="wizb">
             <label class="field">项目名称<input class="inp" id="wzName" placeholder="例如：会员中心手机号登录"></label>
-            <div class="field">项目类型<div class="toolbar" style="margin:0" id="wzType"><button class="chip" aria-pressed="true" type="button">编程</button><button class="chip" aria-pressed="false" type="button">调研</button><button class="chip" aria-pressed="false" type="button">写作与运营</button><button class="chip" aria-pressed="false" type="button">自定义</button></div></div>
+            <div class="field">选一个模板<div class="tpls" id="wzType"></div></div>
+            <div class="field">工作台里放哪些模块<div class="mchips" id="wzMods"></div></div>
             <label class="field">代码或资料放在哪<span class="toolbar" style="margin:0"><input class="inp" id="wzPath" placeholder="D:\projects\shop-web 或 GitHub 仓库地址" style="flex:1;min-width:0"><button class="btn" type="button">选择文件夹</button></span></label>
             <div class="rsbox" id="wzRs" hidden><b>调研项目会换一套做法</b>：调研主要是找数据、整理数据，不是写代码，所以不开工作区和代码权限，换成检索、抓取、表格整理和引用核查。
               <ul><li>先和你确认要收集哪些字段（例如：产品名、价格、来源链接、日期），再开始抓。</li><li>抓取和清洗用便宜的长上下文模型，交叉核对换另一家模型，最后统稿才用贵的。</li><li>每条数据带来源链接和原文片段；只有一个来源的标“待核实”，来源互相矛盾的交给“中立调研”评审。</li><li>产出分开：数据表（可导出 Excel / CSV）、来源清单、结论报告。</li></ul></div>
@@ -616,7 +698,7 @@ a.btn{text-decoration:none;color:inherit}
           <header><strong>整理本周竞品价格</strong><span class="tg chip">任务 · 不用协调者</span><span class="spacer"></span><button class="btn" id="tToProj">升级为项目</button></header>
           <div class="thread askable" id="taskThread">
             <div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>09:10</div><p>把 A、B、C 三家这周的价格整理成表，带来源。</p></div></div>
-            <div class="msg"><div class="av">D</div><div><div class="who"><b>DSH</b>调研组 · DeepSeek V4 Flash · 09:14</div><p>已抓取 9 个页面，整理出 4 行。竞品 B 只有应用商店一个来源，标了待核实；竞品 C 官网写 ¥68 / 人，一篇媒体报道写 ¥58，标了来源矛盾，没有替你选。</p></div></div>
+            <div class="msg"><div class="av">D</div><div><div class="who"><b>DSH</b>调研组 · DeepSeek V4.1 Flash · 09:14</div><p>已抓取 9 个页面，整理出 4 行。竞品 B 只有应用商店一个来源，标了待核实；竞品 C 官网写 ¥68 / 人，一篇媒体报道写 ¥58，标了来源矛盾，没有替你选。</p></div></div>
           </div>
           <div class="composer"><input placeholder="补充要求，比如再加 D 公司"><button class="btn pri">发送</button></div>
         </div>
@@ -670,11 +752,11 @@ app.whenReady().then(() =&gt; {
 
     <!-- 任务台 -->
     <section class="view" id="v-tasks">
-      <div class="toolbar"><h1 style="margin:0">给会员中心加手机号登录</h1><span class="spacer" style="flex:1"></span><button class="btn" id="tgFiles" aria-pressed="true">隐藏左侧</button></div>
-      <p class="sub">左边看项目内容，右边和协调者说话。选中对话里的任意文字可以单独追问。</p>
+      <div class="toolbar"><h1 style="margin:0">给会员中心加手机号登录</h1><span class="spacer" style="flex:1"></span><label class="hint">模板 <select class="s" id="wbTpl"></select></label><button class="btn" id="wbEdit">调整布局</button><button class="btn" id="tgFiles" aria-pressed="true">隐藏左侧</button></div>
+      <p class="sub">左边是模块，可以自己加减、拖动排序、改宽窄；右边和协调者说话。选中对话里的任意文字可以单独追问。</p>
       <div class="split" id="split">
-        <div class="box lpane">
-          <div class="tabs" id="lTabs"><button aria-pressed="true" data-l="files">文件</button><button aria-pressed="false" data-l="plan">任务图</button><button aria-pressed="false" data-l="st">Agent 状态</button><button aria-pressed="false" data-l="gh">GitHub</button></div>
+        <div class="lpane mods" id="mods">
+          <div class="tabs" id="lTabs" hidden><button aria-pressed="true" data-l="files">文件</button><button aria-pressed="false" data-l="plan">任务图</button><button aria-pressed="false" data-l="st">Agent 状态</button><button aria-pressed="false" data-l="gh">GitHub</button></div>
           <div data-lp="files" class="files">
             <div class="tree" id="tree">
               <div class="d">shop-web</div>
@@ -886,16 +968,33 @@ app.whenReady().then(() =&gt; {
       <div class="toolbar"><button class="btn pri" id="updAll">全部更新（2）</button><button class="btn">添加自定义 agent</button><span class="hint">上次检查：今天 09:40</span></div>
       <div class="box tablewrap">
         <table id="mk">
-          <tr><th>Agent</th><th>本机版本</th><th>最新版本</th><th>登录方式</th><th></th></tr>
-          <tr><td><b>Claude Code</b><div class="m">Anthropic 官方 CLI</div></td><td class="ver">2.4.1</td><td class="ver"><span class="new">2.5.0</span></td><td>Claude 账号 / API key / Coding Plan</td><td><button class="btn pri" data-up>更新</button></td></tr>
-          <tr><td><b>Codex CLI</b><div class="m">OpenAI 官方 CLI</div></td><td class="ver">0.61.0</td><td class="ver">0.61.0</td><td>ChatGPT 账号 / API key</td><td><span class="pill done">最新</span></td></tr>
-          <tr><td><b>Gemini CLI</b><div class="m">Google 官方 CLI</div></td><td class="ver">1.8.2</td><td class="ver"><span class="new">1.9.0</span></td><td>Google 账号 / API key</td><td><button class="btn pri" data-up>更新</button></td></tr>
-          <tr><td><b>Qwen Code</b><div class="m">阿里通义</div></td><td class="ver">未安装</td><td class="ver">0.9.3</td><td>百炼 Coding Plan / API key</td><td><button class="btn" data-up>安装</button></td></tr>
-          <tr><td><b>Aider</b><div class="m">开源，Python</div></td><td class="ver">未安装</td><td class="ver">0.88.1</td><td>任意 API key</td><td><button class="btn" data-up>安装</button></td></tr>
-          <tr><td><b>my-reviewer</b><div class="m">自定义 · ~/tools/reviewer.sh</div></td><td class="ver">本地</td><td class="ver">—</td><td>沿用模型网关</td><td><button class="btn ghost">编辑</button></td></tr>
+          <tr><th>Agent</th><th>本机版本</th><th>最新版本</th><th>能用哪些模型来源</th><th></th></tr>
+          <tr class="sec"><td colspan="5">编程 agent（命令行，中枢可以派活）</td></tr>
+          <tr><td><b>Claude Code</b><div class="m">Anthropic 官方</div></td><td class="ver">2.4.1</td><td class="ver"><span class="new">2.5.0</span></td><td>Claude 订阅；或任何 Anthropic 兼容地址：GLM、Kimi、DeepSeek API、OpenCode Go</td><td><button class="btn pri" data-up>更新</button></td></tr>
+          <tr><td><b>Codex CLI</b><div class="m">OpenAI 官方</div></td><td class="ver">0.61.0</td><td class="ver">0.61.0</td><td>ChatGPT 订阅；OpenAI API；OpenAI 兼容地址</td><td><span class="pill done">最新</span></td></tr>
+          <tr><td><b>Gemini CLI</b><div class="m">Google 官方</div></td><td class="ver">1.8.2</td><td class="ver"><span class="new">1.9.0</span></td><td>Google 账号；Gemini API key</td><td><button class="btn pri" data-up>更新</button></td></tr>
+          <tr><td><b>OpenCode</b><div class="m">开源，支持 75+ 家服务商</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>OpenCode Go / Zen；你在这里存的所有 API key 和 Plan</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>GitHub Copilot CLI</b><div class="m">GitHub 官方</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>Copilot 订阅（内含 Claude、GPT、Gemini 多家模型）</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Qwen Code</b><div class="m">阿里通义</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>阿里云百炼 Coding Plan；百炼 API</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Kimi CLI</b><div class="m">月之暗面</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>Kimi Code Plan；Moonshot API</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>CodeBuddy Code</b><div class="m">腾讯</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>腾讯云账号；自带模型</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>DSH</b><div class="m">DeepSeek Harness</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>DeepSeek API；OpenAI 兼容地址</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Kilo Code CLI</b><div class="m">开源</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>Kilo 账号；任意 API key</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Cursor CLI</b><div class="m">Cursor</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>Cursor 订阅</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Factory Droid</b><div class="m">Factory</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>Factory 账号；自带 key</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Amp</b><div class="m">Sourcegraph</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>Amp 账号</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Crush</b><div class="m">Charm，开源</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>任意 API key</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Goose</b><div class="m">Block，开源</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>任意 API key；本地模型</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>Aider</b><div class="m">开源，Python</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>任意 API key；本地模型</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr class="sec"><td colspan="5">桌面和办公 agent（中枢负责安装、打开、记账；没有公开命令行接口的暂时不能派活）</td></tr>
+          <tr><td><b>WorkBuddy</b><div class="m">腾讯，桌面办公智能体</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>腾讯账号，模型由 WorkBuddy 自己调度 · <span class="hint">暂不能派活</span></td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>TRAE</b><div class="m">字节，AI IDE</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>TRAE 账号 · <span class="hint">暂不能派活</span></td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr><td><b>OpenClaw</b><div class="m">开源个人助理，接社交软件</div></td><td class="ver">未安装</td><td class="ver">最新版</td><td>任意 API key；可以接到“消息渠道”</td><td><button class="btn" data-up>安装</button></td></tr>
+          <tr class="sec"><td colspan="5">自定义</td></tr>
+          <tr><td><b>my-reviewer</b><div class="m">自定义 · ~/tools/reviewer.sh</div></td><td class="ver">本地</td><td class="ver">—</td><td>沿用中枢的模型网关</td><td><button class="btn ghost">编辑</button></td></tr>
         </table>
       </div>
-      <p class="hint" style="margin-top:8px">版本号为演示数据。</p>
+      <p class="hint" style="margin-top:8px">版本号为演示数据；实际会从各家官方渠道（npm、PyPI、GitHub Releases、官网）查询。</p>
     </section>
 
     <!-- 账号 -->
@@ -903,57 +1002,42 @@ app.whenReady().then(() =&gt; {
       <h1>账号与模型</h1>
       <p class="sub">中枢先帮你管好手里的 plan 和 API：在这里登录或填 key，存一次；再按自己的习惯分组，之后新建项目、给 agent 选模型时直接挑分组就行。</p>
       <div class="box" style="max-width:1100px">
-        <header><strong>模型来源</strong><span class="hint">已保存 7 个</span><span class="spacer"></span><button class="btn pri" id="addSrcBtn">添加来源</button></header>
-        <div class="addsrc" id="addSrc" hidden>
-          <div class="row2"><span class="hint">方式</span><div class="seg" role="group" id="srcWay"><button aria-pressed="true" data-w="login">应用内登录</button><button aria-pressed="false" data-w="plan">Coding Plan</button><button aria-pressed="false" data-w="key">API key</button><button aria-pressed="false" data-w="local">本地模型</button></div></div>
-          <div class="row2" id="srcLogin"><select class="s"><option>Claude 订阅（用 Claude Code 登录）</option><option>ChatGPT 订阅（用 Codex CLI 登录）</option><option>Google 账号（用 Gemini CLI 登录）</option></select><button class="btn" data-test>打开官方登录</button><span class="hint">会在内置终端里运行官方 CLI 的登录命令，账号密码只在官方页面输入。</span></div>
-          <div class="row2" id="srcKey" hidden><select class="s"><option>DeepSeek</option><option>智谱 GLM</option><option>Kimi</option><option>通义百炼</option><option>OpenAI</option><option>Anthropic</option><option>OpenRouter</option><option>自定义（OpenAI 兼容）</option></select><input class="inp" type="password" placeholder="粘贴 key，存进系统钥匙串" style="flex:1;min-width:180px"><button class="btn" data-test>测试连接</button></div>
-          <div id="srcFound" hidden><div class="hint" style="margin-bottom:6px">✓ 连接正常。找到这些模型，接口格式：OpenAI 兼容 + Anthropic 兼容</div><div class="models"><span class="chip">deepseek-v4-pro</span><span class="chip">deepseek-v4-flash</span></div>
-            <div class="row2" style="margin-top:10px"><span class="hint">放进分组</span><select class="s" id="srcGroup"><option>便宜干活</option><option>调研</option><option>代码</option><option>后端</option></select><button class="btn pri" id="srcSave">保存</button></div></div>
+        <header><strong>模型来源</strong><span class="hint" id="srcCount"></span><span class="spacer"></span><button class="btn pri" id="asBtn">添加来源</button></header>
+        <div class="addsrc" id="as" hidden>
+          <div class="row2"><span class="hint">方式</span><div class="seg" role="group" id="asWay"><button aria-pressed="true" data-w="login">应用内登录</button><button aria-pressed="false" data-w="plan">Coding / Token Plan</button><button aria-pressed="false" data-w="key">API key</button><button aria-pressed="false" data-w="local">本地模型</button></div></div>
+          <div class="row2"><select class="s" id="asProv"></select><input class="inp" id="asKey" type="password" placeholder="粘贴 key，存进系统钥匙串" style="flex:1;min-width:180px" hidden><button class="btn" id="asTest">打开官方登录</button></div>
+          <p class="hint" id="asNote" style="margin:0"></p>
+          <div id="asFound" hidden><div class="hint" id="asFoundH" style="margin-bottom:6px"></div><div class="mlist" id="asModels"></div>
+            <div class="row2" style="margin-top:10px"><button class="btn pri" id="asSave">保存</button><span class="hint">保存后，勾选的模型会出现在下面每个分组的模型选择里</span></div></div>
         </div>
-        <div class="tablewrap"><table class="srcs" id="srcTable">
-          <tr><th>来源</th><th>方式</th><th>能用的模型</th><th>额度</th><th>在哪些分组</th></tr>
-          <tr><td><b>Claude 订阅 · Max</b><div class="m">Claude Code 登录</div></td><td>应用内登录</td><td>Opus、Sonnet</td><td>5 小时窗口，13:00 重置</td><td>代码</td></tr>
-          <tr><td><b>ChatGPT 订阅 · Plus</b><div class="m">Codex CLI 登录</div></td><td>应用内登录</td><td>GPT-5、GPT-5 Codex</td><td>今天 64%</td><td>后端、网页</td></tr>
-          <tr><td><b>智谱 GLM Coding Plan</b></td><td>Coding Plan</td><td>GLM-4.6</td><td>本周 38%</td><td>代码</td></tr>
-          <tr><td><b>DeepSeek API</b></td><td>API key</td><td>V4 Pro、V4 Flash</td><td>本月 ¥23.40</td><td>便宜干活、调研</td></tr>
-          <tr><td><b>Kimi Coding Plan</b></td><td>Coding Plan</td><td>K2</td><td>本周 12%</td><td>调研</td></tr>
-          <tr><td><b>OpenAI / Anthropic API key</b></td><td>API key</td><td>按量</td><td>本月 ¥21.30</td><td>后端、代码（兜底）</td></tr>
-          <tr><td><b>本地 Ollama</b></td><td>本地模型</td><td>qwen3:14b</td><td>免费</td><td>便宜干活</td></tr>
-        </table></div>
+        <div id="srcTree"></div>
       </div>
-      <div class="grphead"><h2>我的分组</h2><span class="hint">名字随你起，比如后端、代码、网页、调研。每组里排好主用和备用，额度用完自动切下一个。</span><span class="spacer"></span><button class="btn" id="addGroup">新建分组</button></div>
-      <div class="pools" id="pools">
-        <div class="pool">
-          <header><input class="gname" value="代码" aria-label="分组名"><span class="hint">协调者、前端在用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>用完再切</option><option>便宜的优先</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
-          <div class="plan2 on"><span class="ord mono">主用</span><div><b>Claude 订阅 · Max</b><div class="m">由 Claude Code 登录 · 5 小时窗口 · 10:31 用完，13:00 重置</div><div class="use"><i style="width:100%" class="full"></i></div></div><span class="pill idle">冷却中</span></div>
-          <div class="plan2 cur"><span class="ord mono">备用 1</span><div><b>智谱 GLM Coding Plan</b><div class="m">Anthropic 兼容地址 · 本周 38% · 10:31 起接替</div><div class="use"><i style="width:38%"></i></div></div><span class="pill run">正在用</span></div>
-          <div class="plan2"><span class="ord mono">备用 2</span><div><b>Anthropic API key</b><div class="m">按量付费 · 本月 ¥12.30</div><div class="use"><i style="width:12%"></i></div></div><span class="pill">待命</span></div>
-          <footer><button class="btn" data-addplan>添加备用 plan / API</button><button class="btn ghost" data-sim>模拟当前额度用完</button></footer>
-        </div>
-        <div class="pool">
-          <header><input class="gname" value="后端" aria-label="分组名"><span class="hint">后端在用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>用完再切</option><option>便宜的优先</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
-          <div class="plan2 cur"><span class="ord mono">主用</span><div><b>ChatGPT 订阅 · Plus</b><div class="m">由 Codex CLI 登录 · 今天 64%</div><div class="use"><i style="width:64%"></i></div></div><span class="pill run">正在用</span></div>
-          <div class="plan2"><span class="ord mono">备用 1</span><div><b>OpenAI API key</b><div class="m">按量付费 · 今天 09:52 接替过 8 分钟（被限流）</div><div class="use"><i style="width:9%"></i></div></div><span class="pill">待命</span></div>
-          <footer><button class="btn" data-addplan>添加备用 plan / API</button><button class="btn ghost" data-sim>模拟当前额度用完</button></footer>
-        </div>
-        <div class="pool">
-          <header><input class="gname" value="便宜干活" aria-label="分组名"><span class="hint">测试、记忆整理、调研抓取在用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>便宜的优先</option><option>用完再切</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
-          <div class="plan2 cur"><span class="ord mono">主用</span><div><b>DeepSeek API</b><div class="m">本月 ¥23.40</div><div class="use"><i style="width:23%"></i></div></div><span class="pill run">正在用</span></div>
-          <div class="plan2"><span class="ord mono">备用 1</span><div><b>Kimi Coding Plan</b><div class="m">本周 12%</div><div class="use"><i style="width:12%"></i></div></div><span class="pill">待命</span></div>
-          <div class="plan2"><span class="ord mono">备用 2</span><div><b>本地 Ollama · qwen3:14b</b><div class="m">免费 · 断网也能用</div><div class="use"><i style="width:0"></i></div></div><span class="pill">待命</span></div>
-          <footer><button class="btn" data-addplan>添加备用 plan / API</button><button class="btn ghost" data-sim>模拟当前额度用完</button></footer>
-        </div>
-      </div>
+      <div class="grphead"><h2>我的分组</h2><span class="hint">名字随你起，比如后端、代码、网页、调研。组里给每个用途选一个模型，比如协调用 Opus、写提示词用 Fable、执行用 GLM；每个模型可以单独设一个备用，额度用完只切那一个。</span><span class="spacer"></span><button class="btn" id="addGroup">新建分组</button></div>
+      <div class="pools" id="pools"></div>
       <div class="box" style="margin-top:14px;max-width:900px">
         <header><strong>今日切换记录</strong></header>
         <div id="swlog">
-          <div class="entry" style="grid-template-columns:62px 1fr"><span class="id">10:31</span><div>Claude 系：Claude 订阅 5 小时额度用完 → 切到 GLM Coding Plan。影响 @frontend-01。</div></div>
-          <div class="entry" style="grid-template-columns:62px 1fr"><span class="id">10:00</span><div>GPT 系：OpenAI API 用完限流冷却 → 切回 ChatGPT 订阅。</div></div>
-          <div class="entry" style="grid-template-columns:62px 1fr"><span class="id">09:52</span><div>GPT 系：ChatGPT 订阅返回 429 限流 → 切到 OpenAI API key。影响 @backend-01。</div></div>
+          <div class="entry" style="grid-template-columns:62px 1fr"><span class="id">10:31</span><div>代码 · 协调：Opus 5 小时额度用完 → 切到备用 GPT-5，写提示词和执行照常。影响 @coord-01。</div></div>
+          <div class="entry" style="grid-template-columns:62px 1fr"><span class="id">10:00</span><div>后端 · 执行：额度恢复 → 切回 GPT-5 Codex。</div></div>
+          <div class="entry" style="grid-template-columns:62px 1fr"><span class="id">09:52</span><div>后端 · 执行：GPT-5 Codex 返回 429 限流 → 切到备用 GPT-5 · OpenAI API key。影响 @backend-01。</div></div>
         </div>
       </div>
       <p class="note">订阅账号通过官方 CLI 自己的登录流程完成，中枢不读取、不转存订阅凭据；API key 存在系统钥匙串里。不同服务商之间互为备用没有问题；用同一家的多个个人订阅轮换来绕开额度限制，可能违反该服务商条款，添加时会提醒你。</p>
+    </section>
+
+    <!-- 接力流程 -->
+    <section class="view" id="v-relays">
+      <h1>接力流程</h1>
+      <p class="sub">把“谁写提示词、谁干活、谁验收”存成预设。之后在首页、问答和团队页里直接选；也可以在项目里跟协调者说一句，让它帮你搭好再存进来。</p>
+      <div class="twocol" style="grid-template-columns:260px minmax(0,1fr)">
+        <div class="box"><header><strong>预设</strong><span class="spacer"></span><button class="btn" id="rsNew">新建</button></header><div id="rsList" class="rslist"></div></div>
+        <div class="box">
+          <header><input class="inp" id="rsName" aria-label="预设名称" style="flex:1;min-width:0;font-weight:600"><button class="btn ghost bad" id="rsDel">删除</button></header>
+          <div class="relay" id="rsSteps"></div>
+          <div class="kindbar" style="border-top:1px solid var(--line-2);border-bottom:0"><button class="btn" id="rsAdd">+ 加一步</button><label class="hint">验收不通过时 <select class="s" id="rsFail"><option>打回上一步，最多 2 轮</option><option>打回上一步，最多 1 轮</option><option>直接停下问我</option></select></label><span class="spacer" style="flex:1"></span><button class="btn pri" id="rsSave">保存</button></div>
+        </div>
+      </div>
+      <p class="note">每一步选两样：<b>谁来做</b>（直接调用模型，或者交给某个 agent 去动手）和<b>用哪个模型</b>（可以选分组里的用途，也可以选某个来源里的具体模型）。上一步的输出自动作为下一步的输入。</p>
     </section>
 
     <!-- 连接平台 -->
@@ -963,24 +1047,24 @@ app.whenReady().then(() =&gt; {
       <div class="toolbar"><input class="inp" placeholder="搜索平台，或填一个 MCP 服务地址" style="min-width:240px;flex:1;max-width:420px"><button class="btn">添加自定义（MCP）</button></div>
       <h2>开发</h2>
       <div class="conns" id="conns">
-        <div class="cn on"><div class="h"><span class="lg" style="background:#24292f">GH</span><b>GitHub</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">xiaomo1231 · 3 个仓库授权</div>
+        <div class="cn on" data-cfg><div class="h"><span class="lg" style="background:#24292f">GH</span><b>GitHub</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">xiaomo1231 · 3 个仓库授权</div>
           <div class="perm"><label class="check"><input type="checkbox" checked>读 issue、PR、代码</label><label class="check"><input type="checkbox" checked>开分支、提交、开 PR</label><label class="check"><input type="checkbox" checked>CI 失败自动交给 agent 修</label><label class="check"><input type="checkbox">合并 PR（打开后仍需你批准）</label></div></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#e24329">GL</span><b>GitLab</b></div><div class="d">仓库、MR、流水线</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#c71d23">G</span><b>Gitee</b></div><div class="d">国内仓库、PR</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn on"><div class="h"><span class="lg" style="background:#5e6ad2">L</span><b>Linear</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">任务完成后自动改状态、贴 PR 链接</div></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#2684ff">J</span><b>Jira</b></div><div class="d">工单转任务</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#362d59">S</span><b>Sentry</b></div><div class="d">报错直接变成修复任务</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#000">▲</span><b>Vercel</b></div><div class="d">预览部署，测试 agent 可以直接打开</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#336791">DB</span><b>数据库（只读）</b></div><div class="d">Postgres / MySQL，写操作一律走审批</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#e24329">GL</span><b>GitLab</b></div><div class="d">仓库、MR、流水线</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#c71d23">G</span><b>Gitee</b></div><div class="d">国内仓库、PR</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn on" data-cfg><div class="h"><span class="lg" style="background:#5e6ad2">L</span><b>Linear</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">任务完成后自动改状态、贴 PR 链接</div></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#2684ff">J</span><b>Jira</b></div><div class="d">工单转任务</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#362d59">S</span><b>Sentry</b></div><div class="d">报错直接变成修复任务</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#000">▲</span><b>Vercel</b></div><div class="d">预览部署，测试 agent 可以直接打开</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#336791">DB</span><b>数据库（只读）</b></div><div class="d">Postgres / MySQL，写操作一律走审批</div><button class="btn" data-cn>连接</button></div>
       </div>
       <h2 style="margin-top:20px">文档与办公</h2>
       <div class="conns">
-        <div class="cn on"><div class="h"><span class="lg" style="background:#3370ff">飞</span><b>飞书</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">文档、多维表格、日历；调研结果可以直接写进多维表格</div></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#000">N</span><b>Notion</b></div><div class="d">需求文档、知识库</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#00b96b">语</span><b>语雀</b></div><div class="d">团队文档</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#0f9d58">G</span><b>Google Drive</b></div><div class="d">文档、表格</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#f24e1e">F</span><b>Figma</b></div><div class="d">前端 agent 照设计稿还原</div><button class="btn" data-cn>连接</button></div>
-        <div class="cn"><div class="h"><span class="lg" style="background:#1677ff">钉</span><b>钉钉 / 企业微信 / Slack</b></div><div class="d">收发消息在“消息渠道”里设置</div><a class="btn" href="#channels">去设置</a></div>
+        <div class="cn on" data-cfg><div class="h"><span class="lg" style="background:#3370ff">飞</span><b>飞书</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">文档、多维表格、日历；调研结果可以直接写进多维表格</div></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#000">N</span><b>Notion</b></div><div class="d">需求文档、知识库</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#00b96b">语</span><b>语雀</b></div><div class="d">团队文档</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#0f9d58">G</span><b>Google Drive</b></div><div class="d">文档、表格</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#f24e1e">F</span><b>Figma</b></div><div class="d">前端 agent 照设计稿还原</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn" data-cfg><div class="h"><span class="lg" style="background:#1677ff">钉</span><b>钉钉 / 企业微信 / Slack</b></div><div class="d">收发消息在“消息渠道”里设置</div><a class="btn" href="#channels">去设置</a></div>
       </div>
       <p class="note">登录走各平台官方授权（OAuth）或 MCP，令牌存在系统钥匙串里。agent 用连接做的每一步（读了哪个 issue、开了哪个 PR）都带身份编号记进通信总线留痕。合并、删除、对外发消息这类动作默认要你批准。</p>
     </section>
@@ -992,6 +1076,7 @@ app.whenReady().then(() =&gt; {
       <div class="toolbar"><span class="hint">一键配置</span><div class="seg" role="group" id="teamPreset"><button aria-pressed="true" data-p="code">编程小团队</button><button aria-pressed="false" data-p="research">调研组</button><button aria-pressed="false" data-p="single">只有一个 agent</button></div><button class="btn ghost" id="teamAuto">按分组重新自动填</button></div>
       <div class="twocol">
         <div>
+          <p class="hint" style="margin:0 0 8px">每个岗位定两件事：<b>谁来干</b>（agent，负责动手改文件、跑命令）和<b>用什么模型</b>（agent 背后的大脑）。模型可以选分组里的某个用途，额度用完会自动切备用；也可以直接指定某个来源里的模型。</p>
           <div class="box tablewrap"><table class="team" id="teamTable"></table></div>
           <div class="rsbox" id="teamRs" style="margin-top:12px" hidden><b>调研组的专门优化</b>
             <ul><li><b>工具不同</b>：开网页检索、网页转 Markdown、PDF 和表格提取、去重；关掉工作区、终端和改代码的权限。</li>
@@ -1007,15 +1092,11 @@ app.whenReady().then(() =&gt; {
         </div>
         <div class="box">
           <header><strong>接力：贵的模型出主意，便宜的模型干活</strong></header>
-          <p class="hint" style="margin:10px 12px 0">不用再在 ChatGPT 和 DSH 之间来回复制提示词和结果，中枢自动传。</p>
-          <div class="relay" id="relay">
-            <div class="rstep"><span class="k">第 1 步 · 写提示词</span><select class="s"><option>后端组 · GPT-5</option><option>代码组 · Claude Opus</option></select><div class="out">把需求改写成给执行者的详细提示词和验收标准</div></div>
-            <div class="rstep"><span class="k">第 2 步 · 干活</span><select class="s"><option>DSH · DeepSeek V4 Pro</option><option>Claude Code · DeepSeek（Anthropic 兼容）</option><option>Claude Code · GLM Coding Plan</option></select><div class="out">按提示词写代码、跑测试</div></div>
-            <div class="rstep"><span class="k">第 3 步 · 验收</span><select class="s"><option>后端组 · GPT-5</option><option>不验收，直接给我</option></select><div class="out">对照验收标准检查，不合格打回第 2 步，最多 2 轮</div></div>
-          </div>
+          <div class="kindbar"><label class="hint">用哪个流程 <select class="s" id="rlPick"></select></label><a class="lnk" href="#relays">在设置里管理预设</a></div>
+          <div class="relay" id="relay"></div>
           <div style="padding:0 12px 10px"><label class="check"><input type="checkbox" id="relayPause" checked>每一步做完先停下给我看，我点继续才往下走</label></div>
-          <div class="cost"><span>全程用 GPT-5 <span class="big mono">≈ ¥4.80</span></span><span>接力 <span class="big mono" style="color:var(--good)">≈ ¥1.15</span></span><span class="hint">按这个任务的估算 token 量，演示数据</span></div>
-          <footer style="display:flex;gap:8px;padding:0 12px 12px;flex-wrap:wrap"><button class="btn pri" id="relayRun">跑一次看看</button><button class="btn ghost" id="relaySave">存为流程模板</button></footer>
+          <div class="cost" id="rlCost"></div>
+          <footer style="display:flex;gap:8px;padding:0 12px 12px;flex-wrap:wrap"><button class="btn pri" id="relayRun">跑一次看看</button><button class="btn" id="relayAsk">让协调者帮我搭</button><button class="btn ghost" id="relaySave">另存为新预设</button></footer>
         </div>
       </div>
       <p class="note">“两个 agent 怎么配合”四种：<b>分工</b>（协调者按子任务分给两边）、<b>主备</b>（一个额度用完换另一个）、<b>并行对比</b>（同一任务两边都做，你挑一个）、<b>写 + 审</b>（一个写，另一个审，审不过打回）。两个 agent 各在自己的工作区，留痕里各有各的身份。</p>
@@ -1164,18 +1245,7 @@ app.whenReady().then(() =&gt; {
     <section class="view" id="v-channels">
       <h1>消息渠道</h1>
       <p class="sub">把中枢接到你常用的聊天软件。人不在电脑前，也能收审批、看进度、发新任务。所有经渠道来的指令同样记进留痕。</p>
-      <div class="grid3" id="chans">
-        <div class="acct"><div class="h"><b>Telegram</b><span class="pill done">已连接</span></div><div class="m">机器人 @zhongshu_bot · 白名单 1 人</div>
-          <label class="hint">权限 <select class="s"><option>可下达任务</option><option>可审批</option><option>只通知</option></select></label>
-          <div class="chk"><label class="check"><input type="checkbox" checked>审批</label><label class="check"><input type="checkbox" checked>报错</label><label class="check"><input type="checkbox">5 分钟摘要</label><label class="check"><input type="checkbox" checked>日报</label></div></div>
-        <div class="acct"><div class="h"><b>飞书</b><span class="pill done">已连接</span></div><div class="m">群“会员中心开发” · 白名单 3 人</div>
-          <label class="hint">权限 <select class="s"><option>只通知</option><option>可审批</option><option>可下达任务</option></select></label>
-          <div class="chk"><label class="check"><input type="checkbox">审批</label><label class="check"><input type="checkbox" checked>报错</label><label class="check"><input type="checkbox">5 分钟摘要</label><label class="check"><input type="checkbox" checked>日报</label></div></div>
-        <div class="acct"><div class="h"><b>钉钉</b><span class="pill idle">未连接</span></div><div class="m">用群机器人 webhook 连接</div><div><button class="btn pri" data-pair>连接</button></div></div>
-        <div class="acct"><div class="h"><b>企业微信</b><span class="pill idle">未连接</span></div><div class="m">用应用消息或群机器人连接</div><div><button class="btn pri" data-pair>连接</button></div></div>
-        <div class="acct"><div class="h"><b>Discord</b><span class="pill idle">未连接</span></div><div class="m">邀请机器人进服务器</div><div><button class="btn pri" data-pair>连接</button></div></div>
-        <div class="acct"><div class="h"><b>Slack</b><span class="pill idle">未连接</span></div><div class="m">安装 Slack 应用</div><div><button class="btn pri" data-pair>连接</button></div></div>
-      </div>
+      <div class="grid3" id="chans"></div>
       <div class="phone">
         <div class="ph-h">Telegram · 中枢</div>
         <div class="bub in">需要你批准 · 高风险<br>@backend-01 想在测试库执行 ALTER TABLE users ADD phone_verified_at<div class="bbtn"><span>批准</span><span>拒绝</span><span>看脚本</span></div></div>
@@ -1186,7 +1256,7 @@ app.whenReady().then(() =&gt; {
         <div class="bub out">顺便让测试把夜间回归也跑一下</div>
         <div class="bub in">收到，已加入任务图 T6，指派 @qa-01。</div>
       </div>
-      <p class="note">绑定方式：在中枢里点“连接”，拿到 6 位配对码，发给机器人完成绑定。只响应白名单里的账号，高风险审批要二次确认。</p>
+      <p class="note">点任意一张卡片，右侧会打开这个渠道的接入教程和全部设置。只响应白名单里的账号，高风险审批要二次确认。</p>
     </section>
 
     <!-- 工作区与协作 -->
@@ -1267,9 +1337,17 @@ app.whenReady().then(() =&gt; {
   <footer><button class="btn" data-m="drop">丢弃</button><button class="btn" data-m="sum">只合并结论</button><button class="btn pri" data-m="all">全部合并到主对话</button></footer>
 </aside>
 
+<aside class="cfgd" id="cfgd" aria-label="设置" hidden>
+  <header><b id="cfgT"></b><span class="pill" id="cfgS"></span><span class="spacer" style="flex:1"></span><button class="btn ghost" id="cfgX" aria-label="关闭">×</button></header>
+  <div class="cfgb">
+    <h3>怎么接入</h3><ol id="cfgSteps"></ol><p class="hint" id="cfgTip"></p>
+    <h3>设置</h3><div id="cfgF" class="cfgf"></div>
+  </div>
+  <footer><button class="btn bad ghost" id="cfgOff">断开</button><span class="spacer" style="flex:1"></span><button class="btn" id="cfgTest">发一条测试消息</button><button class="btn pri" id="cfgSave">保存</button></footer>
+</aside>
 <script>
 (function(){
-  const views=['home','chat','tasks','team','connect','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','tasks','team','connect','relays','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
     let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -1346,7 +1424,7 @@ app.whenReady().then(() =&gt; {
 
   // 市场
   document.getElementById('mk').addEventListener('click',e=>{ const b=e.target.closest('[data-up]'); if(!b) return;
-    const tr=b.closest('tr'); const latest=tr.children[2].textContent; tr.children[1].textContent=latest; b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'最新'})); });
+    const tr=b.closest('tr'); const latest=tr.children[2].textContent; tr.children[1].textContent=latest==='最新版'?'已装最新版':latest; b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'最新'})); });
   document.getElementById('updAll').onclick=()=>document.querySelectorAll('#mk [data-up]').forEach(b=>{ if(b.textContent==='更新') b.click(); });
 
   // 提示条
@@ -1400,25 +1478,89 @@ app.whenReady().then(() =&gt; {
     setTimeout(()=>{ vo.textContent='✓ '+n+' 条记录哈希链完整，没有被改动过'; vo.className='hint ok-flash'; },700); };
   document.getElementById('export').onclick=()=>{ vo.className='hint'; vo.textContent='已导出 bus-2026-11-02.jsonl（演示）'; };
   // 账号池
+  const ROLEOPT='<option>协调</option><option>写提示词</option><option>执行</option><option>审查</option><option>整理</option><option>摘要</option><option>测试</option>';
   document.getElementById('pools').addEventListener('click',e=>{
     const pool=e.target.closest('.pool'); if(!pool) return;
-    if(e.target.closest('[data-addplan]')){ const n=pool.querySelectorAll('.plan2').length; const d=document.createElement('div'); d.className='plan2';
-      d.innerHTML='<span class="ord mono">备用 '+n+'</span><div><select class="s" style="width:100%"><option>从已保存的来源里选…</option><option>DeepSeek API · V4 Flash</option><option>Kimi Coding Plan · K2</option><option>OpenAI API key · GPT-5</option><option>本地 Ollama · qwen3:14b</option></select><div class="m">没有的话先在上面“添加来源”</div></div><span class="pill">待命</span>';
-      pool.insertBefore(d,pool.querySelector('footer')); d.querySelector('input').focus(); }
-    if(e.target.closest('[data-sim]')){ const plans=[...pool.querySelectorAll('.plan2')], i=plans.findIndex(p=>p.classList.contains('cur')), next=plans[i+1];
-      if(!next){ e.target.textContent='没有更多备用了'; return; }
-      plans[i].classList.remove('cur'); plans[i].querySelector('.pill').className='pill idle'; plans[i].querySelector('.pill').textContent='冷却中'; plans[i].querySelector('.use i').style.width='100%'; plans[i].querySelector('.use i').classList.add('full');
-      next.classList.add('cur'); next.querySelector('.pill').className='pill run'; next.querySelector('.pill').textContent='正在用';
+    if(e.target.closest('[data-addrole]')){ const src=pool.querySelector('.role'); const d=src.cloneNode(true); d.classList.remove('sw'); d.querySelector('.rsel').innerHTML=ROLEOPT; d.querySelector('.rsel').value='审查'; d.querySelector('.bsel').value=''; d.querySelector('.use i').style.width='0'; const pl=d.querySelector('.pill'); pl.className='pill'; pl.textContent='待命';
+      pool.insertBefore(d,pool.querySelector('footer')); d.querySelector('.msel').focus(); }
+    if(e.target.closest('[data-sim]')){ const r=[...pool.querySelectorAll('.role')].find(x=>x.querySelector('.rsel').value==='执行'&&!x.classList.contains('sw'));
+      if(!r){ say('这个组的执行模型已经在用备用了'); return; }
+      const lab=sel=>{ const o=sel.selectedOptions[0]; return o&&o.value?o.textContent+'（'+o.parentElement.label+'）':''; }; const bk=lab(r.querySelector('.bsel')), m=lab(r.querySelector('.msel')), pl=r.querySelector('.pill');
+      if(!bk){ pl.className='pill idle'; pl.textContent='额度用完，暂停'; say('没设备用，执行先暂停，额度恢复后自动继续'); return; }
+      r.classList.add('sw'); r.querySelector('.use i').style.width='100%'; r.querySelector('.use i').classList.add('full'); pl.className='pill wait'; pl.textContent='正在用备用';
       const d=new Date(), t=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
       document.getElementById('swlog').insertAdjacentHTML('afterbegin','<div class="entry" style="grid-template-columns:62px 1fr"><span class="id">'+t+'</span><div></div></div>');
-      document.querySelector('#swlog .entry div').textContent=pool.querySelector('.gname').value+'：'+plans[i].querySelector('b').textContent+' 额度用完 → 切到 '+next.querySelector('b').textContent+'。';
-    }
+      document.querySelector('#swlog .entry div').textContent=pool.querySelector('.gname').value+' · 执行：'+m+' 额度用完 → 切到备用 '+bk+'。同组其他用途不受影响。'; }
   });
 
+  // v11：模型来源两层 + 分组
+  const SRC=[
+    {id:'claude',n:'Claude Pro / Max',way:'订阅（应用内登录）',how:'Claude Code 登录',q:'5 小时窗口 46%，13:00 重置',m:[['Opus','Anthropic'],['Fable','Anthropic'],['Sonnet','Anthropic'],['Haiku','Anthropic',0]]},
+    {id:'chatgpt',n:'ChatGPT Plus',way:'订阅（应用内登录）',how:'Codex CLI 登录',q:'今天 64%',m:[['GPT-5 系列','OpenAI'],['GPT-5 Codex','OpenAI']]},
+    {id:'copilot',n:'GitHub Copilot',way:'订阅（应用内登录）',how:'Copilot CLI 登录',q:'本月 41%',multi:1,m:[['Claude Sonnet','Anthropic'],['GPT-5 系列','OpenAI'],['Gemini','Google',0]]},
+    {id:'glm',n:'智谱 GLM Coding Plan',way:'Coding / Token Plan',how:'Anthropic 兼容地址',q:'本周 38%',m:[['GLM-5.3','智谱'],['GLM-5.3-Flash','智谱']]},
+    {id:'kimi',n:'Kimi Code Plan',way:'Coding / Token Plan',how:'Anthropic 兼容地址',q:'本周 12%',m:[['Kimi K3','月之暗面'],['Kimi K2.7','月之暗面',0]]},
+    {id:'ark',n:'火山方舟 Coding Plan',way:'Coding / Token Plan',how:'OpenAI + Anthropic 兼容',q:'本周 20%',multi:1,m:[['Doubao','字节'],['GLM-5.3','智谱',0],['Kimi K3','月之暗面',0],['DeepSeek V4.1','DeepSeek']]},
+    {id:'ocgo',n:'OpenCode Go',way:'Coding / Token Plan',how:'OpenAI + Anthropic 兼容',q:'本月 $18 / $60',multi:1,more:26,m:[['DeepSeek V4 Pro','DeepSeek'],['DeepSeek V4.1 Flash','DeepSeek'],['Kimi K3','月之暗面'],['GLM-5.3','智谱'],['Qwen3.8 Max','阿里',0],['MiniMax M3','MiniMax',0]]},
+    {id:'ds',n:'DeepSeek API',way:'API key',how:'按量付费',q:'本月 ¥23.40',m:[['DeepSeek V4 Pro','DeepSeek'],['DeepSeek V4.1 Flash','DeepSeek']]},
+    {id:'oai',n:'OpenAI API',way:'API key',how:'按量付费',q:'本月 ¥9.00',m:[['GPT-5 系列','OpenAI']]},
+    {id:'ollama',n:'本地 Ollama',way:'本地模型',how:'127.0.0.1:11434',q:'免费',m:[['qwen3:14b','阿里（本地）']]}
+  ];
+  const GRP=[
+    {n:'代码',h:'shop-web 在用',r:[['协调','claude/Opus','chatgpt/GPT-5 系列',46],['写提示词','claude/Fable','claude/Sonnet',22],['执行','glm/GLM-5.3','ocgo/GLM-5.3',38],['审查','claude/Sonnet','',12]]},
+    {n:'后端',h:'后端岗位在用',r:[['协调','chatgpt/GPT-5 系列','claude/Opus',64],['执行','chatgpt/GPT-5 Codex','oai/GPT-5 系列',64]]},
+    {n:'便宜干活',h:'测试、记忆整理、调研抓取在用',r:[['执行','ocgo/DeepSeek V4.1 Flash','ds/DeepSeek V4.1 Flash',18],['整理','ollama/qwen3:14b','ocgo/Kimi K3',0],['摘要','ds/DeepSeek V4.1 Flash','',23]]}
+  ];
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const on=m=>m[2]!==0;
+  let openS=null; function drawSrc(){ const t=document.getElementById('srcTree'); if(t.children.length) openS=new Set([...t.querySelectorAll('details')].map((d,i)=>d.open?d.dataset.id:null)); let h='', last='';
+    SRC.forEach((x,i)=>{ if(x.way!==last){ h+='<div class="stype">'+esc(x.way)+'</div>'; last=x.way; }
+      const n=x.m.filter(on).length;
+      h+='<details class="srow" data-id="'+x.id+'"'+((openS?openS.has(x.id):x.multi)?' open':'')+'><summary><span><b>'+esc(x.n)+'</b>'+(x.multi?'<span class="multi">多家模型</span>':'')+'<div class="m">'+esc(x.how)+'</div></span><span class="m">'+esc(x.q)+'</span><span class="m">用 '+n+' / '+(x.m.length+(x.more||0))+' 个模型</span></summary><div class="mlist">'
+        +x.m.map((m,j)=>'<label><input type="checkbox" data-s="'+i+'" data-j="'+j+'"'+(on(m)?' checked':'')+'><span>'+esc(m[0])+'</span><span class="v">'+esc(m[1])+'</span></label>').join('')
+        +(x.more?'<span class="hint" style="padding:4px 10px">还有 '+x.more+' 个模型，展开全部</span>':'')+'</div></details>'; });
+    t.innerHTML=h; document.getElementById('srcCount').textContent='已保存 '+SRC.length+' 个，同一个模型从不同来源买的会分开列'; }
+  document.getElementById('srcTree').addEventListener('change',e=>{ const c=e.target.closest('[data-s]'); if(!c) return; const m=SRC[c.dataset.s].m[c.dataset.j]; m[2]=c.checked?1:0; drawSrc(); drawPools(); say(c.checked?'已启用，分组里可以选了':'已停用，分组里不再出现'); });
+  function opts(v,none){ let h=none?'<option value=""'+(v?'':' selected')+'>无</option>':'';
+    SRC.forEach(x=>{ const ms=x.m.filter(on); if(!ms.length) return; h+='<optgroup label="'+esc(x.n)+'">'+ms.map(m=>{ const k=x.id+'/'+m[0]; return '<option value="'+esc(k)+'"'+(k===v?' selected':'')+'>'+esc(m[0])+'</option>'; }).join('')+'</optgroup>'; });
+    return h; }
+  const RO=['协调','写提示词','执行','审查','整理','摘要','测试'];
+  function readPools(){ document.querySelectorAll('#pools .pool').forEach((p,i)=>{ if(!GRP[i]) return; GRP[i].n=p.querySelector('.gname').value; GRP[i].r=[...p.querySelectorAll('.role')].map((r,j)=>[r.querySelector('.rsel').value,r.querySelector('.msel').value,r.querySelector('.bsel').value,(GRP[i].r[j]||[])[3]||0]); }); }
+  function drawPools(){ const el=document.getElementById('pools'); if(el.children.length) readPools();
+    el.innerHTML=GRP.map(g=>'<div class="pool"><header><input class="gname" value="'+esc(g.n)+'" aria-label="分组名"><span class="hint">'+esc(g.h)+'</span></header>'
+      +g.r.map(r=>'<div class="role"><div class="rk"><select class="s rsel" aria-label="用途">'+RO.map(o=>'<option'+(o===r[0]?' selected':'')+'>'+o+'</option>').join('')+'</select></div><div class="rm"><select class="s msel" aria-label="模型">'+opts(r[1])+'</select><div class="bk"><span>备用</span><select class="s bsel" aria-label="备用模型">'+opts(r[2],1)+'</select></div><div class="use"><i style="width:'+(r[3]||0)+'%"></i></div></div><span class="pill '+(r[3]?'run':'')+'">'+(r[3]?'正在用':'待命')+'</span></div>').join('')
+      +'<footer><button class="btn" data-addrole>添加用途</button><button class="btn ghost" data-sim>模拟执行模型额度用完</button></footer></div>').join(''); }
+  drawSrc(); drawPools();
+  document.getElementById('addGroup').onclick=()=>{ readPools(); GRP.push({n:'新分组',h:'还没有项目在用',r:[['执行','','',0]]}); drawPools(); const g=[...document.querySelectorAll('#pools .gname')].pop(); g.focus(); g.select(); };
+  // 添加来源
+  const PROV={
+    login:{b:'打开官方登录',note:'会在内置终端里运行官方 CLI 的登录命令，账号密码只在官方页面输入，中枢不读取登录凭据。',l:[['Claude Pro / Max（Claude Code）',[['Opus','Anthropic'],['Fable','Anthropic'],['Sonnet','Anthropic'],['Haiku','Anthropic']]],['ChatGPT Plus / Pro（Codex CLI）',[['GPT-5 系列','OpenAI'],['GPT-5 Codex','OpenAI']]],['Google AI Pro（Gemini CLI）',[['Gemini Pro','Google'],['Gemini Flash','Google']]],['GitHub Copilot（Copilot CLI）',[['Claude Sonnet','Anthropic'],['GPT-5 系列','OpenAI'],['Gemini','Google']],1]]},
+    plan:{b:'测试连接',note:'DeepSeek 官方没有 Coding Plan。想用包月额度跑 DeepSeek，可以选火山方舟、阿里云百炼或 OpenCode Go，它们里面带 DeepSeek 模型；腾讯云的 Coding Plan 已经下线。',l:[['智谱 GLM Coding Plan',[['GLM-5.3','智谱'],['GLM-5.3-Flash','智谱']]],['Kimi Code Plan',[['Kimi K3','月之暗面'],['Kimi K2.7','月之暗面']]],['MiniMax Token Plan',[['MiniMax M3','MiniMax'],['MiniMax M2.7','MiniMax']]],['小米 MiMo',[['MiMo-V2.6-Pro','小米'],['MiMo-V2.6-Flash','小米']]],['阿里云百炼 Coding Plan（多家模型）',[['Qwen3.8 Max','阿里'],['DeepSeek V4 Pro','DeepSeek']],1],['火山方舟 Coding Plan（多家模型）',[['Doubao','字节'],['GLM-5.3','智谱'],['Kimi K3','月之暗面'],['DeepSeek V4.1','DeepSeek']],1],['OpenCode Go（多家模型）',[['DeepSeek V4 Pro','DeepSeek'],['Kimi K3','月之暗面'],['GLM-5.3','智谱'],['Qwen3.8 Max','阿里'],['MiniMax M3','MiniMax'],['MiMo-V2.6-Pro','小米']],1]]},
+    key:{b:'测试连接',note:'key 存进系统钥匙串。OpenRouter、硅基流动这类聚合平台一个 key 能用多家模型，保存时可以只勾你要的。',l:[['DeepSeek API',[['DeepSeek V4 Pro','DeepSeek'],['DeepSeek V4.1 Flash','DeepSeek']]],['Anthropic API',[['Opus','Anthropic'],['Sonnet','Anthropic']]],['OpenAI API',[['GPT-5 系列','OpenAI']]],['Google Gemini API',[['Gemini Pro','Google']]],['智谱 API',[['GLM-5.3','智谱']]],['Moonshot API（Kimi）',[['Kimi K3','月之暗面']]],['阿里云百炼 API',[['Qwen3.8 Max','阿里']]],['火山方舟 API',[['Doubao','字节']]],['MiniMax API',[['MiniMax M3','MiniMax']]],['OpenRouter（多家模型）',[['Opus','Anthropic'],['GPT-5 系列','OpenAI'],['DeepSeek V4 Pro','DeepSeek'],['Kimi K3','月之暗面']],1],['硅基流动（多家模型）',[['DeepSeek V4 Pro','DeepSeek'],['Qwen3.8 Max','阿里'],['GLM-5.3','智谱']],1],['自定义（OpenAI 兼容）',[['自动读取模型列表','自定义']]]]},
+    local:{b:'检测',note:'填本机或局域网地址，模型列表自动读取。',l:[['Ollama',[['qwen3:14b','阿里（本地）'],['deepseek-r1:8b','DeepSeek（本地）']]],['LM Studio',[['已加载的模型','本地']]],['vLLM',[['已部署的模型','本地']]]]}
+  };
+  let asW='login';
+  function asDraw(){ const P=PROV[asW]; document.getElementById('asProv').innerHTML=P.l.map((x,i)=>'<option value="'+i+'">'+esc(x[0])+'</option>').join('');
+    document.getElementById('asTest').textContent=P.b; document.getElementById('asNote').textContent=P.note;
+    const k=document.getElementById('asKey'); k.hidden=asW==='login'; k.type=asW==='local'?'text':'password'; k.placeholder=asW==='local'?'http://127.0.0.1:11434':(asW==='plan'?'粘贴这个 Plan 的 key':'粘贴 key，存进系统钥匙串');
+    document.getElementById('asFound').hidden=true; }
+  document.getElementById('asBtn').onclick=()=>{ const a=document.getElementById('as'); a.hidden=!a.hidden; };
+  document.getElementById('asWay').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); asW=b.dataset.w; asDraw(); });
+  document.getElementById('asProv').onchange=()=>document.getElementById('asFound').hidden=true;
+  document.getElementById('asTest').onclick=()=>{ const x=PROV[asW].l[+document.getElementById('asProv').value];
+    document.getElementById('asFoundH').textContent=(asW==='login'?'✓ 已登录。':'✓ 连接正常。')+'找到 '+x[1].length+' 个模型'+(x[2]?'，来自 '+new Set(x[1].map(m=>m[1])).size+' 家厂商。勾选你要用的：':'。勾选你要用的：');
+    document.getElementById('asModels').innerHTML=x[1].map((m,j)=>'<label><input type="checkbox" checked data-j="'+j+'"><span>'+esc(m[0])+'</span><span class="v">'+esc(m[1])+'</span></label>').join('');
+    document.getElementById('asFound').hidden=false; };
+  document.getElementById('asSave').onclick=()=>{ const x=PROV[asW].l[+document.getElementById('asProv').value]; const name=x[0].replace(/（.*?）/,'');
+    const boxes=[...document.querySelectorAll('#asModels input')];
+    SRC.push({id:'n'+SRC.length,n:name+(SRC.some(s=>s.n===name)?'（第二个）':''),way:{login:'订阅（应用内登录）',plan:'Coding / Token Plan',key:'API key',local:'本地模型'}[asW],how:asW==='login'?'官方 CLI 登录':'刚添加',q:'刚添加',multi:x[2]?1:0,m:x[1].map((m,j)=>[m[0],m[1],boxes[j]&&boxes[j].checked?1:0])});
+    SRC.sort((a,b)=>['订阅（应用内登录）','Coding / Token Plan','API key','本地模型'].indexOf(a.way)-['订阅（应用内登录）','Coding / Token Plan','API key','本地模型'].indexOf(b.way));
+    drawSrc(); drawPools(); document.getElementById('as').hidden=true; say('已保存“'+name+'”，分组里的模型选择已更新'); };
+  asDraw();
   // v6：首页协调者、一键配置预览、调研
   const PRE={
-    code:[['协调者','中枢内置（只派活）','代码组 · Claude Opus',''],['前端','Claude Code + DSH','代码组 · Claude Opus ／ 便宜干活 · DeepSeek V4','写 + 审'],['后端','Codex CLI','后端组 · GPT-5',''],['测试','DSH','便宜干活 · DeepSeek V4 Flash','']],
-    research:[['协调者','中枢内置（只派活）','后端组 · GPT-5',''],['检索','中枢调研 agent（带浏览器）','调研组 · Kimi K2','分工'],['整理','中枢调研 agent','便宜干活 · DeepSeek V4 Flash',''],['核查','Gemini CLI','另一家模型 · Gemini',''],['统稿','Claude Code','代码组 · Claude Opus','']],
+    code:[['协调者','中枢内置（只派活）','代码组 · 协调 · Opus',''],['前端','Claude Code + DSH','代码组 · 执行 · GLM-5.3 ／ 便宜干活 · 执行 · DeepSeek V4.1 Flash','写 + 审'],['后端','Codex CLI','后端组 · GPT-5',''],['测试','DSH','便宜干活 · DeepSeek V4.1 Flash','']],
+    research:[['协调者','中枢内置（只派活）','后端组 · GPT-5',''],['检索','中枢调研 agent（带浏览器）','调研组 · Kimi K3','分工'],['整理','中枢调研 agent','便宜干活 · DeepSeek V4.1 Flash',''],['核查','Gemini CLI','另一家模型 · Gemini',''],['统稿','Claude Code','代码组 · Claude Opus','']],
     single:[['协调者','由 Claude Code 兼任','代码组 · Claude Opus',''],['全部任务','Claude Code','代码组 · Claude Opus（额度用完切 GLM）','']]
   };
   function prevHTML(k){ return PRE[k].map(r=>'<div><b>'+r[0]+'</b><span>'+r[1]+' · '+r[2]+(r[3]?' · '+r[3]:'')+'</span></div>').join(''); }
@@ -1428,7 +1570,7 @@ app.whenReady().then(() =&gt; {
     wzPrev.innerHTML=prevHTML(v); }
   wzTeam.addEventListener('change',drawPrev);
   document.getElementById('wzCfg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawPrev(); });
-  document.getElementById('wzType').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; const r=b.textContent==='调研';
+  document.getElementById('wzType').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; const r=['research','data'].includes(b.dataset.tpl);
     document.getElementById('wzRs').hidden=!r; wzTeam.value = r?'research':(wzTeam.value==='research'?'code':wzTeam.value); drawPrev(); });
   drawPrev();
   document.getElementById('homeMode').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; const pj=b.dataset.hm==='proj';
@@ -1455,34 +1597,14 @@ app.whenReady().then(() =&gt; {
     if(a.textContent.startsWith('+')){ pair.firstChild.textContent=pair.firstChild.textContent+' + DSH'; a.textContent='换'; tr.children[2].textContent+=' ／ 便宜干活 · DeepSeek V4'; const s=tr.querySelector('select'); if(s) s.value='写 + 审'; say('已加上 DSH，默认一个写一个审，可以改'); }
     else say('（演示）这里弹出已安装的 agent 列表'); });
   // 接力
-  function runRelay(){ const btn=document.getElementById('relayRun'), st=[...document.querySelectorAll('#relay .rstep')], pause=document.getElementById('relayPause').checked;
-    const outs=['提示词已写好：拆成 4 个函数，附 6 条验收标准（412 tokens）','DSH 完成：改了 3 个文件，测试 12/12 通过','验收通过：6 条标准全部满足'];
-    st.forEach(x=>x.classList.remove('run','done')); let i=0;
-    function exec(){ btn.onclick=null; btn.textContent='进行中…'; st[i].classList.add('run'); st[i].querySelector('.out').textContent='进行中…';
-      setTimeout(()=>{ st[i].classList.remove('run'); st[i].classList.add('done'); st[i].querySelector('.out').textContent=outs[i]; i++;
-        if(i>=st.length){ say('接力完成，本次花费 ¥1.08'); btn.textContent='再跑一次'; btn.onclick=runRelay; return; }
-        if(pause){ say('第 '+i+' 步做完了，已停下等你看'); btn.textContent='继续下一步'; btn.onclick=exec; } else exec(); },800); }
-    exec(); }
-  document.getElementById('relayRun').onclick=runRelay;
-  document.getElementById('relaySave').onclick=()=>say('已存为模板“GPT 出主意 → DeepSeek 干活”，首页模型里可以直接选');
-  // 添加来源
-  document.getElementById('addSrcBtn').onclick=()=>{ const a=document.getElementById('addSrc'); a.hidden=!a.hidden; };
-  document.getElementById('srcWay').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
-    const login=b.dataset.w==='login'; document.getElementById('srcLogin').hidden=!login; document.getElementById('srcKey').hidden=login; document.getElementById('srcFound').hidden=true;
-    const k=document.querySelector('#srcKey input'); k.placeholder= b.dataset.w==='local'?'本地地址，例如 http://127.0.0.1:11434':'粘贴 key，存进系统钥匙串'; k.type=b.dataset.w==='local'?'text':'password'; });
-  document.getElementById('addSrc').addEventListener('click',e=>{ if(e.target.closest('[data-test]')){ const f=document.getElementById('srcFound'); f.hidden=false; } });
-  document.getElementById('srcSave').onclick=()=>{ const tr=document.createElement('tr'); tr.innerHTML='<td><b>DeepSeek API（第二个 key）</b></td><td>API key</td><td>V4 Pro、V4 Flash</td><td>刚添加</td><td></td>'; tr.lastChild.textContent=document.getElementById('srcGroup').value;
-    document.getElementById('srcTable').appendChild(tr); document.getElementById('addSrc').hidden=true; document.getElementById('srcFound').hidden=true; say('已保存，放进了“'+tr.lastChild.textContent+'”分组'); };
-  document.getElementById('addGroup').onclick=()=>{ const d=document.createElement('div'); d.className='pool';
-    d.innerHTML='<header><input class="gname" value="新分组" aria-label="分组名"><span class="hint">还没有岗位在用</span></header><div class="plan2 cur"><span class="ord mono">主用</span><div><select class="s" style="width:100%"><option>从已保存的来源里选…</option><option>Claude 订阅 · Opus</option><option>ChatGPT 订阅 · GPT-5</option><option>DeepSeek API · V4 Pro</option></select></div><span class="pill">待命</span></div><footer><button class="btn" data-addplan>添加备用 plan / API</button></footer>';
-    document.getElementById('pools').appendChild(d); const g=d.querySelector('.gname'); g.focus(); g.select(); };
+
 
   // v7：项目页签、左侧文件、连接
   let curC='Electron 和 Tauri 怎么选';
   const PV=['tasks','team','viz','bus','council','memory'];
   function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
     document.getElementById('ptabs').hidden=!pj;
-    const st=['accounts','connect','market','control','channels','workspace','perm'].includes(v);
+    const st=['accounts','relays','connect','market','control','channels','workspace','perm'].includes(v);
     document.getElementById('stabs').hidden=!st; document.getElementById('setb').classList.toggle('on',st);
     document.querySelectorAll('#stabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
     document.querySelectorAll('#ptabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
@@ -1506,11 +1628,166 @@ app.whenReady().then(() =&gt; {
     document.querySelectorAll('#tree [data-f]').forEach(d=>d.classList.toggle('on',d.dataset.f===k)); }
   openFile('sms.ts');
   document.getElementById('tree').addEventListener('click',e=>{ const d=e.target.closest('[data-f]'); if(d) openFile(d.dataset.f); });
-  document.getElementById('lTabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
-    b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
-    document.querySelectorAll('[data-lp]').forEach(p=>p.hidden=p.dataset.lp!==b.dataset.l); });
+
   document.getElementById('tgFiles').onclick=function(){ const sp=document.getElementById('split'), off=sp.classList.toggle('nofiles'); this.textContent=off?'显示左侧':'隐藏左侧'; };
   document.querySelectorAll('[data-cn]').forEach(b=>b.onclick=()=>{ const c=b.closest('.cn'); c.classList.add('on'); b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'已连接'})); say('（演示）会打开'+c.querySelector('b').textContent+'的官方授权页'); });
+
+  // v9：模块化工作台
+  const MOD={
+    files:{t:'文件'},plan:{t:'任务图'},st:{t:'Agent 状态'},gh:{t:'GitHub'},
+    preview:{t:'网页预览',h:'<div style="padding:12px"><div style="border:1px solid var(--line);border-radius:6px;padding:14px;background:var(--raise)"><div class="hint mono" style="margin-bottom:8px">localhost:5173/login</div><div style="display:flex;flex-direction:column;gap:6px;max-width:220px"><input class="inp" placeholder="手机号"><div style="display:flex;gap:6px"><input class="inp" placeholder="验证码" style="flex:1;min-width:0"><button class="btn">获取验证码</button></div><button class="btn pri">登录</button></div></div><div class="hint" style="margin-top:6px">前端 agent 每次保存自动刷新</div></div>'},
+    term:{t:'终端',h:'<pre class="term mono">@frontend-01 $ npm run lint\n✓ 0 problems\n@backend-01 $ pytest tests/auth\n12 passed in 3.4s\n@qa-01 $ 等待 T1 T3…</pre>'},
+    tests:{t:'测试结果',h:'<table class="mini"><tr><td>单元测试</td><td class="mono">48 / 48</td><td><span class="pill done">通过</span></td></tr><tr><td>端到端</td><td class="mono">—</td><td><span class="pill idle">排队</span></td></tr><tr><td>覆盖率</td><td class="mono">81%</td><td><span class="pill">+3%</span></td></tr></table>'},
+    issues:{t:'问题与工单',h:'<table class="mini"><tr><td class="mono">#131</td><td>老用户换绑手机号报 500</td><td><span class="pill run">修复中</span></td></tr><tr><td class="mono">#129</td><td>Safari 验证码输入框跳动</td><td><span class="pill idle">排队</span></td></tr><tr><td class="mono">Sentry</td><td>近 24 小时新增报错 3 类</td><td><span class="pill wait">待分诊</span></td></tr></table>'},
+    deps:{t:'依赖与版本',h:'<table class="mini"><tr><td>react</td><td class="mono">18.3.1 → 19.1.0</td><td><span class="pill wait">大版本</span></td></tr><tr><td>express</td><td class="mono">4.19.2 → 4.21.2</td><td><span class="pill">安全补丁</span></td></tr><tr><td>上次全部升级</td><td colspan="2" class="hint">10 月 12 日</td></tr></table>'},
+    data:{t:'数据表',h:'<table class="mini"><tr><td>已收集</td><td class="mono">128 / 200 条</td></tr><tr><td>字段</td><td>产品、价格、日期、来源</td></tr><tr><td>待核实</td><td class="mono">9</td></tr></table>'},
+    src:{t:'来源清单',h:'<table class="mini"><tr><td>官网</td><td class="mono">6</td></tr><tr><td>应用商店</td><td class="mono">3</td></tr><tr><td>媒体报道</td><td class="mono">5</td></tr><tr><td colspan="2" class="hint">每条都留了抓取时间和原文片段</td></tr></table>'},
+    doc:{t:'文档草稿',h:'<div style="padding:10px 12px;font-size:12.5px"><b>调研结论（草稿）</b><p style="margin:6px 0 0;color:var(--ink-2)">三家都在把短信登录做成默认入口……（统稿 agent 写作中，你可以直接改）</p></div>'},
+    sched:{t:'定时任务',h:'<table class="mini"><tr><td>每周一 09:00</td><td>汇总上周数据，写周报</td></tr><tr><td>每天 18:00</td><td>检查竞品价格变化</td></tr></table>'},
+    usage:{t:'用量与花费',h:'<table class="mini"><tr><td>本项目今天</td><td class="mono">¥12.80</td></tr><tr><td>最贵的岗位</td><td>后端 · ¥6.80</td></tr><tr><td>接力省下</td><td class="mono" style="color:var(--good)">¥3.65</td></tr></table>'},
+    mem:{t:'项目记忆',h:'<table class="mini"><tr><td class="mono">m0012</td><td>验证码 5 分钟有效，60 秒限发一次</td></tr><tr><td class="mono">m0031</td><td>登录页沿用现有表单组件</td></tr></table>'}
+  };
+  const TPL={
+    code:{n:'代码开发',d:'写新功能，多 agent 并行',m:[['files',2],['plan',1],['st',1],['preview',1],['term',1]],team:'code'},
+    maint:{n:'项目维护',d:'修 issue、升级依赖、看报错',m:[['issues',2],['gh',1],['deps',1],['tests',1],['term',1]],team:'code'},
+    bug:{n:'Bug 修复',d:'复现、定位、修、回归测试',m:[['issues',1],['tests',1],['files',2],['term',2]],team:'single'},
+    web:{n:'网页与前端',d:'边改边看页面效果',m:[['preview',2],['files',2],['st',1],['tests',1]],team:'code'},
+    research:{n:'需求调研',d:'找资料、核事实、出结论',m:[['doc',2],['src',1],['data',1],['plan',1],['mem',1]],team:'research'},
+    data:{n:'数据收集整理',d:'按字段抓数据、去重、出表',m:[['data',2],['src',1],['plan',1],['usage',1],['sched',1]],team:'research'},
+    write:{n:'写作与内容',d:'文案、报告、周报',m:[['doc',2],['mem',1],['plan',1]],team:'single'},
+    ops:{n:'自动化运营',d:'定时跑、自动汇报',m:[['sched',2],['st',1],['usage',1],['data',2]],team:'single'}
+  };
+  const modsEl=document.getElementById('mods'), store={};
+  modsEl.querySelectorAll('[data-lp]').forEach(p=>{ p.hidden=false; store[p.dataset.lp]=p; });
+  let mcur=[], editing=false;
+  function body(k){ if(store[k]) return store[k]; const d=document.createElement('div'); d.innerHTML=MOD[k].h; store[k]=d; return d; }
+  function render(){ [...modsEl.querySelectorAll('.mod,.palette')].forEach(x=>{ const mb=x.querySelector('.mb'); if(mb) [...mb.children].forEach(c=>c.remove()); x.remove(); });
+    if(editing){ const pal=document.createElement('div'); pal.className='palette'; pal.innerHTML='<b>添加模块</b>';
+      Object.keys(MOD).filter(k=>!mcur.some(c=>c[0]===k)).forEach(k=>{ const c=document.createElement('button'); c.className='chip'; c.type='button'; c.textContent='+ '+MOD[k].t; c.onclick=()=>{ mcur.push([k,1]); render(); }; pal.appendChild(c); });
+      const sv=document.createElement('button'); sv.className='btn'; sv.textContent='存为我的模板'; sv.style.marginLeft='auto'; sv.onclick=()=>say('已存为“我的模板”，新建项目时能选'); pal.appendChild(sv); modsEl.appendChild(pal); }
+    mcur.forEach((c,i)=>{ const m=document.createElement('div'); m.className='mod w'+c[1]; m.draggable=editing; m.dataset.i=i;
+      m.innerHTML='<div class="mh"><b></b><span class="spacer"></span><span class="ctl"><button data-mv="-1" title="往前">↑</button><button data-mv="1" title="往后">↓</button><button data-w>'+(c[1]===2?'窄':'宽')+'</button><button data-x title="移除">×</button></span></div><div class="mb"></div>';
+      m.querySelector('b').textContent=MOD[c[0]].t; m.querySelector('.mb').appendChild(body(c[0])); modsEl.appendChild(m); }); }
+  modsEl.addEventListener('click',e=>{ const b=e.target.closest('.ctl button'); if(!b) return; const i=+b.closest('.mod').dataset.i;
+    if(b.dataset.x!==undefined) mcur.splice(i,1);
+    else if(b.dataset.w!==undefined) mcur[i][1]=mcur[i][1]===2?1:2;
+    else { const j=i+(+b.dataset.mv); if(j<0||j>=mcur.length) return; [mcur[i],mcur[j]]=[mcur[j],mcur[i]]; }
+    render(); });
+  let dragI=null;
+  modsEl.addEventListener('dragstart',e=>{ const m=e.target.closest('.mod'); if(m) dragI=+m.dataset.i; });
+  modsEl.addEventListener('dragover',e=>{ const m=e.target.closest('.mod'); if(m&&editing){ e.preventDefault(); modsEl.querySelectorAll('.drop').forEach(x=>x.classList.remove('drop')); m.classList.add('drop'); } });
+  modsEl.addEventListener('drop',e=>{ const m=e.target.closest('.mod'); if(!m||dragI===null) return; e.preventDefault(); const j=+m.dataset.i; const [it]=mcur.splice(dragI,1); mcur.splice(j,0,it); dragI=null; render(); });
+  const wbTpl=document.getElementById('wbTpl');
+  wbTpl.innerHTML=Object.entries(TPL).map(([k,t])=>'<option value="'+k+'">'+t.n+'</option>').join('');
+  function useTpl(k){ mcur=TPL[k].m.map(x=>[...x]); wbTpl.value=k; render(); }
+  wbTpl.onchange=()=>{ useTpl(wbTpl.value); say('已换成“'+TPL[wbTpl.value].n+'”模板的模块，对话和任务不受影响'); };
+  document.getElementById('wbEdit').onclick=function(){ editing=!editing; modsEl.classList.toggle('edit',editing); this.textContent=editing?'完成':'调整布局'; this.classList.toggle('pri',editing); render(); };
+  useTpl('code');
+  // 新建项目里的模板
+  const wzT=document.getElementById('wzType'), wzM=document.getElementById('wzMods'); let wzCur=[];
+  wzT.innerHTML=Object.entries(TPL).map(([k,t],i)=>'<button type="button" class="tplc" data-tpl="'+k+'" aria-pressed="'+(i===0)+'"><b>'+t.n+'</b><span>'+t.d+'</span></button>').join('')+'<button type="button" class="tplc" data-tpl="blank" aria-pressed="false"><b>从空白开始</b><span>自己挑模块</span></button>';
+  function drawWzM(){ wzM.innerHTML=''; wzCur.forEach((c,i)=>{ const ch=document.createElement('span'); ch.className='chip'; ch.textContent=MOD[c[0]].t; const x=document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label','移除'); x.onclick=()=>{ wzCur.splice(i,1); drawWzM(); }; ch.appendChild(x); wzM.appendChild(ch); });
+    const sel=document.createElement('select'); sel.className='s'; sel.innerHTML='<option value="">+ 添加模块</option>'+Object.keys(MOD).filter(k=>!wzCur.some(c=>c[0]===k)).map(k=>'<option value="'+k+'">'+MOD[k].t+'</option>').join(''); sel.onchange=()=>{ if(sel.value){ wzCur.push([sel.value,1]); drawWzM(); } }; wzM.appendChild(sel); }
+  function wzPick(k){ wzCur = k==='blank'?[]:TPL[k].m.map(x=>[...x]); if(k!=='blank'){ wzTeam.value=TPL[k].team; drawPrev(); } drawWzM(); }
+  wzT.addEventListener('click',e=>{ const b=e.target.closest('[data-tpl]'); if(b) wzPick(b.dataset.tpl); });
+  wzPick('code');
+  document.getElementById('wzGo').addEventListener('click',()=>{ if(wzCur.length){ mcur=wzCur.map(x=>[...x]); const t=wzT.querySelector('[aria-pressed=true]'); if(t&&TPL[t.dataset.tpl]) wbTpl.value=t.dataset.tpl; render(); } });
+
+  // v12：接力预设
+  const AGENTS=['直接调用模型','Claude Code','Codex CLI','OpenCode','DSH','Gemini CLI','Qwen Code','Kimi CLI'];
+  function grpOpts(v){ let h='<optgroup label="用分组里的用途（额度用完自动切备用）">'; GRP.forEach(g=>g.r.forEach(r=>{ const k='grp:'+g.n+'/'+r[0]; const sel=document.querySelector('#pools .msel'); const m=(r[1]||'').split('/')[1]||'未选'; h+='<option value="'+esc(k)+'"'+(k===v?' selected':'')+'>'+esc(g.n+'组 · '+r[0]+'（'+m+'）')+'</option>'; })); return h+'</optgroup>'+opts(v); }
+  function modelLabel(v){ if(!v) return '未选'; if(v.startsWith('grp:')) return v.slice(4).replace('/','组 · '); const [id,m]=v.split('/'); const x=SRC.find(q=>q.id===id); return m+(x?'（'+x.n+'）':''); }
+  const RL=[
+    {n:'Fable 写提示词 → GLM 干活 → Sonnet 验收',f:0,s:[['写提示词','直接调用模型','grp:代码/写提示词',1],['干活','Claude Code','grp:代码/执行',0],['验收','直接调用模型','grp:代码/审查',1]],c:['≈ ¥4.80','≈ ¥1.15']},
+    {n:'GPT 写提示词 → DeepSeek 干活',f:0,s:[['写提示词','直接调用模型','chatgpt/GPT-5 系列',1],['干活','DSH','ds/DeepSeek V4 Pro',0],['验收','直接调用模型','chatgpt/GPT-5 系列',1]],c:['≈ ¥3.90','≈ ¥0.95']},
+    {n:'调研：Kimi 检索 → DeepSeek 整理 → Opus 统稿',f:2,s:[['检索','OpenCode','kimi/Kimi K3',0],['整理','OpenCode','ocgo/DeepSeek V4.1 Flash',0],['统稿','直接调用模型','claude/Opus',1]],c:['≈ ¥6.20','≈ ¥1.70']}
+  ];
+  function stepHTML(st,i,n,edit){ return '<div class="rstep" data-i="'+i+'"><div class="rh"><span class="k">第 '+(i+1)+' 步</span><input class="inp" value="'+esc(st[0])+'" aria-label="这一步叫什么" data-f="0">'+(edit?'<button data-mv="-1" title="往前">↑</button><button data-mv="1" title="往后">↓</button><button data-x title="删掉">×</button>':'')+'</div>'
+    +'<div class="two"><label>谁来做<select class="s" data-f="1">'+AGENTS.map(a=>'<option'+(a===st[1]?' selected':'')+'>'+a+'</option>').join('')+'</select></label><label>用哪个模型<select class="s" data-f="2">'+grpOpts(st[2])+'</select></label></div>'
+    +(edit?'<label class="check" style="font-size:12px"><input type="checkbox" data-f="3"'+(st[3]?' checked':'')+'>做完这一步停下给我看</label>':'<div class="out">'+esc(st[1]==='直接调用模型'?'直接把上一步的结果交给 '+modelLabel(st[2]):st[1]+' 用 '+modelLabel(st[2])+' 动手做')+'</div>')+'</div>'; }
+  function bindSteps(el,arr,redraw){ el.oninput=el.onchange=e=>{ const f=e.target.dataset.f; if(f===undefined) return; const i=+e.target.closest('.rstep').dataset.i; arr[i][f]= f==='3'?(e.target.checked?1:0):e.target.value; if(f!=='0') redraw(); };
+    el.onclick=e=>{ const b=e.target.closest('.rh button'); if(!b) return; const i=+b.closest('.rstep').dataset.i; if(b.dataset.x!==undefined) arr.splice(i,1); else { const j=i+(+b.dataset.mv); if(j<0||j>=arr.length) return; [arr[i],arr[j]]=[arr[j],arr[i]]; } redraw(); }; }
+  // 团队页里的接力卡
+  let rlI=0, rlWork=null;
+  function rlDraw(){ const pick=document.getElementById('rlPick'); pick.innerHTML=RL.map((r,i)=>'<option value="'+i+'"'+(i===rlI?' selected':'')+'>'+esc(r.n)+'</option>').join('');
+    if(!rlWork) rlWork=RL[rlI].s.map(x=>[...x]);
+    const el=document.getElementById('relay'); el.innerHTML=rlWork.map((st,i)=>stepHTML(st,i,rlWork.length,false)).join(''); bindSteps(el,rlWork,rlDraw);
+    document.getElementById('rlCost').innerHTML='<span>全程用最贵的模型 <span class="big mono">'+RL[rlI].c[0]+'</span></span><span>按这个流程 <span class="big mono" style="color:var(--good)">'+RL[rlI].c[1]+'</span></span><span class="hint">按这个任务估算的 token 量，演示数据</span>';
+    homeRelayOpts(); }
+  document.getElementById('rlPick').onchange=e=>{ rlI=+e.target.value; rlWork=null; rlDraw(); };
+  function runRelay(){ const btn=document.getElementById('relayRun'), st=[...document.querySelectorAll('#relay .rstep')], pause=document.getElementById('relayPause').checked; let i=0;
+    st.forEach(x=>x.classList.remove('run','done'));
+    function exec(){ btn.onclick=null; btn.textContent='进行中…'; st[i].classList.add('run'); st[i].querySelector('.out').textContent='进行中…';
+      setTimeout(()=>{ st[i].classList.remove('run'); st[i].classList.add('done'); st[i].querySelector('.out').textContent='✓ '+rlWork[i][0]+'完成（'+modelLabel(rlWork[i][2])+'）'; i++;
+        if(i>=st.length){ say('接力完成'); btn.textContent='再跑一次'; btn.onclick=runRelay; return; }
+        if(pause){ say('第 '+i+' 步做完了，已停下等你看'); btn.textContent='继续下一步'; btn.onclick=exec; } else exec(); },800); }
+    exec(); }
+  document.getElementById('relayRun').onclick=runRelay;
+  document.getElementById('relaySave').onclick=()=>{ RL.push({n:RL[rlI].n+'（我改的）',f:RL[rlI].f,s:rlWork.map(x=>[...x]),c:RL[rlI].c}); rlI=RL.length-1; rlWork=null; rlDraw(); rsI=rlI; rsDraw(); say('已另存为新预设，设置里的“接力流程”能看到'); };
+  document.getElementById('relayAsk').onclick=()=>{ location.hash='tasks'; const c=document.getElementById('cmd'); c.value='帮我搭一个接力流程：用贵的模型写提示词和验收，便宜的模型干活，搭好后存成预设'; c.focus(); say('已把需求填进和协调者的对话框，发出去就行'); };
+  // 设置里的预设编辑
+  let rsI=0;
+  function rsDraw(){ document.getElementById('rsList').innerHTML=RL.map((r,i)=>'<div data-i="'+i+'" class="'+(i===rsI?'on':'')+'">'+esc(r.n)+'<div class="m">'+r.s.length+' 步</div></div>').join('');
+    const r=RL[rsI]; if(!r){ document.getElementById('rsSteps').innerHTML='<p class="hint" style="padding:12px">还没有预设，点“新建”。</p>'; return; }
+    document.getElementById('rsName').value=r.n; document.getElementById('rsFail').selectedIndex=r.f;
+    const el=document.getElementById('rsSteps'); el.innerHTML=r.s.map((st,i)=>stepHTML(st,i,r.s.length,true)).join(''); bindSteps(el,r.s,rsDraw); }
+  document.getElementById('rsList').onclick=e=>{ const d=e.target.closest('[data-i]'); if(!d) return; rsI=+d.dataset.i; rsDraw(); };
+  document.getElementById('rsNew').onclick=()=>{ RL.push({n:'新流程',f:0,s:[['写提示词','直接调用模型','grp:代码/写提示词',1],['干活','Claude Code','grp:代码/执行',0]],c:['—','—']}); rsI=RL.length-1; rsDraw(); const n=document.getElementById('rsName'); n.focus(); n.select(); };
+  document.getElementById('rsAdd').onclick=()=>{ RL[rsI].s.push(['验收','直接调用模型','grp:代码/审查',1]); rsDraw(); };
+  document.getElementById('rsName').oninput=e=>{ RL[rsI].n=e.target.value; document.querySelector('#rsList .on').firstChild.textContent=e.target.value; };
+  document.getElementById('rsFail').onchange=e=>RL[rsI].f=e.target.selectedIndex;
+  document.getElementById('rsDel').onclick=()=>{ if(RL.length<2){ say('至少留一个预设'); return; } RL.splice(rsI,1); rsI=0; rlI=0; rlWork=null; rsDraw(); rlDraw(); say('已删除'); };
+  document.getElementById('rsSave').onclick=()=>{ rlWork=null; rlDraw(); say('已保存，首页、问答和团队页都能直接选“'+RL[rsI].n+'”'); };
+  function homeRelayOpts(){ document.querySelectorAll('optgroup[label="接力"]').forEach(g=>{ g.innerHTML=RL.map(r=>'<option>'+esc(r.n)+'</option>').join(''); }); }
+  rlDraw(); rsDraw();
+  // 团队表（重做）
+  const TEAM={
+    code:[['协调者',[['中枢内置（只派活）','grp:代码/协调']],''],['前端',[['Claude Code','grp:代码/执行'],['DSH','ds/DeepSeek V4 Pro']],'写 + 审'],['后端',[['Codex CLI','chatgpt/GPT-5 Codex']],''],['测试',[['DSH','grp:便宜干活/执行']],'']],
+    research:[['协调者',[['中枢内置（只派活）','chatgpt/GPT-5 系列']],''],['检索',[['OpenCode','kimi/Kimi K3']],''],['整理',[['OpenCode','ocgo/DeepSeek V4.1 Flash']],''],['核查',[['Gemini CLI','glm/GLM-5.3']],''],['统稿',[['Claude Code','claude/Opus']],'']],
+    single:[['协调者',[['由 Claude Code 兼任','claude/Opus']],''],['全部任务',[['Claude Code','grp:代码/执行']],'']]
+  };
+  const TAG=['Claude Code','Codex CLI','OpenCode','DSH','Gemini CLI','Qwen Code','Kimi CLI','GitHub Copilot CLI'];
+  const MODE_TIP={'分工':'协调者把子任务分给两边各做一部分','主备':'先用第一个，额度用完或出错换第二个','并行对比':'同一件事两边都做，你挑一个','写 + 审':'第一个写，第二个审，审不过打回'};
+  drawTeam=function(k){ teamKey=k; const t=document.getElementById('teamTable'), rows=TEAM[k];
+    t.innerHTML='<tr><th>岗位</th><th>谁来干 · 用什么模型</th><th>挂两个 agent 时怎么配合</th></tr>'+rows.map((r,i)=>{ const coord=r[0]==='协调者';
+      return '<tr data-r="'+i+'"><td><b>'+esc(r[0])+'</b></td><td>'+r[1].map((a,j)=>'<div class="ag2" data-a="'+j+'"><select class="s" data-f="ag" aria-label="agent">'+(coord?['中枢内置（只派活）','由 Claude Code 兼任']:TAG).map(o=>'<option'+(o===a[0]?' selected':'')+'>'+o+'</option>').join('')+'</select><select class="s" data-f="md" aria-label="模型">'+grpOpts(a[1])+'</select>'+(j>0?'<button data-rm title="去掉">×</button>':'<span></span>')+'</div>').join('')
+        +(coord||r[1].length>1?'':'<button class="lnk" data-add2>+ 再挂一个 agent</button>')+'</td><td class="mode">'+(coord?'<span class="hint">只派活，不写代码</span>':r[1].length>1?'<select class="s" data-f="mode">'+Object.keys(MODE_TIP).map(o=>'<option'+(o===r[2]?' selected':'')+'>'+o+'</option>').join('')+'</select><span class="hint">'+MODE_TIP[r[2]||'分工']+'</span>':'<span class="hint">只有一个 agent</span>')+'</td></tr>'; }).join('');
+    document.getElementById('teamRs').hidden=k!=='research'; document.getElementById('teamSingle').hidden=k!=='single'; };
+  const ttb=document.getElementById('teamTable');
+  ttb.onchange=e=>{ const f=e.target.dataset.f; if(!f) return; const r=TEAM[teamKey][+e.target.closest('tr').dataset.r];
+    if(f==='mode'){ r[2]=e.target.value; drawTeam(teamKey); return; } const a=r[1][+e.target.closest('.ag2').dataset.a]; if(f==='ag') a[0]=e.target.value; else a[1]=e.target.value; };
+  ttb.addEventListener('click',e=>{ const tr=e.target.closest('tr'); if(!tr||!tr.dataset.r) return; const r=TEAM[teamKey][+tr.dataset.r];
+    if(e.target.closest('[data-add2]')){ e.stopImmediatePropagation(); r[1].push(['DSH','grp:便宜干活/执行']); r[2]='写 + 审'; drawTeam(teamKey); say('已挂上第二个 agent，默认一个写一个审'); }
+    if(e.target.closest('[data-rm]')){ e.stopImmediatePropagation(); r[1].splice(+e.target.closest('.ag2').dataset.a,1); drawTeam(teamKey); } },true);
+  drawTeam('code');
+  // 渠道与连接：教程 + 设置抽屉
+  const CH=[
+    {n:'Telegram',on:1,m:'机器人 @zhongshu_bot · 白名单 1 人',steps:['在 Telegram 里搜索 @BotFather，发送 /newbot，按提示给机器人起名字。','把 BotFather 回给你的 token 粘到下面的“Bot token”。','点保存后中枢会给你一个 6 位配对码，把它发给你的机器人。','配对成功后，你的账号自动进白名单。'],f:[['Bot token','password','••••••••:AAF3…'],['白名单','text','@xiaomo']],tip:'Telegram 机器人可以收也可以发，适合在手机上批审批、下任务。'},
+    {n:'飞书',on:1,m:'群“会员中心开发” · 白名单 3 人',steps:['打开飞书开放平台，创建“企业自建应用”。','在“应用能力”里开启机器人，权限里加上 im:message 和 im:message:send_as_bot。','把 App ID 和 App Secret 粘到下面。','把机器人拉进群，在群里 @它 并发送配对码。'],f:[['App ID','text','cli_a5…'],['App Secret','password','••••••'],['推送到哪个群','text','会员中心开发'],['白名单','text','潇墨、小李、小王']],tip:'需要企业管理员审核应用；个人版飞书可以用群机器人 webhook，只能收通知。'},
+    {n:'钉钉',on:0,m:'用群机器人 webhook 连接',steps:['在钉钉群里打开 群设置 → 机器人 → 添加机器人 → 自定义。','安全设置选“加签”，复制 Webhook 地址和密钥。','粘到下面，点“发一条测试消息”确认能收到。'],f:[['Webhook 地址','text',''],['加签密钥','password','']],tip:'群机器人只能往群里发消息。想在钉钉里直接点批准，需要建企业内部应用。'},
+    {n:'企业微信',on:0,m:'用应用消息或群机器人连接',steps:['管理后台 → 应用管理 → 创建应用，记下 AgentId 和 Secret。','在“我的企业”里找到企业 ID（CorpID）。','接收消息的回调地址填中枢给你的中转地址。','把三项信息粘到下面。'],f:[['企业 ID','text',''],['AgentId','text',''],['Secret','password','']],tip:'只发通知的话，群机器人 webhook 更简单。'},
+    {n:'Discord',on:0,m:'邀请机器人进服务器',steps:['在 Discord Developer Portal 新建 Application，进入 Bot 页面生成 token。','打开 Message Content Intent。','用 OAuth2 生成邀请链接，把机器人拉进你的服务器。','粘贴 token，在频道里把配对码发给机器人。'],f:[['Bot token','password',''],['频道','text','#zhongshu']],tip:''},
+    {n:'Slack',on:0,m:'安装 Slack 应用',steps:['点下面“安装到 Slack”，跳到 Slack 官方授权页。','选择要接入的工作区和频道。','回到频道里输入 /zhongshu pair 加配对码。'],f:[['频道','text','#dev']],tip:'Slack 走官方 OAuth，不需要手动复制 token。'}
+  ];
+  const PUSH='<div class="chk">'+['审批','报错','5 分钟摘要','日报'].map((x,i)=>'<label class="check"><input type="checkbox"'+(i!==2?' checked':'')+'>'+x+'</label>').join('')+'</div>';
+  function drawCh(){ document.getElementById('chans').innerHTML=CH.map((c,i)=>'<div class="acct" data-ch="'+i+'" tabindex="0"><div class="h"><b>'+esc(c.n)+'</b><span class="pill '+(c.on?'done':'idle')+'">'+(c.on?'已连接':'未连接')+'</span></div><div class="m">'+esc(c.m)+'</div><span class="more">'+(c.on?'查看设置 ›':'看教程并连接 ›')+'</span></div>').join(''); }
+  drawCh();
+  let cfgCur=null; const cfgd=document.getElementById('cfgd');
+  function openCfg(t,on,steps,fields,tip,extra){ document.getElementById('cfgT').textContent=t; const s=document.getElementById('cfgS'); s.className='pill '+(on?'done':'idle'); s.textContent=on?'已连接':'未连接';
+    document.getElementById('cfgSteps').innerHTML=steps.map(x=>'<li>'+esc(x)+'</li>').join(''); document.getElementById('cfgTip').textContent=tip||'';
+    document.getElementById('cfgF').innerHTML=fields.map(f=>'<label class="field">'+esc(f[0])+'<input class="inp" type="'+f[1]+'" value="'+esc(f[2])+'"></label>').join('')+(extra||'');
+    document.getElementById('cfgOff').hidden=!on; cfgd.hidden=false; }
+  document.getElementById('chans').addEventListener('click',e=>{ const c=e.target.closest('[data-ch]'); if(!c) return; cfgCur=['ch',+c.dataset.ch]; const x=CH[cfgCur[1]];
+    openCfg(x.n,x.on,x.steps,x.f,x.tip,'<label class="field">这个渠道能做什么<select class="s"><option>可下达任务</option><option>可审批</option><option>只通知</option></select></label><div class="field">推送哪些消息'+PUSH+'</div><label class="field">免打扰时段<input class="inp" value="23:00 – 08:00"></label>'); });
+  document.getElementById('conns').parentElement.addEventListener('click',e=>{ const c=e.target.closest('[data-cfg]'); if(!c||e.target.closest('input,a')) return; if(e.target.closest('[data-cn]')) return; const n=c.querySelector('b').textContent; cfgCur=['cn',c];
+    const gh=n==='GitHub';
+    openCfg(n,c.classList.contains('on'),gh?['点“连接”，跳到 GitHub 官方授权页。','选择允许中枢访问的仓库（可以只选几个）。','回到中枢，在下面勾选 agent 能做哪些事。','每个项目里还可以再单独关掉。']:['点“连接”，跳到 '+n+' 官方授权页（OAuth）或填 MCP 服务地址。','选择允许访问的空间、项目或仓库。','回到中枢，在下面勾选 agent 能做哪些事。'],[],gh?'令牌存在系统钥匙串里，可以随时在 GitHub 设置里撤销。':'令牌存在系统钥匙串里。',
+      '<div class="field">agent 能做什么<div class="chk" style="flex-direction:column;gap:4px"><label class="check"><input type="checkbox" checked>读取内容</label><label class="check"><input type="checkbox" checked>新建和修改</label><label class="check"><input type="checkbox">删除、合并（打开后仍要你批准）</label></div></div><label class="field">哪些项目能用<select class="s"><option>所有项目</option><option>只有 shop-web 会员登录</option><option>每个项目单独选</option></select></label>'); },true);
+  document.getElementById('cfgX').onclick=()=>cfgd.hidden=true;
+  document.getElementById('cfgSave').onclick=()=>{ if(cfgCur&&cfgCur[0]==='ch'){ CH[cfgCur[1]].on=1; drawCh(); } if(cfgCur&&cfgCur[0]==='cn'){ cfgCur[1].classList.add('on'); } cfgd.hidden=true; say('已保存'); };
+  document.getElementById('cfgOff').onclick=()=>{ if(cfgCur&&cfgCur[0]==='ch'){ CH[cfgCur[1]].on=0; drawCh(); } cfgd.hidden=true; say('已断开'); };
+  document.getElementById('cfgTest').onclick=()=>say('（演示）测试消息已发送');
+  addEventListener('keydown',e=>{ if(e.key==='Escape') cfgd.hidden=true; });
   // 调度控制
   document.querySelectorAll('.cr input[type=range]').forEach(r=>r.addEventListener('input',()=>{ r.nextElementSibling.textContent=r.value; }));
   const kill=document.getElementById('kill');
