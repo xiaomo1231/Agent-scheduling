@@ -420,6 +420,40 @@ td .m{font-size:12px;color:var(--ink-3)}
   .meter .bar{width:60px}
   .top .kbd{display:none}
 }
+
+/* v6 模型来源 / 分组 / 团队 / 接力 / 调研 */
+.srcs td .m{font-size:12px;color:var(--ink-3)}
+.addsrc{padding:12px 14px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line-2)}
+.addsrc .row2{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.models{display:flex;gap:6px;flex-wrap:wrap}
+.models .chip{cursor:default}
+.grphead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:22px 0 10px}
+.grphead h2{margin:0}
+.pool header .gname{font-weight:600;border:1px solid transparent;background:transparent;border-radius:var(--r);padding:1px 4px;width:7em;font-size:13.5px}
+.pool header .gname:hover,.pool header .gname:focus{border-color:var(--line);background:var(--raise)}
+.coordrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+.preview{border:1px solid var(--line-2);border-radius:6px;background:var(--bg);font-size:12.5px}
+.preview div{display:grid;grid-template-columns:76px 1fr;gap:10px;padding:6px 10px;border-bottom:1px solid var(--line-2)}
+.preview div:last-child{border-bottom:0}
+.preview b{font-weight:600}
+.rsbox{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;padding:10px 12px;font-size:12.5px}
+.rsbox ul{margin:6px 0 0;padding-left:18px}
+.rsbox li{margin:2px 0}
+.team td{vertical-align:top}
+.team .pair{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.team .s{max-width:100%}
+.relay{display:grid;grid-template-columns:1fr;gap:8px;padding:12px}
+.field>.seg{align-self:flex-start}
+.team td:first-child{white-space:nowrap}
+.rstep{border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--raise);min-width:0;position:relative}
+.rstep .k{font-size:11.5px;color:var(--ink-3)}
+.rstep.run{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.rstep.done{opacity:.85}
+.rstep .out{font-size:12px;color:var(--ink-2);min-height:2.6em}
+.cost{display:flex;gap:18px;flex-wrap:wrap;padding:0 12px 12px;font-size:12.5px;align-items:baseline}
+.cost .big{font-size:18px;font-weight:600}
+.twocol{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:1100px){ .twocol{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
 </style>
 
@@ -438,13 +472,14 @@ td .m{font-size:12px;color:var(--ink-3)}
     <a href="#chat" data-v="chat">问答</a>
     <div class="sec">当前项目</div>
     <a href="#tasks" data-v="tasks">任务台 <span class="n alert">1</span></a>
+    <a href="#team" data-v="team">团队与模型</a>
     <a href="#viz" data-v="viz">工作可视化</a>
     <a href="#bus" data-v="bus">通信总线 <span class="n alert" id="busN">2</span></a>
     <a href="#council" data-v="council">群聊评审</a>
     <a href="#memory" data-v="memory">记忆</a>
     <div class="sec">配置</div>
-    <a href="#market" data-v="market">Agent 市场 <span class="n">2 更新</span></a>
     <a href="#accounts" data-v="accounts">账号与模型</a>
+    <a href="#market" data-v="market">Agent 市场 <span class="n">2 更新</span></a>
     <a href="#control" data-v="control">调度控制</a>
     <a href="#channels" data-v="channels">消息渠道</a>
     <a href="#workspace" data-v="workspace">工作区与协作</a>
@@ -460,8 +495,9 @@ td .m{font-size:12px;color:var(--ink-3)}
           <textarea id="homeIn" rows="3" placeholder="直接提问，或者描述一个要交给 agent 团队的项目"></textarea>
           <div class="bigc-row">
             <div class="seg" role="group" aria-label="模式" id="homeMode"><button aria-pressed="true" data-hm="ask">提问</button><button aria-pressed="false" data-hm="proj">新建项目</button></div>
-            <select class="s" aria-label="模型" id="homeModel"><option>自动（按账号池）</option><option>Claude 系</option><option>GPT 系</option><option>国产模型</option><option>本地 Ollama</option></select>
-            <label class="check"><input type="checkbox" id="homeCmp">两个模型同时回答，对比着看</label>
+            <select class="s" aria-label="模型" id="homeModel"><option>自动（按我的分组）</option><optgroup label="我的分组"><option>代码</option><option>后端</option><option>网页</option><option>调研</option><option>便宜干活</option></optgroup><optgroup label="接力"><option>GPT 写提示词 → DeepSeek 干活</option></optgroup><optgroup label="指定模型"><option>Claude Opus · Claude 订阅</option><option>GPT-5 · ChatGPT 订阅</option><option>DeepSeek V4 · DeepSeek API</option><option>qwen3:14b · 本地</option></optgroup></select>
+            <label class="coordrow" id="homeCoordW" hidden>协调者 <select class="s" id="homeCoord"><option>代码组 · Claude Opus</option><option>后端组 · GPT-5</option><option>便宜干活 · DeepSeek V4</option><option>只有一个 agent 时由它兼任</option></select></label>
+            <label class="check" id="homeCmpW"><input type="checkbox" id="homeCmp">两个模型同时回答，对比着看</label>
             <span class="spacer"></span>
             <button class="btn pri" id="homeGo">开始</button>
           </div>
@@ -473,7 +509,11 @@ td .m{font-size:12px;color:var(--ink-3)}
             <label class="field">项目名称<input class="inp" id="wzName" placeholder="例如：会员中心手机号登录"></label>
             <div class="field">项目类型<div class="toolbar" style="margin:0" id="wzType"><button class="chip" aria-pressed="true" type="button">编程</button><button class="chip" aria-pressed="false" type="button">调研</button><button class="chip" aria-pressed="false" type="button">写作与运营</button><button class="chip" aria-pressed="false" type="button">自定义</button></div></div>
             <label class="field">代码或资料放在哪<span class="toolbar" style="margin:0"><input class="inp" id="wzPath" placeholder="D:\projects\shop-web 或 GitHub 仓库地址" style="flex:1;min-width:0"><button class="btn" type="button">选择文件夹</button></span></label>
-            <label class="field">agent 团队<select class="s" id="wzTeam"><option>小团队：协调者 + 前端 + 后端 + 测试</option><option>调研组：检索 + 核查 + 反证 + 统稿</option><option>单个 agent：只用 Claude Code</option><option>我自己挑</option></select></label>
+            <div class="rsbox" id="wzRs" hidden><b>调研项目会换一套做法</b>：调研主要是找数据、整理数据，不是写代码，所以不开工作区和代码权限，换成检索、抓取、表格整理和引用核查。
+              <ul><li>先和你确认要收集哪些字段（例如：产品名、价格、来源链接、日期），再开始抓。</li><li>抓取和清洗用便宜的长上下文模型，交叉核对换另一家模型，最后统稿才用贵的。</li><li>每条数据带来源链接和原文片段；只有一个来源的标“待核实”，来源互相矛盾的交给“中立调研”评审。</li><li>产出分开：数据表（可导出 Excel / CSV）、来源清单、结论报告。</li></ul></div>
+            <label class="field">agent 团队<select class="s" id="wzTeam"><option value="code">小团队：协调者 + 前端 + 后端 + 测试</option><option value="research">调研组：检索 + 整理 + 核查 + 统稿</option><option value="single">单个 agent：只用 Claude Code</option><option value="mine">我自己挑</option></select></label>
+            <div class="field">怎么配模型<div class="seg" role="group" id="wzCfg"><button type="button" aria-pressed="true" data-c="auto">一键配置（推荐）</button><button type="button" aria-pressed="false" data-c="later">进去再细选</button></div></div>
+            <div class="preview" id="wzPrev"></div>
             <label class="field">默认权限<select class="s"><option>部分权限（推荐）</option><option>限制</option><option>完全权限</option></select></label>
             <label class="check"><input type="checkbox" checked>带上我的全局记忆（偏好和约定）</label>
             <div><button class="btn pri" id="wzGo">创建并进入</button></div>
@@ -526,7 +566,7 @@ app.whenReady().then(() =&gt; {
               <p>后台进程用 node-pty 拉起各家 CLI，界面用 xterm.js 显示终端。</p>
               <div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>
           </div>
-          <div class="composer"><select class="s" aria-label="模型"><option>自动（按账号池）</option><option>Claude 系</option><option>GPT 系</option></select><input id="chatIn" placeholder="继续问，选中上面任意文字可以单独追问"><button class="btn pri" id="chatSend">发送</button></div>
+          <div class="composer"><select class="s" aria-label="模型"><option>自动（按我的分组）</option><optgroup label="我的分组"><option>代码</option><option>后端</option><option>网页</option><option>调研</option><option>便宜干活</option></optgroup><optgroup label="接力"><option>GPT 写提示词 → DeepSeek 干活</option></optgroup><optgroup label="指定模型"><option>Claude Opus · Claude 订阅</option><option>GPT-5 · ChatGPT 订阅</option><option>DeepSeek V4 · DeepSeek API</option><option>qwen3:14b · 本地</option></optgroup></select><input id="chatIn" placeholder="继续问，选中上面任意文字可以单独追问"><button class="btn pri" id="chatSend">发送</button></div>
         </div>
         <aside class="chatside">
           <div class="box">
@@ -761,23 +801,44 @@ app.whenReady().then(() =&gt; {
     <!-- 账号 -->
     <section class="view" id="v-accounts">
       <h1>账号与模型</h1>
-      <p class="sub">每个账号池有一个主用和若干备用。主用额度用完、被限流或出错时，中枢自动切到下一个，额度恢复后再切回来，每次切换都记进留痕。</p>
+      <p class="sub">中枢先帮你管好手里的 plan 和 API：在这里登录或填 key，存一次；再按自己的习惯分组，之后新建项目、给 agent 选模型时直接挑分组就行。</p>
+      <div class="box" style="max-width:1100px">
+        <header><strong>模型来源</strong><span class="hint">已保存 7 个</span><span class="spacer"></span><button class="btn pri" id="addSrcBtn">添加来源</button></header>
+        <div class="addsrc" id="addSrc" hidden>
+          <div class="row2"><span class="hint">方式</span><div class="seg" role="group" id="srcWay"><button aria-pressed="true" data-w="login">应用内登录</button><button aria-pressed="false" data-w="plan">Coding Plan</button><button aria-pressed="false" data-w="key">API key</button><button aria-pressed="false" data-w="local">本地模型</button></div></div>
+          <div class="row2" id="srcLogin"><select class="s"><option>Claude 订阅（用 Claude Code 登录）</option><option>ChatGPT 订阅（用 Codex CLI 登录）</option><option>Google 账号（用 Gemini CLI 登录）</option></select><button class="btn" data-test>打开官方登录</button><span class="hint">会在内置终端里运行官方 CLI 的登录命令，账号密码只在官方页面输入。</span></div>
+          <div class="row2" id="srcKey" hidden><select class="s"><option>DeepSeek</option><option>智谱 GLM</option><option>Kimi</option><option>通义百炼</option><option>OpenAI</option><option>Anthropic</option><option>OpenRouter</option><option>自定义（OpenAI 兼容）</option></select><input class="inp" type="password" placeholder="粘贴 key，存进系统钥匙串" style="flex:1;min-width:180px"><button class="btn" data-test>测试连接</button></div>
+          <div id="srcFound" hidden><div class="hint" style="margin-bottom:6px">✓ 连接正常。找到这些模型，接口格式：OpenAI 兼容 + Anthropic 兼容</div><div class="models"><span class="chip">deepseek-v4-pro</span><span class="chip">deepseek-v4-flash</span></div>
+            <div class="row2" style="margin-top:10px"><span class="hint">放进分组</span><select class="s" id="srcGroup"><option>便宜干活</option><option>调研</option><option>代码</option><option>后端</option></select><button class="btn pri" id="srcSave">保存</button></div></div>
+        </div>
+        <div class="tablewrap"><table class="srcs" id="srcTable">
+          <tr><th>来源</th><th>方式</th><th>能用的模型</th><th>额度</th><th>在哪些分组</th></tr>
+          <tr><td><b>Claude 订阅 · Max</b><div class="m">Claude Code 登录</div></td><td>应用内登录</td><td>Opus、Sonnet</td><td>5 小时窗口，13:00 重置</td><td>代码</td></tr>
+          <tr><td><b>ChatGPT 订阅 · Plus</b><div class="m">Codex CLI 登录</div></td><td>应用内登录</td><td>GPT-5、GPT-5 Codex</td><td>今天 64%</td><td>后端、网页</td></tr>
+          <tr><td><b>智谱 GLM Coding Plan</b></td><td>Coding Plan</td><td>GLM-4.6</td><td>本周 38%</td><td>代码</td></tr>
+          <tr><td><b>DeepSeek API</b></td><td>API key</td><td>V4 Pro、V4 Flash</td><td>本月 ¥23.40</td><td>便宜干活、调研</td></tr>
+          <tr><td><b>Kimi Coding Plan</b></td><td>Coding Plan</td><td>K2</td><td>本周 12%</td><td>调研</td></tr>
+          <tr><td><b>OpenAI / Anthropic API key</b></td><td>API key</td><td>按量</td><td>本月 ¥21.30</td><td>后端、代码（兜底）</td></tr>
+          <tr><td><b>本地 Ollama</b></td><td>本地模型</td><td>qwen3:14b</td><td>免费</td><td>便宜干活</td></tr>
+        </table></div>
+      </div>
+      <div class="grphead"><h2>我的分组</h2><span class="hint">名字随你起，比如后端、代码、网页、调研。每组里排好主用和备用，额度用完自动切下一个。</span><span class="spacer"></span><button class="btn" id="addGroup">新建分组</button></div>
       <div class="pools" id="pools">
         <div class="pool">
-          <header><b>Claude 系</b><span class="hint">给 前端、协调者 用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>用完再切</option><option>便宜的优先</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
+          <header><input class="gname" value="代码" aria-label="分组名"><span class="hint">协调者、前端在用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>用完再切</option><option>便宜的优先</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
           <div class="plan2 on"><span class="ord mono">主用</span><div><b>Claude 订阅 · Max</b><div class="m">由 Claude Code 登录 · 5 小时窗口 · 10:31 用完，13:00 重置</div><div class="use"><i style="width:100%" class="full"></i></div></div><span class="pill idle">冷却中</span></div>
           <div class="plan2 cur"><span class="ord mono">备用 1</span><div><b>智谱 GLM Coding Plan</b><div class="m">Anthropic 兼容地址 · 本周 38% · 10:31 起接替</div><div class="use"><i style="width:38%"></i></div></div><span class="pill run">正在用</span></div>
           <div class="plan2"><span class="ord mono">备用 2</span><div><b>Anthropic API key</b><div class="m">按量付费 · 本月 ¥12.30</div><div class="use"><i style="width:12%"></i></div></div><span class="pill">待命</span></div>
           <footer><button class="btn" data-addplan>添加备用 plan / API</button><button class="btn ghost" data-sim>模拟当前额度用完</button></footer>
         </div>
         <div class="pool">
-          <header><b>GPT 系</b><span class="hint">给 后端 用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>用完再切</option><option>便宜的优先</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
+          <header><input class="gname" value="后端" aria-label="分组名"><span class="hint">后端在用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>用完再切</option><option>便宜的优先</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
           <div class="plan2 cur"><span class="ord mono">主用</span><div><b>ChatGPT 订阅 · Plus</b><div class="m">由 Codex CLI 登录 · 今天 64%</div><div class="use"><i style="width:64%"></i></div></div><span class="pill run">正在用</span></div>
           <div class="plan2"><span class="ord mono">备用 1</span><div><b>OpenAI API key</b><div class="m">按量付费 · 今天 09:52 接替过 8 分钟（被限流）</div><div class="use"><i style="width:9%"></i></div></div><span class="pill">待命</span></div>
           <footer><button class="btn" data-addplan>添加备用 plan / API</button><button class="btn ghost" data-sim>模拟当前额度用完</button></footer>
         </div>
         <div class="pool">
-          <header><b>国产模型</b><span class="hint">给 群聊评审、记忆整理 用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>便宜的优先</option><option>用完再切</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
+          <header><input class="gname" value="便宜干活" aria-label="分组名"><span class="hint">测试、记忆整理、调研抓取在用</span><span class="spacer"></span><label class="hint">切换策略 <select class="s"><option>便宜的优先</option><option>用完再切</option><option>剩余额度多的优先</option><option>轮流</option></select></label></header>
           <div class="plan2 cur"><span class="ord mono">主用</span><div><b>DeepSeek API</b><div class="m">本月 ¥23.40</div><div class="use"><i style="width:23%"></i></div></div><span class="pill run">正在用</span></div>
           <div class="plan2"><span class="ord mono">备用 1</span><div><b>Kimi Coding Plan</b><div class="m">本周 12%</div><div class="use"><i style="width:12%"></i></div></div><span class="pill">待命</span></div>
           <div class="plan2"><span class="ord mono">备用 2</span><div><b>本地 Ollama · qwen3:14b</b><div class="m">免费 · 断网也能用</div><div class="use"><i style="width:0"></i></div></div><span class="pill">待命</span></div>
@@ -793,6 +854,42 @@ app.whenReady().then(() =&gt; {
         </div>
       </div>
       <p class="note">订阅账号通过官方 CLI 自己的登录流程完成，中枢不读取、不转存订阅凭据；API key 存在系统钥匙串里。不同服务商之间互为备用没有问题；用同一家的多个个人订阅轮换来绕开额度限制，可能违反该服务商条款，添加时会提醒你。</p>
+    </section>
+
+    <!-- 团队与模型 -->
+    <section class="view" id="v-team">
+      <h1>团队与模型</h1>
+      <p class="sub">给当前项目的每个岗位挑 agent 和模型。一个岗位可以同时挂两个 agent；只有一个 agent 时，协调者照样能拆任务、排顺序。</p>
+      <div class="toolbar"><span class="hint">一键配置</span><div class="seg" role="group" id="teamPreset"><button aria-pressed="true" data-p="code">编程小团队</button><button aria-pressed="false" data-p="research">调研组</button><button aria-pressed="false" data-p="single">只有一个 agent</button></div><button class="btn ghost" id="teamAuto">按分组重新自动填</button></div>
+      <div class="twocol">
+        <div>
+          <div class="box tablewrap"><table class="team" id="teamTable"></table></div>
+          <div class="rsbox" id="teamRs" style="margin-top:12px" hidden><b>调研组的专门优化</b>
+            <ul><li><b>工具不同</b>：开网页检索、网页转 Markdown、PDF 和表格提取、去重；关掉工作区、终端和改代码的权限。</li>
+            <li><b>先定字段再抓</b>：协调者先和你确认要收集哪些列，检索员按列抓，整理员只负责清洗合并。</li>
+            <li><b>模型分工</b>：抓取和整理吃上下文多，用便宜的长上下文模型；核查换另一家模型，避免同一个模型自己验自己；统稿用强模型。</li>
+            <li><b>证据优先</b>：每条数据带来源链接、抓取时间和原文片段；单一来源标“待核实”，互相矛盾的自动送到群聊评审的“中立调研”。</li>
+            <li><b>进度看得懂</b>：显示已收集 128 / 200 条、来源覆盖 14 个网站、待核实 9 条，而不是代码行数。</li>
+            <li><b>产出</b>：数据表（Excel / CSV）、来源清单、结论报告三份分开交付。</li></ul></div>
+          <div class="rsbox" id="teamSingle" style="margin-top:12px" hidden><b>只有一个 agent 也能用协调者</b>
+            <ul><li>协调者照常拆任务、排先后、做验收，只是所有子任务都派给同一个 agent，按顺序一个个做。</li>
+            <li>协调者可以由这个 agent 兼任（不多花钱），也可以单独用一个便宜模型来做（拆任务更稳，不占主力额度）。</li>
+            <li>以后加 agent 不用重建项目，直接在上面表里加一行，协调者会把还没开始的任务重新分配。</li></ul></div>
+        </div>
+        <div class="box">
+          <header><strong>接力：贵的模型出主意，便宜的模型干活</strong></header>
+          <p class="hint" style="margin:10px 12px 0">不用再在 ChatGPT 和 DSH 之间来回复制提示词和结果，中枢自动传。</p>
+          <div class="relay" id="relay">
+            <div class="rstep"><span class="k">第 1 步 · 写提示词</span><select class="s"><option>后端组 · GPT-5</option><option>代码组 · Claude Opus</option></select><div class="out">把需求改写成给执行者的详细提示词和验收标准</div></div>
+            <div class="rstep"><span class="k">第 2 步 · 干活</span><select class="s"><option>DSH · DeepSeek V4 Pro</option><option>Claude Code · DeepSeek（Anthropic 兼容）</option><option>Claude Code · GLM Coding Plan</option></select><div class="out">按提示词写代码、跑测试</div></div>
+            <div class="rstep"><span class="k">第 3 步 · 验收</span><select class="s"><option>后端组 · GPT-5</option><option>不验收，直接给我</option></select><div class="out">对照验收标准检查，不合格打回第 2 步，最多 2 轮</div></div>
+          </div>
+          <div style="padding:0 12px 10px"><label class="check"><input type="checkbox" id="relayPause" checked>每一步做完先停下给我看，我点继续才往下走</label></div>
+          <div class="cost"><span>全程用 GPT-5 <span class="big mono">≈ ¥4.80</span></span><span>接力 <span class="big mono" style="color:var(--good)">≈ ¥1.15</span></span><span class="hint">按这个任务的估算 token 量，演示数据</span></div>
+          <footer style="display:flex;gap:8px;padding:0 12px 12px;flex-wrap:wrap"><button class="btn pri" id="relayRun">跑一次看看</button><button class="btn ghost" id="relaySave">存为流程模板</button></footer>
+        </div>
+      </div>
+      <p class="note">“两个 agent 怎么配合”四种：<b>分工</b>（协调者按子任务分给两边）、<b>主备</b>（一个额度用完换另一个）、<b>并行对比</b>（同一任务两边都做，你挑一个）、<b>写 + 审</b>（一个写，另一个审，审不过打回）。两个 agent 各在自己的工作区，留痕里各有各的身份。</p>
     </section>
 
     <!-- 工作可视化 -->
@@ -1043,7 +1140,7 @@ app.whenReady().then(() =&gt; {
 
 <script>
 (function(){
-  const views=['home','chat','tasks','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','tasks','team','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
     let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -1178,7 +1275,7 @@ app.whenReady().then(() =&gt; {
   document.getElementById('pools').addEventListener('click',e=>{
     const pool=e.target.closest('.pool'); if(!pool) return;
     if(e.target.closest('[data-addplan]')){ const n=pool.querySelectorAll('.plan2').length; const d=document.createElement('div'); d.className='plan2';
-      d.innerHTML='<span class="ord mono">备用 '+n+'</span><div><input class="inp" placeholder="名称，例如 OpenRouter" style="width:100%"><div class="m">填好 API 地址和 key 后保存，key 存进系统钥匙串</div></div><span class="pill">待命</span>';
+      d.innerHTML='<span class="ord mono">备用 '+n+'</span><div><select class="s" style="width:100%"><option>从已保存的来源里选…</option><option>DeepSeek API · V4 Flash</option><option>Kimi Coding Plan · K2</option><option>OpenAI API key · GPT-5</option><option>本地 Ollama · qwen3:14b</option></select><div class="m">没有的话先在上面“添加来源”</div></div><span class="pill">待命</span>';
       pool.insertBefore(d,pool.querySelector('footer')); d.querySelector('input').focus(); }
     if(e.target.closest('[data-sim]')){ const plans=[...pool.querySelectorAll('.plan2')], i=plans.findIndex(p=>p.classList.contains('cur')), next=plans[i+1];
       if(!next){ e.target.textContent='没有更多备用了'; return; }
@@ -1186,9 +1283,71 @@ app.whenReady().then(() =&gt; {
       next.classList.add('cur'); next.querySelector('.pill').className='pill run'; next.querySelector('.pill').textContent='正在用';
       const d=new Date(), t=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
       document.getElementById('swlog').insertAdjacentHTML('afterbegin','<div class="entry" style="grid-template-columns:62px 1fr"><span class="id">'+t+'</span><div></div></div>');
-      document.querySelector('#swlog .entry div').textContent=pool.querySelector('header b').textContent+'：'+plans[i].querySelector('b').textContent+' 额度用完 → 切到 '+next.querySelector('b').textContent+'。';
+      document.querySelector('#swlog .entry div').textContent=pool.querySelector('.gname').value+'：'+plans[i].querySelector('b').textContent+' 额度用完 → 切到 '+next.querySelector('b').textContent+'。';
     }
   });
+
+  // v6：首页协调者、一键配置预览、调研
+  const PRE={
+    code:[['协调者','中枢内置（只派活）','代码组 · Claude Opus',''],['前端','Claude Code + DSH','代码组 · Claude Opus ／ 便宜干活 · DeepSeek V4','写 + 审'],['后端','Codex CLI','后端组 · GPT-5',''],['测试','DSH','便宜干活 · DeepSeek V4 Flash','']],
+    research:[['协调者','中枢内置（只派活）','后端组 · GPT-5',''],['检索','中枢调研 agent（带浏览器）','调研组 · Kimi K2','分工'],['整理','中枢调研 agent','便宜干活 · DeepSeek V4 Flash',''],['核查','Gemini CLI','另一家模型 · Gemini',''],['统稿','Claude Code','代码组 · Claude Opus','']],
+    single:[['协调者','由 Claude Code 兼任','代码组 · Claude Opus',''],['全部任务','Claude Code','代码组 · Claude Opus（额度用完切 GLM）','']]
+  };
+  function prevHTML(k){ return PRE[k].map(r=>'<div><b>'+r[0]+'</b><span>'+r[1]+' · '+r[2]+(r[3]?' · '+r[3]:'')+'</span></div>').join(''); }
+  const wzPrev=document.getElementById('wzPrev'), wzTeam=document.getElementById('wzTeam');
+  function drawPrev(){ const v=wzTeam.value, later=document.querySelector('#wzCfg [aria-pressed=true]').dataset.c==='later';
+    if(later||v==='mine'){ wzPrev.innerHTML='<div><b>稍后</b><span>创建后在“团队与模型”里逐个岗位挑 agent 和模型</span></div>'; return; }
+    wzPrev.innerHTML=prevHTML(v); }
+  wzTeam.addEventListener('change',drawPrev);
+  document.getElementById('wzCfg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawPrev(); });
+  document.getElementById('wzType').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; const r=b.textContent==='调研';
+    document.getElementById('wzRs').hidden=!r; wzTeam.value = r?'research':(wzTeam.value==='research'?'code':wzTeam.value); drawPrev(); });
+  drawPrev();
+  document.getElementById('homeMode').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; const pj=b.dataset.hm==='proj';
+    document.getElementById('homeCoordW').hidden=!pj; document.getElementById('homeCmpW').hidden=pj; });
+  // 团队表
+  const MODES='<option>只用一个</option><option>分工</option><option>主备</option><option>并行对比</option><option>写 + 审</option>';
+  let teamKey='code';
+  function drawTeam(k){ teamKey=k; const t=document.getElementById('teamTable');
+    t.innerHTML='<tr><th>岗位</th><th>Agent</th><th>用哪个模型</th><th>两个 agent 怎么配合</th></tr>';
+    PRE[k].forEach(r=>{ const tr=document.createElement('tr'); const two=r[1].includes('+');
+      tr.innerHTML='<td><b></b></td><td><div class="pair"></div></td><td></td><td></td>';
+      tr.children[0].firstChild.textContent=r[0];
+      tr.children[1].firstChild.textContent=r[1];
+      if(!r[1].startsWith('中枢')&&!r[1].startsWith('由')){ const a=document.createElement('button'); a.className='lnk'; a.textContent=two?'换':'+ 再加一个'; a.dataset.add=''; tr.children[1].firstChild.append(' ',a); }
+      tr.children[2].textContent=r[2];
+      tr.children[3].innerHTML=r[0]==='协调者'?'<span class="hint">只派活，不写代码</span>':'<select class="s">'+MODES+'</select>';
+      const sel=tr.children[3].querySelector('select'); if(sel) sel.value=two?(r[3]||'分工'):(r[3]||'只用一个');
+      t.appendChild(tr); });
+    document.getElementById('teamRs').hidden=k!=='research'; document.getElementById('teamSingle').hidden=k!=='single'; }
+  drawTeam('code');
+  document.getElementById('teamPreset').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawTeam(b.dataset.p); });
+  document.getElementById('teamAuto').onclick=()=>{ drawTeam(teamKey); say('已按你的分组重新填好，额度紧的岗位优先用便宜组'); };
+  document.getElementById('teamTable').addEventListener('click',e=>{ const a=e.target.closest('[data-add]'); if(!a) return; const tr=a.closest('tr'), pair=tr.querySelector('.pair');
+    if(a.textContent.startsWith('+')){ pair.firstChild.textContent=pair.firstChild.textContent+' + DSH'; a.textContent='换'; tr.children[2].textContent+=' ／ 便宜干活 · DeepSeek V4'; const s=tr.querySelector('select'); if(s) s.value='写 + 审'; say('已加上 DSH，默认一个写一个审，可以改'); }
+    else say('（演示）这里弹出已安装的 agent 列表'); });
+  // 接力
+  function runRelay(){ const btn=document.getElementById('relayRun'), st=[...document.querySelectorAll('#relay .rstep')], pause=document.getElementById('relayPause').checked;
+    const outs=['提示词已写好：拆成 4 个函数，附 6 条验收标准（412 tokens）','DSH 完成：改了 3 个文件，测试 12/12 通过','验收通过：6 条标准全部满足'];
+    st.forEach(x=>x.classList.remove('run','done')); let i=0;
+    function exec(){ btn.onclick=null; btn.textContent='进行中…'; st[i].classList.add('run'); st[i].querySelector('.out').textContent='进行中…';
+      setTimeout(()=>{ st[i].classList.remove('run'); st[i].classList.add('done'); st[i].querySelector('.out').textContent=outs[i]; i++;
+        if(i>=st.length){ say('接力完成，本次花费 ¥1.08'); btn.textContent='再跑一次'; btn.onclick=runRelay; return; }
+        if(pause){ say('第 '+i+' 步做完了，已停下等你看'); btn.textContent='继续下一步'; btn.onclick=exec; } else exec(); },800); }
+    exec(); }
+  document.getElementById('relayRun').onclick=runRelay;
+  document.getElementById('relaySave').onclick=()=>say('已存为模板“GPT 出主意 → DeepSeek 干活”，首页模型里可以直接选');
+  // 添加来源
+  document.getElementById('addSrcBtn').onclick=()=>{ const a=document.getElementById('addSrc'); a.hidden=!a.hidden; };
+  document.getElementById('srcWay').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    const login=b.dataset.w==='login'; document.getElementById('srcLogin').hidden=!login; document.getElementById('srcKey').hidden=login; document.getElementById('srcFound').hidden=true;
+    const k=document.querySelector('#srcKey input'); k.placeholder= b.dataset.w==='local'?'本地地址，例如 http://127.0.0.1:11434':'粘贴 key，存进系统钥匙串'; k.type=b.dataset.w==='local'?'text':'password'; });
+  document.getElementById('addSrc').addEventListener('click',e=>{ if(e.target.closest('[data-test]')){ const f=document.getElementById('srcFound'); f.hidden=false; } });
+  document.getElementById('srcSave').onclick=()=>{ const tr=document.createElement('tr'); tr.innerHTML='<td><b>DeepSeek API（第二个 key）</b></td><td>API key</td><td>V4 Pro、V4 Flash</td><td>刚添加</td><td></td>'; tr.lastChild.textContent=document.getElementById('srcGroup').value;
+    document.getElementById('srcTable').appendChild(tr); document.getElementById('addSrc').hidden=true; document.getElementById('srcFound').hidden=true; say('已保存，放进了“'+tr.lastChild.textContent+'”分组'); };
+  document.getElementById('addGroup').onclick=()=>{ const d=document.createElement('div'); d.className='pool';
+    d.innerHTML='<header><input class="gname" value="新分组" aria-label="分组名"><span class="hint">还没有岗位在用</span></header><div class="plan2 cur"><span class="ord mono">主用</span><div><select class="s" style="width:100%"><option>从已保存的来源里选…</option><option>Claude 订阅 · Opus</option><option>ChatGPT 订阅 · GPT-5</option><option>DeepSeek API · V4 Pro</option></select></div><span class="pill">待命</span></div><footer><button class="btn" data-addplan>添加备用 plan / API</button></footer>';
+    document.getElementById('pools').appendChild(d); const g=d.querySelector('.gname'); g.focus(); g.select(); };
   // 调度控制
   document.querySelectorAll('.cr input[type=range]').forEach(r=>r.addEventListener('input',()=>{ r.nextElementSibling.textContent=r.value; }));
   const kill=document.getElementById('kill');
