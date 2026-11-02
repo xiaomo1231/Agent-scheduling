@@ -106,6 +106,8 @@ export interface Project {
   color: string;
   goal: string;
   template: string;
+  /** 工作区目录：agent 只能在这里读写和执行。空表示用中枢数据目录下的默认位置。 */
+  folder?: string;
   createdAt: number;
   archived: boolean;
   layout: Widget[];
@@ -125,6 +127,8 @@ export type ThreadStatus = 'waiting' | 'running' | 'idle' | 'resolved';
 export interface Thread {
   id: string;
   projectId: string;
+  /** coord 是项目的协调者对话，每个项目一条；work 是普通讨论串。缺省为 work。 */
+  kind?: 'coord' | 'work';
   title: string;
   createdAt: number;
   updatedAt: number;

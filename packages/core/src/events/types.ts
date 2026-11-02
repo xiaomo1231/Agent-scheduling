@@ -6,7 +6,7 @@ import type {
 /** 事件正文：已经发生的事。名字用“领域.动作”。 */
 export type EventBody =
   | { type: 'project.created'; project: Project }
-  | { type: 'project.updated'; projectId: string; patch: Partial<Pick<Project, 'name' | 'color' | 'goal' | 'archived'>> & { settings?: Partial<ProjectSettings> } }
+  | { type: 'project.updated'; projectId: string; patch: Partial<Pick<Project, 'name' | 'color' | 'goal' | 'archived' | 'folder'>> & { settings?: Partial<ProjectSettings> } }
   | { type: 'project.layoutChanged'; projectId: string; layout: Widget[] }
   | { type: 'project.deleted'; projectId: string }
   | { type: 'thread.created'; thread: Thread }

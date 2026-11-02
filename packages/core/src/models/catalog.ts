@@ -3,8 +3,7 @@ import type { ModelChoice, ModelEntry, ModelGroup, ModelRef, ModelSource, Purpos
 /** 思考强度挡位跟着模型走，每家叫法不一样。 */
 export function effortLevels(modelLabelOrId: string): string[] {
   const m = modelLabelOrId;
-  if (/opus|fable|sonnet/i.test(m)) return ['低', '中', '高', '超高', '最高'];
-  if (/haiku/i.test(m)) return ['不思考', '思考'];
+  if (/opus|fable|sonnet|haiku|mythos/i.test(m)) return ['低', '中', '高', '超高', '最高'];
   if (/gpt-6/i.test(m)) return ['最少', '低', '中', '高', '超高'];
   if (/gpt-5|o\d/i.test(m)) return ['最少', '低', '中', '高'];
   if (/gemini/i.test(m)) return ['低', '高'];
@@ -20,11 +19,16 @@ export function normalizeEffort(model: string, wanted: string | undefined): stri
 }
 
 /** 把中文挡位翻译成各家 API 的参数。 */
-export function effortToApi(model: string, effort: string): { anthropicBudget?: number; openaiEffort?: 'minimal' | 'low' | 'medium' | 'high'; thinking?: boolean } {
+export type AnthropicEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+/**
+ * 把中文挡位翻译成各家 API 的参数。
+ * Claude 现行模型用自适应思考 + output_config.effort（固定思考预算已被淘汰）。
+ */
+export function effortToApi(model: string, effort: string): { anthropicEffort?: AnthropicEffort; openaiEffort?: 'minimal' | 'low' | 'medium' | 'high'; thinking?: boolean } {
   const e = normalizeEffort(model, effort);
-  if (/opus|fable|sonnet|haiku/i.test(model)) {
-    const budget: Record<string, number> = { 低: 1024, 中: 4096, 高: 12000, 超高: 24000, 最高: 48000, 思考: 4096, 不思考: 0 };
-    return { anthropicBudget: budget[e] ?? 0 };
+  if (/opus|fable|sonnet|haiku|mythos/i.test(model)) {
+    const map: Record<string, AnthropicEffort> = { 低: 'low', 中: 'medium', 高: 'high', 超高: 'xhigh', 最高: 'max' };
+    return { anthropicEffort: map[e] ?? 'high' };
   }
   if (/gpt|o\d/i.test(model)) {
     const map: Record<string, 'minimal' | 'low' | 'medium' | 'high'> = { 最少: 'minimal', 低: 'low', 中: 'medium', 高: 'high', 超高: 'high' };

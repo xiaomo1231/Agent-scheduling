@@ -1,1 +1,1 @@
-export { effortLevels, normalizeEffort, effortToApi, resolveChoice, choiceLabel, runsViaCli, PROVIDER_PRESETS, PURPOSES, type ResolvedModel, type ProviderPreset } from './catalog.js';
+export { effortLevels, normalizeEffort, effortToApi, type AnthropicEffort, resolveChoice, choiceLabel, runsViaCli, PROVIDER_PRESETS, PURPOSES, type ResolvedModel, type ProviderPreset } from './catalog.js';

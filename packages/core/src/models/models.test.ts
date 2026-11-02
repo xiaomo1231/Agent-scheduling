@@ -13,7 +13,8 @@ describe('思考强度', () => {
     expect(normalizeEffort('Opus', undefined)).toBe('高');
   });
   it('翻译成 API 参数', () => {
-    expect(effortToApi('Opus', '最高').anthropicBudget).toBeGreaterThan(30000);
+    expect(effortToApi('Opus', '最高').anthropicEffort).toBe('max');
+    expect(effortToApi('claude-opus-5-5', '超高').anthropicEffort).toBe('xhigh');
     expect(effortToApi('GPT-5 系列', '低').openaiEffort).toBe('low');
     expect(effortToApi('GLM-5.3', '深度思考').thinking).toBe(true);
   });
