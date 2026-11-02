@@ -409,7 +409,7 @@ td .m{font-size:12px;color:var(--ink-3)}
 }
 @media (max-width:680px){
   body{padding-block:0}
-  .app{grid-template-columns:1fr;grid-template-rows:auto auto 1fr;border-radius:0;border-left:0;border-right:0}
+  .app{grid-template-columns:1fr;grid-template-rows:auto auto minmax(0,1fr);border-radius:0;border-left:0;border-right:0}
   nav{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:6px}
   nav .sec{display:none}
   nav a{white-space:nowrap;gap:6px}
@@ -454,13 +454,63 @@ td .m{font-size:12px;color:var(--ink-3)}
 .cost .big{font-size:18px;font-weight:600}
 .twocol{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
 @media (max-width:1100px){ .twocol{grid-template-columns:1fr} }
+
+/* v7 Claude 式布局 */
+nav .newb{margin:2px 0 8px;justify-content:center;display:flex}
+nav a .tg{font-size:10.5px;border:1px solid var(--line);border-radius:8px;padding:0 5px;color:var(--ink-3);font-weight:400}
+nav a .ic{width:8px;height:8px;border-radius:2px;flex:none;margin-right:8px}
+nav a .lb{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+nav .more{font-size:12px;color:var(--ink-3);padding:4px 8px;text-decoration:none}
+nav details summary{list-style:none;cursor:pointer;font-size:11px;color:var(--ink-3);letter-spacing:.08em;padding:10px 8px 4px}
+nav details summary::-webkit-details-marker{display:none}
+nav details summary::after{content:" ▾"}
+nav details:not([open]) summary::after{content:" ▸"}
+.ptabs{display:flex;align-items:center;gap:4px;padding:8px 22px 0;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.ptabs .pn{font-weight:600;margin-right:12px;font-size:13.5px}
+.ptabs a{padding:7px 10px 8px;color:var(--ink-2);text-decoration:none;border-bottom:2px solid transparent;font-size:13px}
+.ptabs a.on{color:var(--ink);border-bottom-color:var(--accent)}
+.ptabs .spacer{flex:1}
+.ptabs .conn{font-size:12px;color:var(--ink-3);display:flex;gap:6px;align-items:center;padding-bottom:6px}
+.split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,1fr);gap:16px;align-items:start}
+.split.nofiles{grid-template-columns:1fr}
+.split.nofiles .lpane{display:none}
+.lpane .tabs{display:flex;gap:2px;padding:6px 8px;border-bottom:1px solid var(--line-2)}
+.lpane .tabs button{border:0;background:transparent;padding:4px 10px;border-radius:var(--r);font-size:12.5px;color:var(--ink-2)}
+.lpane .tabs button[aria-pressed="true"]{background:var(--line-2);color:var(--ink);font-weight:500}
+.files{display:grid;grid-template-columns:190px minmax(0,1fr);min-height:420px}
+.tree{border-right:1px solid var(--line-2);padding:8px 4px;font-size:12.5px;overflow:auto}
+.tree div{padding:3px 8px;border-radius:var(--r);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree div:hover{background:var(--line-2)}
+.tree div.on{background:var(--accent-soft)}
+.tree .d{color:var(--ink-3);cursor:default}
+.tree .d:hover{background:transparent}
+.tree .chg::after{content:" M";color:var(--warn);font-family:var(--f-mono);font-size:11px}
+.tree .add::after{content:" A";color:var(--good);font-family:var(--f-mono);font-size:11px}
+.prev{min-width:0;display:flex;flex-direction:column}
+.prev .ph{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line-2);font-size:12px;color:var(--ink-3);flex-wrap:wrap}
+.prev pre{margin:0;padding:10px 12px;font-size:12px;line-height:1.6;overflow:auto;white-space:pre}
+.prev pre .a{background:var(--good-soft);display:block}
+.prev pre .r{background:var(--bad-soft);display:block;text-decoration:line-through;opacity:.8}
+.split .rpane .thread{max-height:560px}
+.conns{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;max-width:1100px}
+.cn{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.cn .h{display:flex;align-items:center;gap:8px}
+.cn .lg{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+.cn .d{font-size:12px;color:var(--ink-3)}
+.cn.on{border-color:var(--accent)}
+.cn>.pill,.cn>.btn{align-self:flex-start}
+a.btn{text-decoration:none;color:inherit}
+.cn .perm{font-size:12px;display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line-2);padding-top:6px;margin-top:2px}
+.kindbar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+@media (max-width:1100px){ .split{grid-template-columns:1fr} }
+@media (max-width:680px){ .files{grid-template-columns:1fr} .tree{border-right:0;border-bottom:1px solid var(--line-2);max-height:140px} .ptabs{padding:6px 8px 0} nav details{display:contents} nav details summary{display:none} nav{align-items:center;max-height:48px;overflow-y:hidden} nav a{flex:none} nav .newb{margin:0} nav .sec{display:none} }
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
 </style>
 
 <div class="app">
   <div class="top">
     <div class="brand"><i></i>中枢</div>
-    <label class="proj">项目 <select id="proj"><option>shop-web 会员登录</option><option>周报自动化</option></select></label>
+    
     <div class="spacer"></div>
     <div class="meter" title="本月预算">本月 <span class="mono">¥186 / ¥300</span><span class="bar"><b style="width:62%"></b></span></div>
     <div class="meter">权限 <span class="pill run" id="lvlTop">部分权限</span></div>
@@ -468,25 +518,34 @@ td .m{font-size:12px;color:var(--ink-3)}
   </div>
 
   <nav id="nav">
-    <a href="#home" data-v="home">首页</a>
-    <a href="#chat" data-v="chat">问答</a>
-    <div class="sec">当前项目</div>
-    <a href="#tasks" data-v="tasks">任务台 <span class="n alert">1</span></a>
-    <a href="#team" data-v="team">团队与模型</a>
-    <a href="#viz" data-v="viz">工作可视化</a>
-    <a href="#bus" data-v="bus">通信总线 <span class="n alert" id="busN">2</span></a>
-    <a href="#council" data-v="council">群聊评审</a>
-    <a href="#memory" data-v="memory">记忆</a>
-    <div class="sec">配置</div>
+    <a href="#home" data-v="home" class="newb btn">＋ 新建</a>
+    <div class="sec">已置顶</div>
+    <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert">1</span></a>
+    <a href="#tasks" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
+    <a href="#tasks" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
+    <div class="sec">对话和任务</div>
+    <a href="#chat" data-v="chat" data-c="Electron 和 Tauri 怎么选"><span class="lb">Electron 和 Tauri 怎么选</span></a>
+    <a href="#chat" data-c="整理本周竞品价格"><span class="lb">整理本周竞品价格</span><span class="tg">任务</span></a>
+    <a href="#chat" data-c="正则怎么匹配大陆手机号"><span class="lb">正则怎么匹配大陆手机号</span></a>
+    <a href="#chat" data-c="帮我润色这周的周报"><span class="lb">帮我润色这周的周报</span></a>
+    <a href="#chat" class="more">查看全部</a>
+    <details open><summary>设置</summary>
     <a href="#accounts" data-v="accounts">账号与模型</a>
+    <a href="#connect" data-v="connect">连接平台 <span class="n">3</span></a>
     <a href="#market" data-v="market">Agent 市场 <span class="n">2 更新</span></a>
     <a href="#control" data-v="control">调度控制</a>
     <a href="#channels" data-v="channels">消息渠道</a>
     <a href="#workspace" data-v="workspace">工作区与协作</a>
     <a href="#perm" data-v="perm">权限与审批</a>
+    </details>
   </nav>
 
   <main>
+    <div class="ptabs" id="ptabs" hidden>
+      <span class="pn" id="pjName">shop-web 会员登录</span>
+      <a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
+      <span class="spacer"></span><span class="conn">已连接 <span class="chip">GitHub</span><span class="chip">Linear</span></span>
+    </div>
     <!-- 首页 -->
     <section class="view" id="v-home">
       <div class="home">
@@ -544,7 +603,29 @@ td .m{font-size:12px;color:var(--ink-3)}
 
     <!-- 问答 -->
     <section class="view" id="v-chat">
-      <div class="chatwrap">
+      <div class="split" id="taskView" hidden>
+        <div class="box lpane">
+          <div class="tabs"><button aria-pressed="true">产出：竞品价格表</button><button aria-pressed="false">来源 9</button></div>
+          <div class="tablewrap"><table>
+            <tr><th>产品</th><th>套餐</th><th>月价</th><th>来源</th><th>核实</th></tr>
+            <tr><td>竞品 A</td><td>标准版</td><td class="mono">¥39</td><td><span class="lnk">官网定价页</span></td><td><span class="pill done">2 个来源</span></td></tr>
+            <tr><td>竞品 A</td><td>专业版</td><td class="mono">¥99</td><td><span class="lnk">官网定价页</span></td><td><span class="pill done">2 个来源</span></td></tr>
+            <tr><td>竞品 B</td><td>个人版</td><td class="mono">¥29</td><td><span class="lnk">应用商店</span></td><td><span class="pill wait">待核实</span></td></tr>
+            <tr><td>竞品 C</td><td>团队版</td><td class="mono">¥68 / 人</td><td><span class="lnk">官网 + 媒体报道</span></td><td><span class="pill idle">来源矛盾</span></td></tr>
+          </table></div>
+          <div class="kindbar" style="border-top:1px solid var(--line-2);border-bottom:0"><button class="btn" id="tExp">导出 Excel</button><button class="btn" id="tFs">写入飞书多维表格</button><span class="hint">每格都能点开看原文片段</span></div>
+        </div>
+        <div class="box rpane">
+          <header><strong>整理本周竞品价格</strong><span class="tg chip">任务 · 不用协调者</span><span class="spacer"></span><button class="btn" id="tToProj">升级为项目</button></header>
+          <div class="thread askable" id="taskThread">
+            <div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>09:10</div><p>把 A、B、C 三家这周的价格整理成表，带来源。</p></div></div>
+            <div class="msg"><div class="av">D</div><div><div class="who"><b>DSH</b>调研组 · DeepSeek V4 Flash · 09:14</div><p>已抓取 9 个页面，整理出 4 行。竞品 B 只有应用商店一个来源，标了待核实；竞品 C 官网写 ¥68 / 人，一篇媒体报道写 ¥58，标了来源矛盾，没有替你选。</p></div></div>
+          </div>
+          <div class="composer"><input placeholder="补充要求，比如再加 D 公司"><button class="btn pri">发送</button></div>
+        </div>
+      </div>
+      <p class="hint" id="taskHint" hidden style="margin-top:8px">普通对话和单 agent 任务不经过协调者，直接交给你选的一个 agent；做大了可以一键升级成项目。</p>
+      <div class="chatwrap" id="chatView">
         <div class="box chatmain">
           <header><strong>Electron 和 Tauri 怎么选</strong><span class="spacer"></span><span class="ctxm" title="上下文窗口用量"><span class="bar"><b style="width:18%"></b></span><span class="mono hint">上下文 18%</span></span><button class="btn" id="toProj">转为项目</button></header>
           <div class="thread askable" id="chatThread">
@@ -566,7 +647,7 @@ app.whenReady().then(() =&gt; {
               <p>后台进程用 node-pty 拉起各家 CLI，界面用 xterm.js 显示终端。</p>
               <div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>
           </div>
-          <div class="composer"><select class="s" aria-label="模型"><option>自动（按我的分组）</option><optgroup label="我的分组"><option>代码</option><option>后端</option><option>网页</option><option>调研</option><option>便宜干活</option></optgroup><optgroup label="接力"><option>GPT 写提示词 → DeepSeek 干活</option></optgroup><optgroup label="指定模型"><option>Claude Opus · Claude 订阅</option><option>GPT-5 · ChatGPT 订阅</option><option>DeepSeek V4 · DeepSeek API</option><option>qwen3:14b · 本地</option></optgroup></select><input id="chatIn" placeholder="继续问，选中上面任意文字可以单独追问"><button class="btn pri" id="chatSend">发送</button></div>
+          <div class="composer"><select class="s" aria-label="怎么做" id="chatKind"><option>直接对话</option><option>交给一个 agent 做（不用协调者）</option></select><select class="s" aria-label="模型"><option>自动（按我的分组）</option><optgroup label="我的分组"><option>代码</option><option>后端</option><option>网页</option><option>调研</option><option>便宜干活</option></optgroup><optgroup label="接力"><option>GPT 写提示词 → DeepSeek 干活</option></optgroup><optgroup label="指定模型"><option>Claude Opus · Claude 订阅</option><option>GPT-5 · ChatGPT 订阅</option><option>DeepSeek V4 · DeepSeek API</option><option>qwen3:14b · 本地</option></optgroup></select><input id="chatIn" placeholder="继续问，选中上面任意文字可以单独追问"><button class="btn pri" id="chatSend">发送</button></div>
         </div>
         <aside class="chatside">
           <div class="box">
@@ -592,24 +673,26 @@ app.whenReady().then(() =&gt; {
 
     <!-- 任务台 -->
     <section class="view" id="v-tasks">
-      <h1>给会员中心加手机号登录</h1>
-      <p class="sub">协调者把任务拆成 5 步，3 个 agent 在各自的工作区并行。选中对话里的任意文字可以单独追问。</p>
-      <div class="tasks">
-        <div class="box">
-          <header><strong>与协调者的对话</strong><span class="spacer"></span><span class="pill run">进行中</span></header>
-          <div class="thread" id="thread">
-            <div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>10:02</div><p>给会员中心加手机号 + 验证码登录，沿用现有的用户表，短信先用阿里云。今天下班前要能在测试环境跑通。</p></div></div>
-            <div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>Claude · 10:02</div>
-              <p>我拆成 5 步，右侧是任务图。后端和前端可以并行，测试等两边都完成后再开始。用户表需要加一个 <b>phone_verified_at</b> 字段，这一步涉及数据库迁移，按你的权限设置会先停下来等你批准。</p>
-              <p>记忆里有一条你 10 月 21 日定下的约定：“验证码有效期统一 5 分钟，同一号码 60 秒内只能发一次”，我已经写进后端的任务说明。</p></div></div>
-            <div class="msg"><div class="av x">后</div><div><div class="who"><b>后端</b>Codex CLI · 10:19</div><p>接口已完成：POST /auth/sms/send 和 POST /auth/sms/verify，限流用 Redis 计数。迁移脚本写好了，等待批准后执行。</p></div></div>
+      <div class="toolbar"><h1 style="margin:0">给会员中心加手机号登录</h1><span class="spacer" style="flex:1"></span><button class="btn" id="tgFiles" aria-pressed="true">隐藏左侧</button></div>
+      <p class="sub">左边看项目内容，右边和协调者说话。选中对话里的任意文字可以单独追问。</p>
+      <div class="split" id="split">
+        <div class="box lpane">
+          <div class="tabs" id="lTabs"><button aria-pressed="true" data-l="files">文件</button><button aria-pressed="false" data-l="plan">任务图</button><button aria-pressed="false" data-l="st">Agent 状态</button><button aria-pressed="false" data-l="gh">GitHub</button></div>
+          <div data-lp="files" class="files">
+            <div class="tree" id="tree">
+              <div class="d">shop-web</div>
+              <div class="d">&nbsp;&nbsp;src / auth</div>
+              <div class="on add" data-f="sms.ts">&nbsp;&nbsp;&nbsp;&nbsp;sms.ts</div>
+              <div class="chg" data-f="routes.ts">&nbsp;&nbsp;&nbsp;&nbsp;routes.ts</div>
+              <div class="d">&nbsp;&nbsp;web / login</div>
+              <div class="chg" data-f="LoginForm.tsx">&nbsp;&nbsp;&nbsp;&nbsp;LoginForm.tsx</div>
+              <div class="d">&nbsp;&nbsp;db / migrations</div>
+              <div class="add" data-f="0042_phone.sql">&nbsp;&nbsp;&nbsp;&nbsp;0042_phone.sql</div>
+              <div data-f="README.md">&nbsp;&nbsp;README.md</div>
+            </div>
+            <div class="prev"><div class="ph"><b class="mono" id="pvName">src/auth/sms.ts</b><span id="pvBy">新增 · @backend-01 · wt/auth-api</span></div><pre class="mono" id="pvBody"></pre></div>
           </div>
-          <div class="composer"><input id="cmd" placeholder="给协调者下达任务或补充要求"><button class="btn pri" id="send">发送</button></div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
-          <div class="box">
-            <header><strong>任务图</strong><span class="spacer"></span><button class="btn ghost" title="把这次拆法存成可复用的流程">存为模板</button></header>
+          <div data-lp="plan" hidden>
             <ul class="plan">
               <li><span class="k">T1</span><div><div class="t">数据库迁移：加 phone_verified_at</div><div class="m">后端 · Codex CLI · 工作区 wt/auth-db</div></div><span class="pill wait">待批准</span></li>
               <li><span class="k">T2</span><div><div class="t">短信发送与校验接口</div><div class="m">后端 · Codex CLI · 工作区 wt/auth-api</div></div><span class="pill done">完成</span></li>
@@ -617,14 +700,10 @@ app.whenReady().then(() =&gt; {
               <li><span class="k">T4</span><div><div class="t">端到端测试</div><div class="m">测试 · Gemini CLI</div><div class="dep">等待 T1 T2 T3</div></div><span class="pill idle">排队</span></li>
               <li><span class="k">T5</span><div><div class="t">合并与变更说明</div><div class="m">协调者验收</div><div class="dep">等待 T4</div></div><span class="pill idle">排队</span></li>
             </ul>
-            <div class="approve" id="approve">
-              <div class="h">需要你批准 · 高风险：修改数据库结构</div>
-              <p style="margin:4px 0 0;font-size:12.5px">后端 agent 想在测试库执行 <code>ALTER TABLE users ADD phone_verified_at</code>。已自动备份表结构。</p>
-              <div class="row"><button class="btn pri" data-ap="ok">批准执行</button><button class="btn" data-ap="diff">查看脚本</button><button class="btn bad" data-ap="no">拒绝</button></div>
-            </div>
+
           </div>
-          <div class="box">
-            <header><strong>Agent 状态</strong><span class="spacer"></span><div class="seg" role="group" aria-label="展示方式" id="stMode"><button aria-pressed="true" data-m="s">简约</button><button aria-pressed="false" data-m="d">详细</button></div></header>
+          <div data-lp="st" hidden>
+            <div class="kindbar"><span class="hint">展示方式</span><div class="seg" role="group" aria-label="展示方式" id="stMode"><button aria-pressed="true" data-m="s">简约</button><button aria-pressed="false" data-m="d">详细</button></div></div>
             <table id="stSimple">
               <tr><td><b>协调者</b><div class="m">Claude · 只派单不写文件</div></td><td class="mono">12.4k tok</td><td><span class="pill run">在线</span></td></tr>
               <tr><td><b>后端</b><div class="m">Codex CLI · ChatGPT 账号</div></td><td class="mono">38.1k tok</td><td><span class="pill wait">等审批</span></td></tr>
@@ -653,6 +732,30 @@ app.whenReady().then(() =&gt; {
               </div>
             </div>
           </div>
+          <div data-lp="gh" hidden>
+            <div class="kindbar"><b>xiaomo/shop-web</b><span class="hint">通过“连接平台”里的 GitHub 接入</span></div>
+            <ul class="plan">
+              <li><span class="k">#128</span><div><div class="t">Issue：会员中心支持手机号登录</div><div class="m">已转成本项目的任务 · 完成后自动关闭</div></div><span class="pill run">关联中</span></li>
+              <li><span class="k">PR</span><div><div class="t">agent/backend-01/t2 → main</div><div class="m">CI 通过 · 等协调者验收后由你点合并</div></div><span class="pill wait">待你合并</span></li>
+              <li><span class="k">CI</span><div><div class="t">agent/frontend-01/t3 lint 失败 1 次</div><div class="m">已自动交给 @frontend-01 修复，10:40 通过</div></div><span class="pill done">已修好</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="box rpane">
+          <header><strong>与协调者的对话</strong><span class="spacer"></span><span class="pill run">进行中</span></header>
+          <div class="thread" id="thread">
+            <div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>10:02</div><p>给会员中心加手机号 + 验证码登录，沿用现有的用户表，短信先用阿里云。今天下班前要能在测试环境跑通。</p></div></div>
+            <div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>Claude · 10:02</div>
+              <p>我拆成 5 步，左边“任务图”能看到。后端和前端可以并行，测试等两边都完成后再开始。用户表需要加一个 <b>phone_verified_at</b> 字段，这一步涉及数据库迁移，按你的权限设置会先停下来等你批准。</p>
+              <p>记忆里有一条你 10 月 21 日定下的约定：“验证码有效期统一 5 分钟，同一号码 60 秒内只能发一次”，我已经写进后端的任务说明。</p></div></div>
+            <div class="msg"><div class="av x">后</div><div><div class="who"><b>后端</b>Codex CLI · 10:19</div><p>接口已完成：POST /auth/sms/send 和 POST /auth/sms/verify，限流用 Redis 计数。迁移脚本写好了，等待批准后执行。</p></div></div>
+            <div class="approve" style="margin:0" id="approve">
+              <div class="h">需要你批准 · 高风险：修改数据库结构</div>
+              <p style="margin:4px 0 0;font-size:12.5px">后端 agent 想在测试库执行 <code>ALTER TABLE users ADD phone_verified_at</code>。已自动备份表结构。</p>
+              <div class="row"><button class="btn pri" data-ap="ok">批准执行</button><button class="btn" data-ap="diff">查看脚本</button><button class="btn bad" data-ap="no">拒绝</button></div>
+            </div>
+          </div>
+          <div class="composer"><input id="cmd" placeholder="给协调者下达任务或补充要求"><button class="btn pri" id="send">发送</button></div>
         </div>
       </div>
     </section>
@@ -854,6 +957,35 @@ app.whenReady().then(() =&gt; {
         </div>
       </div>
       <p class="note">订阅账号通过官方 CLI 自己的登录流程完成，中枢不读取、不转存订阅凭据；API key 存在系统钥匙串里。不同服务商之间互为备用没有问题；用同一家的多个个人订阅轮换来绕开额度限制，可能违反该服务商条款，添加时会提醒你。</p>
+    </section>
+
+    <!-- 连接平台 -->
+    <section class="view" id="v-connect">
+      <h1>连接平台</h1>
+      <p class="sub">把常用的开发和办公平台接进来，agent 就能直接读 issue、开 PR、查文档、更新任务，不用你来回复制。每个项目单独选择开放哪些连接，agent 能做什么跟着权限档位走。</p>
+      <div class="toolbar"><input class="inp" placeholder="搜索平台，或填一个 MCP 服务地址" style="min-width:240px;flex:1;max-width:420px"><button class="btn">添加自定义（MCP）</button></div>
+      <h2>开发</h2>
+      <div class="conns" id="conns">
+        <div class="cn on"><div class="h"><span class="lg" style="background:#24292f">GH</span><b>GitHub</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">xiaomo1231 · 3 个仓库授权</div>
+          <div class="perm"><label class="check"><input type="checkbox" checked>读 issue、PR、代码</label><label class="check"><input type="checkbox" checked>开分支、提交、开 PR</label><label class="check"><input type="checkbox" checked>CI 失败自动交给 agent 修</label><label class="check"><input type="checkbox">合并 PR（打开后仍需你批准）</label></div></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#e24329">GL</span><b>GitLab</b></div><div class="d">仓库、MR、流水线</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#c71d23">G</span><b>Gitee</b></div><div class="d">国内仓库、PR</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn on"><div class="h"><span class="lg" style="background:#5e6ad2">L</span><b>Linear</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">任务完成后自动改状态、贴 PR 链接</div></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#2684ff">J</span><b>Jira</b></div><div class="d">工单转任务</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#362d59">S</span><b>Sentry</b></div><div class="d">报错直接变成修复任务</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#000">▲</span><b>Vercel</b></div><div class="d">预览部署，测试 agent 可以直接打开</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#336791">DB</span><b>数据库（只读）</b></div><div class="d">Postgres / MySQL，写操作一律走审批</div><button class="btn" data-cn>连接</button></div>
+      </div>
+      <h2 style="margin-top:20px">文档与办公</h2>
+      <div class="conns">
+        <div class="cn on"><div class="h"><span class="lg" style="background:#3370ff">飞</span><b>飞书</b><span class="spacer" style="flex:1"></span><span class="pill done">已连接</span></div><div class="d">文档、多维表格、日历；调研结果可以直接写进多维表格</div></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#000">N</span><b>Notion</b></div><div class="d">需求文档、知识库</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#00b96b">语</span><b>语雀</b></div><div class="d">团队文档</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#0f9d58">G</span><b>Google Drive</b></div><div class="d">文档、表格</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#f24e1e">F</span><b>Figma</b></div><div class="d">前端 agent 照设计稿还原</div><button class="btn" data-cn>连接</button></div>
+        <div class="cn"><div class="h"><span class="lg" style="background:#1677ff">钉</span><b>钉钉 / 企业微信 / Slack</b></div><div class="d">收发消息在“消息渠道”里设置</div><a class="btn" href="#channels">去设置</a></div>
+      </div>
+      <p class="note">登录走各平台官方授权（OAuth）或 MCP，令牌存在系统钥匙串里。agent 用连接做的每一步（读了哪个 issue、开了哪个 PR）都带身份编号记进通信总线留痕。合并、删除、对外发消息这类动作默认要你批准。</p>
     </section>
 
     <!-- 团队与模型 -->
@@ -1140,7 +1272,7 @@ app.whenReady().then(() =&gt; {
 
 <script>
 (function(){
-  const views=['home','chat','tasks','team','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','tasks','team','connect','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
     let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -1235,8 +1367,7 @@ app.whenReady().then(() =&gt; {
   document.getElementById('newProj').onclick=()=>openWiz('');
   document.getElementById('wizClose').onclick=()=>wiz.hidden=true;
   document.getElementById('wzType').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
-  document.getElementById('wzGo').onclick=()=>{ const n=document.getElementById('wzName').value.trim()||'新项目'; const sel=document.getElementById('proj');
-    const o=document.createElement('option'); o.textContent=n; sel.prepend(o); sel.value=n; wiz.hidden=true; say('已创建“'+n+'”，协调者在等你下达第一个任务'); location.hash='tasks'; };
+  document.getElementById('wzGo').onclick=()=>{ const n=document.getElementById('wzName').value.trim()||'新项目'; const a=document.createElement('a'); a.href='#tasks'; a.dataset.pj=n; a.innerHTML='<i class="ic" style="background:#8a6fc0"></i><span class="lb"></span>'; a.querySelector('.lb').textContent=n; document.querySelector('nav a[data-pj]').before(a); document.getElementById('pjName').textContent=n; wiz.hidden=true; say('已创建“'+n+'”，协调者在等你下达第一个任务'); location.hash='tasks'; };
   // 问答
   const ct=document.getElementById('chatThread');
   function addChat(v){ ct.insertAdjacentHTML('beforeend','<div class="msg cm"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p></p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="fork">改写并分支</button></div></div></div><div class="msg cm"><div class="av">C</div><div><div class="who"><b>Claude</b>刚刚</div><p>（演示）这里会是模型的回答。选中任意一段文字，可以单独追问。</p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>');
@@ -1348,6 +1479,38 @@ app.whenReady().then(() =&gt; {
   document.getElementById('addGroup').onclick=()=>{ const d=document.createElement('div'); d.className='pool';
     d.innerHTML='<header><input class="gname" value="新分组" aria-label="分组名"><span class="hint">还没有岗位在用</span></header><div class="plan2 cur"><span class="ord mono">主用</span><div><select class="s" style="width:100%"><option>从已保存的来源里选…</option><option>Claude 订阅 · Opus</option><option>ChatGPT 订阅 · GPT-5</option><option>DeepSeek API · V4 Pro</option></select></div><span class="pill">待命</span></div><footer><button class="btn" data-addplan>添加备用 plan / API</button></footer>';
     document.getElementById('pools').appendChild(d); const g=d.querySelector('.gname'); g.focus(); g.select(); };
+
+  // v7：项目页签、左侧文件、连接
+  let curC='Electron 和 Tauri 怎么选';
+  const PV=['tasks','team','viz','bus','council','memory'];
+  function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
+    document.getElementById('ptabs').hidden=!pj;
+    document.querySelectorAll('#ptabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
+    document.querySelectorAll('nav a[data-pj]').forEach(a=>a.classList.toggle('on', pj && a.dataset.pj===document.getElementById('pjName').textContent));
+    document.querySelectorAll('nav a[data-c]').forEach(a=>a.classList.toggle('on', v==='chat' && a.dataset.c===curC));
+  }
+  addEventListener('hashchange',layout);
+  document.getElementById('nav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return;
+    if(a.dataset.pj){ document.getElementById('pjName').textContent=a.dataset.pj; setTimeout(layout); }
+    if(a.dataset.c){ curC=a.dataset.c; const t=!!a.querySelector('.tg'); document.getElementById('taskView').hidden=!t; document.getElementById('taskHint').hidden=!t; document.getElementById('chatView').hidden=t; if(!t) document.querySelector('#v-chat .chatmain header strong').textContent=a.dataset.c; setTimeout(layout); } });
+  document.getElementById('tExp').onclick=()=>say('已导出 竞品价格-1102.xlsx（演示）'); document.getElementById('tFs').onclick=()=>say('已写入飞书多维表格“竞品价格”（演示）'); document.getElementById('tToProj').onclick=()=>{ location.hash='home'; openWiz('竞品价格监测'); say('任务和产出会带进新项目'); };
+  layout();
+  const FILES={
+    'sms.ts':['src/auth/sms.ts','新增 · @backend-01 · wt/auth-api','<span class="a">export async function sendCode(phone: string) {</span><span class="a">  if (await limited(phone, 60)) throw new TooMany()</span><span class="a">  const code = random6()</span><span class="a">  await redis.set(`sms:${phone}`, code, { EX: 300 })</span><span class="a">  return aliyun.send(phone, code)</span><span class="a">}</span>'],
+    'routes.ts':['src/auth/routes.ts','修改 · @backend-01','router.post(\'/auth/login\', login)\n<span class="a">router.post(\'/auth/sms/send\', smsSend)</span><span class="a">router.post(\'/auth/sms/verify\', smsVerify)</span>'],
+    'LoginForm.tsx':['web/login/LoginForm.tsx','修改中 · @frontend-01 · wt/auth-ui','export function LoginForm() {\n<span class="r">  const [email, setEmail] = useState(\'\')</span><span class="a">  const [mode, setMode] = useState&lt;\'email\' | \'phone\'&gt;(\'phone\')</span><span class="a">  const { left, start } = useCountdown(60)</span>  …'],
+    '0042_phone.sql':['db/migrations/0042_phone.sql','新增 · 等你批准执行','<span class="a">ALTER TABLE users ADD COLUMN phone_verified_at TIMESTAMP NULL;</span>\n-- 回滚：ALTER TABLE users DROP COLUMN phone_verified_at;'],
+    'README.md':['README.md','未改动','# shop-web\n会员中心前后端。']
+  };
+  function openFile(k){ const f=FILES[k]; document.getElementById('pvName').textContent=f[0]; document.getElementById('pvBy').textContent=f[1]; document.getElementById('pvBody').innerHTML=f[2];
+    document.querySelectorAll('#tree [data-f]').forEach(d=>d.classList.toggle('on',d.dataset.f===k)); }
+  openFile('sms.ts');
+  document.getElementById('tree').addEventListener('click',e=>{ const d=e.target.closest('[data-f]'); if(d) openFile(d.dataset.f); });
+  document.getElementById('lTabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+    b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    document.querySelectorAll('[data-lp]').forEach(p=>p.hidden=p.dataset.lp!==b.dataset.l); });
+  document.getElementById('tgFiles').onclick=function(){ const sp=document.getElementById('split'), off=sp.classList.toggle('nofiles'); this.textContent=off?'显示左侧':'隐藏左侧'; };
+  document.querySelectorAll('[data-cn]').forEach(b=>b.onclick=()=>{ const c=b.closest('.cn'); c.classList.add('on'); b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'已连接'})); say('（演示）会打开'+c.querySelector('b').textContent+'的官方授权页'); });
   // 调度控制
   document.querySelectorAll('.cr input[type=range]').forEach(r=>r.addEventListener('input',()=>{ r.nextElementSibling.textContent=r.value; }));
   const kill=document.getElementById('kill');
