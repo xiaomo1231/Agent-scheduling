@@ -648,6 +648,88 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
 .term{margin:0;padding:10px 12px;font-size:12px;line-height:1.6;background:#16181a;color:#cfd6cf;min-height:120px;border-radius:0 0 6px 6px;overflow:auto}
 @media (max-width:680px){ .lpane.mods{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+/* v17 项目页：像 Claude Code 的分栏 */
+.pjbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.pjbar h1{margin:0;font-size:17px}
+.pjbar .ib{border:1px solid transparent;background:transparent;border-radius:var(--r);padding:4px 8px;font-size:12.5px;color:var(--ink-2)}
+.pjbar .ib:hover,.pjbar .ib[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
+.mwrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 4px);z-index:30;background:var(--raise);border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.12);min-width:180px;padding:4px;display:flex;flex-direction:column}
+.menu[hidden]{display:none}
+.menu a,.menu button{display:block;text-align:left;border:0;background:transparent;padding:6px 10px;border-radius:4px;font-size:13px;color:var(--ink);text-decoration:none}
+.menu a:hover,.menu button:hover{background:var(--line-2)}
+.menu hr{border:0;border-top:1px solid var(--line-2);margin:4px 0}
+.panes{display:grid;gap:12px;align-items:stretch;height:max(520px,calc(100vh - 150px))}
+.pane[data-w="1"] .lpane.mods{grid-template-columns:1fr}
+.pane>.ph .pctl select{max-width:130px}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:6px;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.pane>.ph{display:flex;align-items:center;gap:6px;padding:6px 8px 6px 10px;border-bottom:1px solid var(--line-2);flex-wrap:wrap;background:var(--raise)}
+.pane>.ph .crumb{display:flex;align-items:center;gap:4px;font-size:13px;min-width:0}
+.pane>.ph .crumb button{border:0;background:transparent;padding:0;color:var(--ink-2);font:inherit}
+.pane>.ph .crumb button:hover{color:var(--accent);text-decoration:underline}
+.pane>.ph .crumb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pane>.ph .pctl{display:flex;gap:2px;margin-left:auto;align-items:center}
+.pane>.ph .pctl button{border:0;background:transparent;color:var(--ink-3);padding:2px 6px;border-radius:4px;font-size:12px}
+.pane>.ph .pctl button:hover{background:var(--line-2);color:var(--ink)}
+.pane>.ph .pctl select{font-size:12px;padding:1px 4px}
+.pane>.ph .pextra{display:flex;gap:6px;align-items:center}
+.pane>.pb{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column}
+.pane .view{display:block!important;padding:12px}
+.pane .view[hidden]{display:none!important}
+.pane .rpane[hidden]{display:none}
+.thwrap{display:flex;flex-direction:column;flex:1;min-height:0}
+.pane .view>.toolbar h1{font-size:14px}
+.pane .view>.sub{display:none}
+.pane .rpane{border:0;border-radius:0;flex:1;display:flex;flex-direction:column}
+.pane .rpane>header{display:none}
+.pane .rpane .thread{max-height:none;flex:1}
+.pane .lpane.mods{padding:10px}
+.pane .tsec{max-width:none}
+.cbox{display:flex;flex-direction:column;flex:1;min-height:0}
+.cbox .thread{flex:1;max-height:none}
+.tcard{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--raise);border-radius:6px;padding:8px 10px;margin-top:6px;cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit}
+.tcard:hover{border-color:var(--accent)}
+.tcard .tt{flex:1;min-width:0}
+.tcard .tt b{display:block;font-size:13px}
+.tcard .tt span{font-size:11.5px;color:var(--ink-3)}
+.cfoot{font-size:11.5px;color:var(--ink-3);padding:0 12px 10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.cfoot button{border:0;background:transparent;color:var(--accent);padding:0;font:inherit;text-decoration:underline}
+.thmeta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--line-2);font-size:12px;color:var(--ink-3)}
+.thmeta select{font-size:12px;padding:1px 4px;max-width:180px}
+.eff{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);margin:-2px 0 6px}
+.eff .s{font-size:12px;padding:1px 4px}
+/* 项目设置弹窗 */
+.pset{position:fixed;inset:0;z-index:60;background:rgba(10,14,12,.38);display:flex;align-items:center;justify-content:center;padding:16px}
+.pset[hidden]{display:none}
+.pset .dlg{background:var(--panel);border:1px solid var(--line);border-radius:10px;width:min(920px,100%);height:min(640px,100%);display:grid;grid-template-columns:180px minmax(0,1fr);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.pset .pn{border-right:1px solid var(--line-2);padding:14px 8px;display:flex;flex-direction:column;gap:2px;background:var(--bg)}
+.pset .pn b{padding:0 8px 8px;font-size:14px}
+.pset .pn button{border:0;background:transparent;text-align:left;padding:6px 8px;border-radius:var(--r);color:var(--ink-2);font-size:13px}
+.pset .pn button[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:500}
+.pset .pc{overflow:auto;padding:18px 22px;position:relative}
+.pset .pc h2{font-size:16px;margin:0 0 14px}
+.pset .px{position:absolute;right:12px;top:10px;border:0;background:transparent;font-size:18px;color:var(--ink-3)}
+.pset .fr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.pset .fr>div:first-child b{display:block;font-size:13px}
+.pset .fr>div:first-child span{font-size:12px;color:var(--ink-3)}
+.pset .fr .s,.pset .fr .inp,.pset .fr textarea{width:100%}
+.pset textarea{border:1px solid var(--line);border-radius:var(--r);padding:6px 8px;background:var(--raise);resize:vertical}
+.pset .row2{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pset .row2 .s{width:auto;flex:1;min-width:0}
+.pset .acts{display:flex;gap:8px;flex-wrap:wrap;padding-top:14px}
+.pset .stat{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.pset .stat div{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--raise)}
+.pset .stat b{display:block;font-size:17px}
+.pset .stat span{font-size:11.5px;color:var(--ink-3)}
+.pset .mfile{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:var(--raise);font-size:12.5px}
+.pset .mfile .mono{flex:1}
+.sw{display:inline-flex;gap:4px}
+.sw i{width:16px;height:16px;border-radius:4px;display:inline-block;cursor:pointer;border:2px solid transparent}
+.sw i.on{border-color:var(--ink)}
+.dualx{font-size:12px;color:var(--ink-2);background:var(--bg);border:1px solid var(--line-2);border-radius:6px;padding:8px 10px;margin-top:6px}
+.dualx p{margin:0 0 4px}
+@media (max-width:1100px){ .panes{grid-template-columns:1fr!important;height:auto} .pane{height:620px} }
+@media (max-width:680px){ .pset .dlg{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);height:100%} .pset .pn{flex-direction:row;overflow:auto;border-right:0;border-bottom:1px solid var(--line-2);padding:8px} .pset .pn b{display:none} .pset .pn button{white-space:nowrap} .pset .fr{grid-template-columns:1fr} }
 </style>
 
 <div class="app">
@@ -663,10 +745,10 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
   <nav id="nav">
     <a href="#home" data-v="home" class="newb btn">＋ 新建</a>
     <div class="sec">项目</div>
-    <a href="#threads" data-v="threads" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert" title="1 项等你批准">1</span></a>
+    <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert" title="1 项等你批准">1</span></a>
     <div id="navTh"></div>
-    <a href="#threads" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
-    <a href="#threads" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
+    <a href="#tasks" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
+    <a href="#tasks" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
     <div class="sec">对话和任务</div>
     <a href="#chat" data-v="chat" data-c="Electron 和 Tauri 怎么选"><span class="lb">Electron 和 Tauri 怎么选</span></a>
     <a href="#chat" data-c="整理本周竞品价格"><span class="lb">整理本周竞品价格</span><span class="tg">任务</span></a>
@@ -683,7 +765,7 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
     </div>
     <div class="ptabs" id="ptabs" hidden>
       <span class="pn" id="pjName">shop-web 会员登录</span>
-      <a href="#threads" data-t="threads">讨论串 <span class="n alert" title="2 件事等你处理">2</span></a><a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN" title="条消息等你放行">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
+      <a href="#tasks" data-t="tasks">← 回到项目</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN" title="条消息等你放行">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
       <span class="spacer"></span><span class="conn">已连接 <span class="chip">GitHub</span><span class="chip">Linear</span></span>
     </div>
     <!-- 首页 -->
@@ -814,8 +896,38 @@ app.whenReady().then(() =&gt; {
 
     <!-- 任务台 -->
     <section class="view" id="v-tasks">
-      <div class="toolbar"><h1 style="margin:0">给会员中心加手机号登录</h1><span class="spacer" style="flex:1"></span><label class="hint">模板 <select class="s" id="wbTpl"></select></label><button class="btn" id="wbEdit">调整布局</button><button class="btn" id="tgFiles" aria-pressed="true">隐藏左侧</button></div>
-      <p class="sub">左边是模块，可以自己加减、拖动排序、改宽窄；右边和协调者说话。选中对话里的任意文字可以单独追问。</p>
+      <div class="pjbar"><h1 id="pjTitle">shop-web 会员登录</h1>
+        <select class="s" id="pjLay" aria-label="布局"><option value="cl">协调者 + 讨论串（像 Claude）</option><option value="wb">讨论串 + 工作台模块</option><option value="all">协调者 + 讨论串 + 模块</option><option value="th">只看讨论串</option><option value="custom" hidden>自定义布局</option></select>
+        <button class="btn ghost" id="pjAdd">+ 加一栏</button>
+        <span class="spacer" style="flex:1"></span>
+        <button class="ib" id="pjThB" title="讨论串列表">讨论串 <span class="n alert" id="pjThN">2</span></button>
+        <button class="ib" id="pjLib" title="资料库：项目里产出的文件、PR 和文档">资料库</button>
+        <div class="mwrap"><button class="ib" id="pjMore" aria-expanded="false" aria-label="更多">⋯</button>
+          <div class="menu" id="pjMenu" hidden>
+            <a href="#team">团队与模型</a><a href="#viz">工作可视化</a><a href="#bus">通信总线</a><a href="#council">群聊评审</a><a href="#memory">记忆</a>
+            <button data-pm="sched">定时任务</button><hr><button data-pm="save">把当前布局存成我的默认</button><button data-pm="set">项目设置</button>
+          </div></div>
+      </div>
+      <div class="panes" id="panes"></div>
+      <div id="paneStash" hidden>
+      <div class="cbox" id="coordBox">
+        <div class="thread" id="pcLog">
+          <div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>09:58</div><p>会员中心要支持手机号 + 验证码登录，顺便看看登录页的转化，今天下班前测试环境能跑通。</p></div></div>
+          <div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>Fable 5.1 · 09:59</div>
+            <p>拆成两件事，各开一个讨论串。埋点要等表单定下来再做，免得返工。</p>
+            <button class="tcard" data-oth="0"><span class="spin"></span><span class="tt"><b>手机号登录</b><span>4 个 agent · 1 / 5 完成 · 有一步等你批准</span></span><span class="pill wait">等你</span></button>
+            <button class="tcard" data-oth="1"><span class="idlec"></span><span class="tt"><b>登录页埋点</b><span>排队，等手机号登录做完</span></span><span class="pill idle">排队</span></button>
+          </div></div>
+          <div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>10:31</div><p>“手机号登录”里后端想改数据库结构，按你的权限要先批。点上面的卡片进去看。</p></div></div>
+        </div>
+        <div class="composer"><input id="pcIn" placeholder="跟协调者说要做什么，它会开讨论串、派给 agent"><button class="btn pri" id="pcSend">发送</button></div>
+        <div class="cfoot"><span id="pcModel">协调者 Fable 5.1 · 思考：最高 · 双脑：GPT-6 Astra 审计划</span><button id="pcSet">改</button></div>
+      </div>
+      <div class="pextra" id="modsCtl"><select class="s" id="wbTpl" aria-label="模板"></select><button class="btn ghost" id="wbEdit">调整布局</button></div>
+      <div id="libBox" style="padding:10px">
+        <table class="mini"><tr><td>PR</td><td>agent/backend-01/t2 → main</td><td><span class="pill wait">待合并</span></td></tr><tr><td>文档</td><td>短信服务商选型.md</td><td class="hint">10 月 30 日</td></tr><tr><td>文档</td><td>接口说明 /auth/sms</td><td class="hint">今天</td></tr><tr><td>表格</td><td>登录页埋点事件清单</td><td class="hint">昨天</td></tr><tr><td>图片</td><td>登录页改版设计稿.png</td><td class="hint">10 月 28 日</td></tr></table>
+        <p class="hint" style="margin:8px 2px 0">讨论串里产出的文件、PR、文档都自动收进这里。</p>
+      </div>
       <div class="split" id="split">
         <div class="lpane mods" id="mods">
           <div class="tabs" id="lTabs" hidden><button aria-pressed="true" data-l="files">文件</button><button aria-pressed="false" data-l="plan">任务图</button><button aria-pressed="false" data-l="st">Agent 状态</button><button aria-pressed="false" data-l="gh">GitHub</button></div>
@@ -884,6 +996,7 @@ app.whenReady().then(() =&gt; {
         </div>
         <div class="box rpane">
           <header><span class="hint">讨论串</span><select class="s" id="thSel" aria-label="讨论串"></select><span class="spacer"></span><span class="pill run" id="thSt">进行中</span></header>
+          <div class="thmeta">这个讨论串用 <select class="s" id="thModel" aria-label="讨论串模型"></select> 思考 <select class="s" id="thEff" aria-label="思考强度"></select></div>
           <div class="ckl" id="ckl"></div>
           <div class="subag" id="subag"></div>
           <div class="thread" id="thread">
@@ -901,6 +1014,7 @@ app.whenReady().then(() =&gt; {
           <div class="composer"><input id="cmd" placeholder="随时补充：加需求、改顺序、取消某一步，协调者会自动调整计划"><button class="btn pri" id="send">发送</button></div>
           <div class="hint" style="padding:0 12px 10px">试试：“顺便把夜间回归也跑一下”、“先做前端”、“不用做端到端测试了”、“另开一个讨论串做埋点”</div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1420,6 +1534,59 @@ app.whenReady().then(() =&gt; {
   </div>
   <footer><button class="btn bad ghost" id="cfgOff">断开</button><span class="spacer" style="flex:1"></span><button class="btn" id="cfgTest">发一条测试消息</button><button class="btn pri" id="cfgSave">保存</button></footer>
 </aside>
+<div class="pset" id="pset" hidden role="dialog" aria-modal="true" aria-label="项目设置">
+  <div class="dlg">
+    <div class="pn" id="psNav"><b>项目设置</b><button data-ps="gen" aria-current="true">通用</button><button data-ps="team">团队与模型</button><button data-ps="mem">记忆</button><button data-ps="env">环境</button><button data-ps="use">使用情况</button><button data-ps="perm">权限</button></div>
+    <div class="pc"><button class="px" id="psX" aria-label="关闭">×</button>
+      <section data-pp="gen"><h2>通用</h2>
+        <div class="fr"><div><b>名称和颜色</b></div><div><input class="inp" id="psName" value="shop-web 会员登录"><div class="sw" id="psSw" style="margin-top:6px"><i class="on" style="background:#c0563f"></i><i style="background:#3f7fc0"></i><i style="background:#5a9a6e"></i><i style="background:#8a6fc0"></i><i style="background:#b08a2e"></i></div></div></div>
+        <div class="fr"><div><b>这个项目要做成什么？</b><span>协调者每次拆任务、验收都会对照这段话</span></div><div><textarea rows="3" id="psGoal">会员中心支持手机号 + 验证码登录，沿用现有用户表。今天下班前测试环境能跑通，之后看登录页转化。</textarea></div></div>
+        <div class="fr"><div><b>协调者模型</b><span>只拆任务、派活、验收，不直接写代码。可以用订阅里的模型</span></div><div><select class="s" id="psCo"></select><div class="row2"><span class="hint">思考</span><select class="s" id="psCoE"></select></div><div class="hint" id="psCoN" style="margin-top:4px"></div></div></div>
+        <div class="fr"><div><b>双脑</b><span>再挂一个模型配合协调者</span></div><div><label class="check"><input type="checkbox" id="psDual" checked>打开双脑</label>
+          <div id="psDualW"><div class="row2"><select class="s" id="psDm"><option value="rev">审计划</option><option value="bak">备用</option></select><select class="s" id="psD2"></select></div><div class="row2"><span class="hint">思考</span><select class="s" id="psD2E"></select></div>
+          <div class="dualx" id="psDx"></div></div></div></div>
+        <div class="fr"><div><b>讨论串默认模型</b><span>新开的讨论串先用它，每个讨论串里还能单独改</span></div><div><select class="s" id="psTh"></select><div class="row2"><span class="hint">思考</span><select class="s" id="psThE"></select></div></div></div>
+        <div class="fr"><div><b>自动调挡</b><span>简单的事自动降一挡，省额度；卡住或验收不过时升一挡</span></div><div><label class="check"><input type="checkbox" checked>打开</label></div></div>
+        <div class="fr"><div><b>额度重置后自动继续</b><span>订阅额度用完时暂停，重置后接着跑</span></div><div><label class="check"><input type="checkbox" checked>打开</label></div></div>
+        <div class="acts"><button class="btn" data-pa="暂停">暂停项目</button><button class="btn" data-pa="重启">重启协调者</button><span class="spacer" style="flex:1"></span><button class="btn" data-pa="归档">归档项目</button><button class="btn bad" data-pa="删除">删除项目</button></div>
+      </section>
+      <section data-pp="team" hidden><h2>团队与模型</h2>
+        <table class="mini" id="psTeam"></table>
+        <div class="acts"><a class="btn pri" href="#team" id="psTeamGo">打开完整的团队与模型</a></div>
+      </section>
+      <section data-pp="mem" hidden><h2>记忆</h2>
+        <div class="fr"><div><b>项目指令</b><span>每个讨论串开始前都会读，相当于这个项目的 CLAUDE.md</span></div><div><textarea rows="5">用 TypeScript，后端接口统一放在 src/auth 下。
+不要改 users 表已有字段，只能加列。
+验证码有效期 5 分钟，同一号码 60 秒内只能发一次。</textarea></div></div>
+        <div class="fr"><div><b>自动记忆</b><span>协调者把讨论串里定下的事写进 MEMORY.md，每晚整理一次</span></div><div><label class="check"><input type="checkbox" checked>打开</label></div></div>
+        <div style="padding-top:12px"><b style="font-size:13px">记忆文件</b><div style="margin-top:8px">
+          <div class="mfile"><span class="mono">MEMORY.md</span><span class="hint">索引 · 12 条</span><button class="btn ghost">打开</button></div>
+          <div class="mfile"><span class="mono">约定.md</span><span class="hint">5 条</span><button class="btn ghost">打开</button></div>
+          <div class="mfile"><span class="mono">踩坑.md</span><span class="hint">3 条</span><button class="btn ghost">打开</button></div></div>
+          <div class="composer" style="padding:8px 0 0;border:0"><input class="inp" style="flex:1" id="psMemIn" placeholder="告诉协调者要改或删哪条记忆"><button class="btn pri" id="psMemGo">发送</button></div></div>
+      </section>
+      <section data-pp="env" hidden><h2>环境</h2>
+        <div class="fr"><div><b>代码仓库</b></div><div><span class="chip">GitHub · acme/shop-web</span> <span class="hint">默认分支 main</span></div></div>
+        <div class="fr"><div><b>在哪里跑</b><span>本机能用你装好的工具；云端沙箱更隔离</span></div><div><select class="s"><option>本机</option><option>云端沙箱</option></select></div></div>
+        <div class="fr"><div><b>预先允许的文件夹</b><span>agent 读写这些文件夹不用再问</span></div><div><div class="mfile"><span class="mono">~/code/shop-web</span><button class="btn ghost">移除</button></div><button class="btn">+ 添加文件夹</button></div></div>
+        <div class="fr"><div><b>使用工作树</b><span>每个 agent 在自己的 git 工作树里改，互不干扰</span></div><div><label class="check"><input type="checkbox" checked>打开</label></div></div>
+      </section>
+      <section data-pp="use" hidden><h2>使用情况</h2>
+        <div class="stat"><div><b>5</b><span>讨论串</span></div><div><b class="mono">2.3M</b><span>tokens</span></div><div><b class="mono">71%</b><span>缓存命中</span></div><div><b class="mono">¥12.80</b><span>按量花费</span></div><div><b class="mono">46%</b><span>Claude 订阅 5 小时窗口</span></div></div>
+        <table class="mini"><tr><td><b>讨论串</b></td><td><b>模型 · 思考</b></td><td><b>tokens</b></td><td><b>花费</b></td></tr>
+          <tr><td>项目协调</td><td>Fable 5.1 · 最高</td><td class="mono">410K</td><td class="hint">订阅额度</td></tr>
+          <tr><td>手机号登录</td><td>GLM-5.3 · 快速</td><td class="mono">1.2M</td><td class="mono">¥6.80</td></tr>
+          <tr><td>夜间回归脚本</td><td>DeepSeek V4.1 Flash · 快速</td><td class="mono">380K</td><td class="mono">¥1.20</td></tr>
+          <tr><td>接口文档同步到飞书</td><td>Kimi K3 · 深度思考</td><td class="mono">210K</td><td class="mono">¥2.10</td></tr>
+          <tr><td>登录页埋点</td><td>—</td><td class="mono">0</td><td class="mono">¥0</td></tr></table>
+      </section>
+      <section data-pp="perm" hidden><h2>权限</h2>
+        <div class="fr"><div><b>这个项目的权限挡位</b><span>高风险操作（改数据库、删文件、对外发消息）始终要你批准</span></div><div><select class="s"><option>只读</option><option selected>部分权限</option><option>完全权限</option></select></div></div>
+        <div class="acts"><a class="btn" href="#perm" id="psPermGo">打开权限与审批规则</a></div>
+      </section>
+    </div>
+  </div>
+</div>
 <script>
 (function(){
   const views=['home','chat','threads','tasks','team','connect','relays','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
@@ -1596,7 +1763,7 @@ app.whenReady().then(() =&gt; {
   document.getElementById('newProj').onclick=()=>openWiz('');
   document.getElementById('wizClose').onclick=()=>wiz.hidden=true;
   document.getElementById('wzType').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
-  document.getElementById('wzGo').onclick=()=>{ const n=document.getElementById('wzName').value.trim()||'新项目'; const a=document.createElement('a'); a.href='#tasks'; a.dataset.pj=n; a.innerHTML='<i class="ic" style="background:#8a6fc0"></i><span class="lb"></span>'; a.querySelector('.lb').textContent=n; document.querySelector('nav a[data-pj]').before(a); document.getElementById('pjName').textContent=n; wiz.hidden=true; say('已创建“'+n+'”，协调者在等你下达第一个任务'); location.hash='tasks'; };
+  document.getElementById('wzGo').onclick=()=>{ const n=document.getElementById('wzName').value.trim()||'新项目'; const a=document.createElement('a'); a.href='#tasks'; a.dataset.pj=n; a.innerHTML='<i class="ic" style="background:#8a6fc0"></i><span class="lb"></span>'; a.querySelector('.lb').textContent=n; document.querySelector('nav a[data-pj]').before(a); document.getElementById('pjName').textContent=n; document.getElementById('pjTitle').textContent=n; wiz.hidden=true; say('已创建“'+n+'”，协调者在等你下达第一个任务'); location.hash='tasks'; };
   // 问答
   const ct=document.getElementById('chatThread');
   function addChat(v){ ct.insertAdjacentHTML('beforeend','<div class="msg cm"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p></p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="fork">改写并分支</button></div></div></div><div class="msg cm"><div class="av">C</div><div><div class="who"><b>Claude</b>刚刚</div><p>（演示）这里会是模型的回答。选中任意一段文字，可以单独追问。</p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>');
@@ -1662,7 +1829,7 @@ app.whenReady().then(() =&gt; {
     {id:'ollama',n:'本地 Ollama',way:'本地模型',how:'127.0.0.1:11434',q:'免费',m:[['qwen3:14b','阿里（本地）']]}
   ];
   const GRP=[
-    {n:'代码',h:'shop-web 在用',r:[['协调','claude/Opus','chatgpt/GPT-5 系列',46],['写提示词','claude/Fable','claude/Sonnet',22],['执行','glm/GLM-5.3','ocgo/GLM-5.3',38],['审查','claude/Sonnet','',12]]},
+    {n:'代码',h:'shop-web 在用',r:[['协调','claude/Opus','chatgpt/GPT-5 系列',46,'超高'],['写提示词','claude/Fable','claude/Sonnet',22,'高'],['执行','glm/GLM-5.3','ocgo/GLM-5.3',38,'快速'],['审查','claude/Sonnet','',12,'中']]},
     {n:'后端',h:'后端岗位在用',r:[['协调','chatgpt/GPT-5 系列','claude/Opus',64],['执行','chatgpt/GPT-5 Codex','oai/GPT-5 系列',64]]},
     {n:'便宜干活',h:'测试、记忆整理、调研抓取在用',r:[['执行','ocgo/DeepSeek V4.1 Flash','ds/DeepSeek V4.1 Flash',18],['整理','ollama/qwen3:14b','ocgo/Kimi K3',0],['摘要','ds/DeepSeek V4.1 Flash','',23]]}
   ];
@@ -1676,14 +1843,27 @@ app.whenReady().then(() =&gt; {
         +(x.more?'<span class="hint" style="padding:4px 10px">还有 '+x.more+' 个模型，展开全部</span>':'')+'</div></details>'; });
     t.innerHTML=h; document.getElementById('srcCount').textContent='已保存 '+SRC.length+' 个，同一个模型从不同来源买的会分开列'; }
   document.getElementById('srcTree').addEventListener('change',e=>{ const c=e.target.closest('[data-s]'); if(!c) return; const m=SRC[c.dataset.s].m[c.dataset.j]; m[2]=c.checked?1:0; drawSrc(); drawPools(); say(c.checked?'已启用，分组里可以选了':'已停用，分组里不再出现'); });
+  // v17：思考强度，挡位跟着模型变
+  function effList(k){ if(!k) return ['默认']; if(k.startsWith('grp:')){ const [g,r]=k.slice(4).split('/'); const G=GRP.find(x=>x.n===g); const R=G&&G.r.find(x=>x[0]===r); k=R?R[1]:''; }
+    const m=(k||'').split('/')[1]||'';
+    if(/Opus|Fable|Sonnet/.test(m)) return ['低','中','高','超高','最高'];
+    if(/Haiku/.test(m)) return ['不思考','思考'];
+    if(/GPT-6/.test(m)) return ['最少','低','中','高','超高'];
+    if(/GPT-5/.test(m)) return ['最少','低','中','高'];
+    if(/Gemini/.test(m)) return ['低','高'];
+    if(/Doubao/.test(m)) return ['不思考','自动','深度思考'];
+    if(/DeepSeek|GLM|Kimi|Qwen|qwen|MiMo|MiniMax/.test(m)) return ['快速','深度思考'];
+    return ['默认']; }
+  function effOf(k,v){ const L=effList(k); return v&&L.includes(v)?v:(L.includes('高')?'高':L[0]); }
+  function effOpts(k,v){ const L=effList(k); const d=v&&L.includes(v)?v:(L.includes('高')?'高':L[0]); return L.map(o=>'<option'+(o===d?' selected':'')+'>'+o+'</option>').join(''); }
   function opts(v,none){ let h=none?'<option value=""'+(v?'':' selected')+'>无</option>':'';
     SRC.forEach(x=>{ const ms=x.m.filter(on); if(!ms.length) return; h+='<optgroup label="'+esc(x.n)+'">'+ms.map(m=>{ const k=x.id+'/'+m[0]; return '<option value="'+esc(k)+'"'+(k===v?' selected':'')+'>'+esc(m[0])+'</option>'; }).join('')+'</optgroup>'; });
     return h; }
   const RO=['协调','写提示词','执行','审查','整理','摘要','测试'];
-  function readPools(){ document.querySelectorAll('#pools .pool').forEach((p,i)=>{ if(!GRP[i]) return; GRP[i].n=p.querySelector('.gname').value; GRP[i].r=[...p.querySelectorAll('.role')].map((r,j)=>[r.querySelector('.rsel').value,r.querySelector('.msel').value,r.querySelector('.bsel').value,(GRP[i].r[j]||[])[3]||0]); }); }
+  function readPools(){ document.querySelectorAll('#pools .pool').forEach((p,i)=>{ if(!GRP[i]) return; GRP[i].n=p.querySelector('.gname').value; GRP[i].r=[...p.querySelectorAll('.role')].map((r,j)=>[r.querySelector('.rsel').value,r.querySelector('.msel').value,r.querySelector('.bsel').value,(GRP[i].r[j]||[])[3]||0,r.querySelector('.esel')?r.querySelector('.esel').value:'']); }); }
   function drawPools(){ const el=document.getElementById('pools'); if(el.children.length) readPools();
     el.innerHTML=GRP.map(g=>'<div class="pool"><header><input class="gname" value="'+esc(g.n)+'" aria-label="分组名"><span class="hint">'+esc(g.h)+'</span></header>'
-      +g.r.map(r=>'<div class="role"><div class="rk"><select class="s rsel" aria-label="用途">'+RO.map(o=>'<option'+(o===r[0]?' selected':'')+'>'+o+'</option>').join('')+'</select></div><div class="rm"><select class="s msel" aria-label="模型">'+opts(r[1])+'</select><div class="bk"><span>备用</span><select class="s bsel" aria-label="备用模型">'+opts(r[2],1)+'</select></div><div class="use"><i style="width:'+(r[3]||0)+'%"></i></div></div><span class="pill '+(r[3]?'run':'')+'">'+(r[3]?'正在用':'待命')+'</span></div>').join('')
+      +g.r.map(r=>'<div class="role"><div class="rk"><select class="s rsel" aria-label="用途">'+RO.map(o=>'<option'+(o===r[0]?' selected':'')+'>'+o+'</option>').join('')+'</select></div><div class="rm"><select class="s msel" aria-label="模型">'+opts(r[1])+'</select><div class="bk"><span>备用</span><select class="s bsel" aria-label="备用模型">'+opts(r[2],1)+'</select></div><div class="bk"><span>思考</span><select class="s esel" aria-label="思考强度">'+effOpts(r[1],r[4])+'</select></div><div class="use"><i style="width:'+(r[3]||0)+'%"></i></div></div><span class="pill '+(r[3]?'run':'')+'">'+(r[3]?'正在用':'待命')+'</span></div>').join('')
       +'<footer><button class="btn" data-addrole>添加用途</button><button class="btn ghost" data-sim>模拟执行模型额度用完</button></footer></div>').join(''); }
   drawSrc(); drawPools();
   document.getElementById('addGroup').onclick=()=>{ readPools(); GRP.push({n:'新分组',h:'还没有项目在用',r:[['执行','','',0]]}); drawPools(); const g=[...document.querySelectorAll('#pools .gname')].pop(); g.focus(); g.select(); };
@@ -1758,7 +1938,7 @@ app.whenReady().then(() =&gt; {
   let curC='Electron 和 Tauri 怎么选';
   const PV=['threads','tasks','team','viz','bus','council','memory'];
   function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
-    document.getElementById('ptabs').hidden=!pj;
+    document.getElementById('ptabs').hidden=!pj||v==='tasks'||v==='threads';
     const st=['accounts','relays','connect','market','control','channels','workspace','perm'].includes(v);
     document.getElementById('stabs').hidden=!st; document.getElementById('setb').classList.toggle('on',st);
     document.querySelectorAll('#stabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
@@ -1768,7 +1948,7 @@ app.whenReady().then(() =&gt; {
   }
   addEventListener('hashchange',layout);
   document.getElementById('nav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return;
-    if(a.dataset.pj){ document.getElementById('pjName').textContent=a.dataset.pj; setTimeout(layout); }
+    if(a.dataset.pj){ document.getElementById('pjName').textContent=a.dataset.pj; document.getElementById('pjTitle').textContent=a.dataset.pj; setTimeout(layout); }
     if(a.dataset.c){ curC=a.dataset.c; const t=!!a.querySelector('.tg'); document.getElementById('taskView').hidden=!t; document.getElementById('taskHint').hidden=!t; document.getElementById('chatView').hidden=t; if(!t) document.querySelector('#v-chat .chatmain header strong').textContent=a.dataset.c; setTimeout(layout); } });
   document.getElementById('tExp').onclick=()=>say('已导出 竞品价格-1102.xlsx（演示）'); document.getElementById('tFs').onclick=()=>say('已写入飞书多维表格“竞品价格”（演示）'); document.getElementById('tToProj').onclick=()=>{ location.hash='home'; openWiz('竞品价格监测'); say('任务和产出会带进新项目'); };
   layout();
@@ -1784,7 +1964,6 @@ app.whenReady().then(() =&gt; {
   openFile('sms.ts');
   document.getElementById('tree').addEventListener('click',e=>{ const d=e.target.closest('[data-f]'); if(d) openFile(d.dataset.f); });
 
-  document.getElementById('tgFiles').onclick=function(){ const sp=document.getElementById('split'), off=sp.classList.toggle('nofiles'); this.textContent=off?'显示左侧':'隐藏左侧'; };
   document.querySelectorAll('[data-cn]').forEach(b=>b.onclick=()=>{ const c=b.closest('.cn'); c.classList.add('on'); b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'已连接'})); say('（演示）会打开'+c.querySelector('b').textContent+'的官方授权页'); });
 
   // v9：模块化工作台
@@ -1879,7 +2058,7 @@ app.whenReady().then(() =&gt; {
     exec(); }
   document.getElementById('relayRun').onclick=runRelay;
   document.getElementById('relaySave').onclick=()=>{ RL.push({n:RL[rlI].n+'（我改的）',f:RL[rlI].f,s:rlWork.map(x=>[...x]),c:RL[rlI].c}); rlI=RL.length-1; rlWork=null; rlDraw(); rsI=rlI; rsDraw(); say('已另存为新预设，设置里的“接力流程”能看到'); };
-  document.getElementById('relayAsk').onclick=()=>{ location.hash='tasks'; const c=document.getElementById('cmd'); c.value='帮我搭一个接力流程：用贵的模型写提示词和验收，便宜的模型干活，搭好后存成预设'; c.focus(); say('已把需求填进和协调者的对话框，发出去就行'); };
+  document.getElementById('relayAsk').onclick=()=>{ location.hash='tasks'; setTimeout(()=>window.__openTh&&window.__openTh(thI)); const c=document.getElementById('cmd'); c.value='帮我搭一个接力流程：用贵的模型写提示词和验收，便宜的模型干活，搭好后存成预设'; c.focus(); say('已把需求填进和协调者的对话框，发出去就行'); };
   // 设置里的预设编辑
   let rsI=0;
   function rsDraw(){ document.getElementById('rsList').innerHTML=RL.map((r,i)=>'<div data-i="'+i+'" class="'+(i===rsI?'on':'')+'">'+esc(r.n)+'<div class="m">'+r.s.length+' 步</div></div>').join('');
@@ -1897,7 +2076,7 @@ app.whenReady().then(() =&gt; {
   rlDraw(); rsDraw();
   // 团队表（重做）
   const TEAM={
-    code:[['协调者',[['中枢内置（只派活）','claude/Fable']],'',{dual:1,m2:'chatgpt/GPT-6 Astra'}],['前端',[['Claude Code','grp:代码/执行'],['DSH','ds/DeepSeek V4 Pro']],'写 + 审'],['后端',[['Codex CLI','chatgpt/GPT-5 Codex']],''],['测试',[['DSH','grp:便宜干活/执行']],'']],
+    code:[['协调者',[['中枢内置（只派活）','claude/Fable','最高']],'',{dual:1,m2:'chatgpt/GPT-6 Astra',e2:'高'}],['前端',[['Claude Code','grp:代码/执行'],['DSH','ds/DeepSeek V4 Pro']],'写 + 审'],['后端',[['Codex CLI','chatgpt/GPT-5 Codex']],''],['测试',[['DSH','grp:便宜干活/执行']],'']],
     research:[['协调者',[['中枢内置（只派活）','chatgpt/GPT-5 系列']],''],['检索',[['OpenCode','kimi/Kimi K3']],''],['整理',[['OpenCode','ocgo/DeepSeek V4.1 Flash']],''],['核查',[['Gemini CLI','glm/GLM-5.3']],''],['统稿',[['Claude Code','claude/Opus']],'']],
     single:[['协调者',[['由 Claude Code 兼任','claude/Opus']],''],['全部任务',[['Claude Code','grp:代码/执行']],'']]
   };
@@ -1909,15 +2088,15 @@ app.whenReady().then(() =&gt; {
   const MODE_TIP={'分工':'协调者把子任务分给两边各做一部分','主备':'先用第一个，额度用完或出错换第二个','并行对比':'同一件事两边都做，你挑一个','写 + 审':'第一个写，第二个审，审不过打回'};
   drawTeam=function(k){ teamKey=k; const t=document.getElementById('teamTable'), rows=TEAM[k];
     t.innerHTML='<tr><th>岗位</th><th>谁来干 · 用什么模型</th><th>挂两个 agent 时怎么配合</th></tr>'+rows.map((r,i)=>{ const coord=r[0]==='协调者';
-      return '<tr data-r="'+i+'"><td><b>'+esc(r[0])+'</b></td><td>'+r[1].map((a,j)=>'<div class="ag2" data-a="'+j+'"><select class="s" data-f="ag" aria-label="agent">'+(coord?['中枢协调者（只派活）']:TAG).map(o=>'<option'+(o===a[0]?' selected':'')+'>'+o+'</option>').join('')+'</select><select class="s" data-f="md" aria-label="模型">'+grpOpts(a[1])+'</select>'+(j>0?'<button data-rm title="去掉">×</button>':'<span></span>')+'</div>').join('')
-        +(coord?'<div class="hint" style="margin:-2px 0 6px">'+esc(runNote(r[1][0][1]))+'</div><label class="check" style="font-size:12.5px"><input type="checkbox" data-f="dual"'+(r[3]&&r[3].dual?' checked':'')+'>双脑：再用一个模型审计划，或者当备用</label>'+(r[3]&&r[3].dual?'<div class="ag2" style="margin-top:6px"><select class="s" data-f="dmode"><option>审计划</option><option'+(r[3].dm==='备用'?' selected':'')+'>备用</option></select><select class="s" data-f="m2">'+grpOpts(r[3].m2)+'</select><span></span></div><div class="hint">'+esc(runNote(r[3].m2))+'</div>':''):'')
+      return '<tr data-r="'+i+'"><td><b>'+esc(r[0])+'</b></td><td>'+r[1].map((a,j)=>'<div class="ag2" data-a="'+j+'"><select class="s" data-f="ag" aria-label="agent">'+(coord?['中枢协调者（只派活）']:TAG).map(o=>'<option'+(o===a[0]?' selected':'')+'>'+o+'</option>').join('')+'</select><select class="s" data-f="md" aria-label="模型">'+grpOpts(a[1])+'</select>'+(j>0?'<button data-rm title="去掉">×</button>':'<span></span>')+'</div><div class="eff" data-a="'+j+'">思考 <select class="s" data-f="ef" aria-label="思考强度">'+effOpts(a[1],a[2])+'</select></div>').join('')
+        +(coord?'<div class="hint" style="margin:-2px 0 6px">'+esc(runNote(r[1][0][1]))+'</div><label class="check" style="font-size:12.5px"><input type="checkbox" data-f="dual"'+(r[3]&&r[3].dual?' checked':'')+'>双脑：再用一个模型审计划，或者当备用</label>'+(r[3]&&r[3].dual?'<div class="ag2" style="margin-top:6px"><select class="s" data-f="dmode"><option>审计划</option><option'+(r[3].dm==='备用'?' selected':'')+'>备用</option></select><select class="s" data-f="m2">'+grpOpts(r[3].m2)+'</select><span></span></div><div class="eff">思考 <select class="s" data-f="e2">'+effOpts(r[3].m2,r[3].e2)+'</select></div><div class="hint">'+esc(runNote(r[3].m2))+' · '+(r[3].dm==='备用'?'平时不出场，主脑额度用完、限流或出错时接手':'主脑拆完任务先给它审，挑出问题改完才派活')+'</div>':''):'')
         +(coord||r[1].length>1?'':'<button class="lnk" data-add2>+ 再挂一个 agent</button>')+'</td><td class="mode">'+(coord?'<span class="hint">只派活，不写代码</span>':r[1].length>1?'<select class="s" data-f="mode">'+Object.keys(MODE_TIP).map(o=>'<option'+(o===r[2]?' selected':'')+'>'+o+'</option>').join('')+'</select><span class="hint">'+MODE_TIP[r[2]||'分工']+'</span>':'<span class="hint">只有一个 agent</span>')+'</td></tr>'; }).join('');
     document.getElementById('teamRs').hidden=k!=='research'; document.getElementById('teamSingle').hidden=k!=='single'; };
   const ttb=document.getElementById('teamTable');
   ttb.onchange=e=>{ const f=e.target.dataset.f; if(!f) return; const r=TEAM[teamKey][+e.target.closest('tr').dataset.r];
     if(f==='mode'){ r[2]=e.target.value; drawTeam(teamKey); return; }
     if(f==='dual'){ r[3]=r[3]||{m2:'chatgpt/GPT-6 Astra'}; r[3].dual=e.target.checked?1:0; drawTeam(teamKey); return; }
-    if(f==='m2'){ r[3].m2=e.target.value; drawTeam(teamKey); return; } if(f==='dmode'){ r[3].dm=e.target.value; return; } const a=r[1][+e.target.closest('.ag2').dataset.a]; if(f==='ag') a[0]=e.target.value; else { a[1]=e.target.value; if(r[0]==='协调者') drawTeam(teamKey); } };
+    if(f==='m2'){ r[3].m2=e.target.value; drawTeam(teamKey); return; } if(f==='dmode'){ r[3].dm=e.target.value; drawTeam(teamKey); return; } if(f==='e2'){ r[3].e2=e.target.value; return; } if(f==='ef'){ r[1][+e.target.closest('.eff').dataset.a][2]=e.target.value; say('已改思考强度：'+e.target.value); return; } const a=r[1][+e.target.closest('.ag2').dataset.a]; if(f==='ag') a[0]=e.target.value; else { a[1]=e.target.value; if(r[0]==='协调者') drawTeam(teamKey); } };
   ttb.addEventListener('click',e=>{ const tr=e.target.closest('tr'); if(!tr||!tr.dataset.r) return; const r=TEAM[teamKey][+tr.dataset.r];
     if(e.target.closest('[data-add2]')){ e.stopImmediatePropagation(); r[1].push(['DSH','grp:便宜干活/执行']); r[2]='写 + 审'; drawTeam(teamKey); say('已挂上第二个 agent，默认一个写一个审'); }
     if(e.target.closest('[data-rm]')){ e.stopImmediatePropagation(); r[1].splice(+e.target.closest('.ag2').dataset.a,1); drawTeam(teamKey); } },true);
@@ -2065,5 +2244,110 @@ app.whenReady().then(() =&gt; {
     document.querySelectorAll('#levels .level').forEach(x=>x.setAttribute('aria-pressed',x===b));
     document.getElementById('lvlTop').textContent=b.dataset.l;
   });
+  // v17：项目页像 Claude Code 一样分栏，每一栏放什么由你定
+  const LAY={cl:['coord','threads'],wb:['threads','mods'],all:['coord','threads','mods'],th:['threads']};
+  let PANES=LAY.cl.map(k=>({k:k,w:1})), thMode='detail';
+  const panesEl=document.getElementById('panes'), stash=document.getElementById('paneStash');
+  const coordBox=document.getElementById('coordBox'), libBox=document.getElementById('libBox'), modsCtl=document.getElementById('modsCtl');
+  const vThreads=document.getElementById('v-threads'), rp=document.querySelector('#split .rpane'), thStEl=document.getElementById('thSt'), rpHead=rp.querySelector('header');
+  const thWrap=document.createElement('div'); thWrap.className='thwrap'; thWrap.append(vThreads,rp); stash.appendChild(thWrap);
+  const CL={};
+  function modSel(k){ const h='<option value="coord">协调者</option><option value="threads">讨论串</option><option value="mods">工作台模块（按模板）</option><option value="lib">资料库</option><optgroup label="单个模块">'+Object.keys(MOD).map(m=>'<option value="m:'+m+'">'+MOD[m].t+'</option>').join('')+'</optgroup>'; return h.replace('value="'+k+'"','value="'+k+'" selected'); }
+  function drawPanes(){
+    rpHead.appendChild(thStEl); stash.append(thWrap,coordBox,libBox,modsCtl,modsEl);
+    Object.values(CL).forEach(n=>stash.appendChild(n));
+    panesEl.innerHTML=''; panesEl.style.gridTemplateColumns=PANES.map(p=>p.w===2?'minmax(0,1.7fr)':'minmax(0,1fr)').join(' ');
+    PANES.forEach((p,i)=>{ const el=document.createElement('div'); el.className='pane'; el.dataset.i=i; el.dataset.k=p.k; el.dataset.w=p.w;
+      el.innerHTML='<div class="ph"><div class="crumb"></div><div class="pextra"></div><div class="pctl"><select class="s" data-pk aria-label="这一栏放什么">'+modSel(p.k)+'</select><button data-pmv="-1" title="往左挪">←</button><button data-pmv="1" title="往右挪">→</button><button data-pw title="改宽窄">'+(p.w===2?'窄':'宽')+'</button>'+(PANES.length>1?'<button data-px title="关掉这一栏">×</button>':'')+'</div></div><div class="pb"></div>';
+      const cr=el.querySelector('.crumb'), pb=el.querySelector('.pb');
+      if(p.k==='threads'){ if(thMode==='detail'){ cr.innerHTML='<button data-back>讨论串</button><span class="hint">›</span><b></b>'; cr.querySelector('b').textContent=TH[thI].n; cr.appendChild(thStEl); } else cr.innerHTML='<b>讨论串</b>';
+        vThreads.hidden=thMode!=='list'; rp.hidden=thMode!=='detail'; pb.appendChild(thWrap); }
+      else if(p.k==='mods'){ cr.innerHTML='<b>工作台模块</b>'; el.querySelector('.pextra').appendChild(modsCtl); pb.appendChild(modsEl); }
+      else if(p.k==='coord'){ cr.innerHTML='<b>协调者</b><span class="hint">项目对话</span>'; pb.appendChild(coordBox); }
+      else if(p.k==='lib'){ cr.innerHTML='<b>资料库</b>'; pb.appendChild(libBox); }
+      else { const m=p.k.slice(2); cr.innerHTML='<b></b>'; cr.querySelector('b').textContent=MOD[m].t; if(!CL[m]){ CL[m]=document.createElement('div'); CL[m].appendChild(body(m).cloneNode(true)); } pb.appendChild(CL[m]); }
+      panesEl.appendChild(el); });
+    const key=Object.keys(LAY).find(k=>LAY[k].join()===PANES.map(p=>p.k).join()); document.getElementById('pjLay').value=key||'custom';
+    document.getElementById('pjAdd').disabled=PANES.length>=3; }
+  function putPane(k,keep){ if(PANES.some(p=>p.k===k)) return; if(PANES.length<3) PANES.push({k:k,w:1}); else { let j=PANES.length-1; while(j>0&&PANES[j].k===keep) j--; PANES[j]={k:k,w:1}; } }
+  panesEl.addEventListener('change',e=>{ const s=e.target.closest('[data-pk]'); if(!s) return; const i=+s.closest('.pane').dataset.i, v=s.value, j=PANES.findIndex(p=>p.k===v);
+    if(j>=0&&j!==i){ PANES[j].k=PANES[i].k; } PANES[i].k=v; drawPanes(); say('这一栏换成了“'+s.selectedOptions[0].textContent+'”'); });
+  panesEl.addEventListener('click',e=>{ const pane=e.target.closest('.pane'); if(!pane) return; const i=+pane.dataset.i;
+    if(e.target.closest('[data-back]')){ thMode='list'; drawPanes(); drawTov(); return; }
+    if(e.target.closest('[data-px]')){ PANES.splice(i,1); drawPanes(); return; }
+    if(e.target.closest('[data-pw]')){ PANES[i].w=PANES[i].w===2?1:2; drawPanes(); return; }
+    const mv=e.target.closest('[data-pmv]'); if(mv){ const j=i+(+mv.dataset.pmv); if(j<0||j>=PANES.length) return; [PANES[i],PANES[j]]=[PANES[j],PANES[i]]; drawPanes(); return; }
+    const tc=e.target.closest('[data-oth]'); if(tc){ switchTh(+tc.dataset.oth); } });
+  const _sw=switchTh;
+  switchTh=function(i){ _sw(i); thMode='detail'; putPane('threads','coord'); drawPanes(); syncThMeta(); };
+  window.__openTh=i=>switchTh(i);
+  document.getElementById('pjLay').onchange=e=>{ const v=e.target.value; if(!LAY[v]) return; PANES=LAY[v].map(k=>({k:k,w:k==='mods'&&LAY[v].length<3?2:1})); drawPanes(); };
+  document.getElementById('pjAdd').onclick=()=>{ const k=['coord','threads','mods','lib'].find(k=>!PANES.some(p=>p.k===k))||'m:preview'; PANES.push({k:k,w:1}); drawPanes(); say('加了一栏，在栏头的下拉里换成你要的模块'); };
+  document.getElementById('pjThB').onclick=()=>{ thMode='list'; putPane('threads','coord'); drawPanes(); drawTov(); };
+  document.getElementById('pjLib').onclick=()=>{ putPane('lib','coord'); drawPanes(); };
+  const pjMenu=document.getElementById('pjMenu'), pjMore=document.getElementById('pjMore');
+  pjMore.onclick=e=>{ e.stopPropagation(); pjMenu.hidden=!pjMenu.hidden; pjMore.setAttribute('aria-expanded',String(!pjMenu.hidden)); };
+  document.addEventListener('click',e=>{ if(!pjMenu.hidden&&!e.target.closest('#pjMenu')){ pjMenu.hidden=true; pjMore.setAttribute('aria-expanded','false'); } });
+  pjMenu.addEventListener('click',e=>{ const b=e.target.closest('[data-pm]'); pjMenu.hidden=true; if(!b) return; const m=b.dataset.pm;
+    if(m==='sched'){ putPane('m:sched','coord'); drawPanes(); }
+    if(m==='save') say('已存为默认布局，新建项目时会先用它');
+    if(m==='set') openPset('gen'); });
+  const _dt=drawTov; drawTov=function(){ _dt(); document.getElementById('pjThN').textContent=TOV.wait.length||''; };
+  function fixHash(){ if(location.hash==='#threads'){ thMode='list'; putPane('threads','coord'); drawPanes(); drawTov(); history.replaceState(null,'','#tasks'); show(); layout(); } }
+  addEventListener('hashchange',fixHash);
+  // 协调者栏：项目对话，开讨论串
+  const pcIn=document.getElementById('pcIn'), pcLog=document.getElementById('pcLog');
+  function pcSend(){ const v=pcIn.value.trim(); if(!v) return; pcIn.value='';
+    pcLog.insertAdjacentHTML('beforeend','<div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p>'+esc(v)+'</p></div></div>');
+    const n=v.replace(/^(帮我|请|再|顺便)+/,'').replace(/[，。,.!！?？].*$/,'').slice(0,14)||'新讨论串';
+    TH.push({n:n,st:'排队',steps:[['T1','和你确认需求','@coord-01','queue']],html:'<div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p>'+esc(v)+'</p></div></div>'}); const i=TH.length-1; drawTh();
+    TOV.run.unshift({n:n,p:'0/1',who:'@coord-01',tm:'刚刚',i:i}); drawTov();
+    setTimeout(()=>{ pcLog.insertAdjacentHTML('beforeend','<div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>刚刚</div><p>好，开了一个讨论串，先在里面跟你确认需求，定了再派给 agent。</p><button class="tcard" data-oth="'+i+'"><span class="spin"></span><span class="tt"><b>'+esc(n)+'</b><span>刚开 · 0 / 1</span></span><span class="pill run">进行中</span></button></div></div>'); pcLog.scrollTop=pcLog.scrollHeight; },350); }
+  document.getElementById('pcSend').onclick=pcSend; pcIn.addEventListener('keydown',e=>{ if(e.key==='Enter') pcSend(); });
+  // 讨论串里的模型和思考强度
+  const PS={th:'grp:代码/执行',thE:'快速'};
+  const thModel=document.getElementById('thModel'), thEff=document.getElementById('thEff');
+  function syncThMeta(){ const t=TH[thI]; const m=t.m||PS.th; thModel.innerHTML=grpOpts(m); thEff.innerHTML=effOpts(m,t.e||PS.thE); }
+  thModel.onchange=()=>{ TH[thI].m=thModel.value; thEff.innerHTML=effOpts(thModel.value,TH[thI].e); say('这个讨论串改用 '+modelLabel(thModel.value)); };
+  thEff.onchange=()=>{ TH[thI].e=thEff.value; say('思考强度改成“'+thEff.value+'”，下一条消息起生效'); };
+  // 项目设置
+  const pset=document.getElementById('pset'), $=id=>document.getElementById(id);
+  function coRow(){ return (TEAM[teamKey]||TEAM.code).find(r=>r[0]==='协调者'); }
+  function dualText(co,d2,dm){ const a=esc(modelLabel(co)), b=esc(modelLabel(d2));
+    return dm==='bak' ? '<p><b>备用：</b>平时只有 '+a+' 在干。它的额度用完、被限流或者报错时，'+b+' 带着同一份任务图和讨论串记录接手，你这边不会断。</p><p class="hint" style="margin:0">两个大脑最好来自不同的订阅，额度不会一起用完。</p>'
+      : '<p><b>审计划：</b>'+a+' 拆好任务后，先交给 '+b+' 审一遍，挑出漏掉的步骤、风险和不合理的分工。主脑改完才开始派活；中途大改计划时也会再审一次。</p><p class="hint" style="margin:0">适合大任务。多花一次副脑的额度，换开工前的一道把关。</p>'; }
+  function fillPs(){ const r=coRow(), a=r[1][0], d=r[3]||{}; const dm=d.dm==='备用'?'bak':'rev', d2=d.m2||'chatgpt/GPT-6 Astra';
+    $('psCo').innerHTML=grpOpts(a[1]); $('psCoE').innerHTML=effOpts(a[1],a[2]); $('psCoN').textContent=runNote(a[1]);
+    $('psDual').checked=!!d.dual; $('psDualW').hidden=!d.dual; $('psDm').value=dm; $('psD2').innerHTML=grpOpts(d2); $('psD2E').innerHTML=effOpts(d2,d.e2); $('psDx').innerHTML=dualText(a[1],d2,dm);
+    $('psTh').innerHTML=grpOpts(PS.th); $('psThE').innerHTML=effOpts(PS.th,PS.thE);
+    $('psTeam').innerHTML='<tr><td><b>岗位</b></td><td><b>模型</b></td><td><b>思考</b></td></tr>'+(TEAM[teamKey]||TEAM.code).map(r=>r[1].map((x,j)=>'<tr><td>'+(j?'':esc(r[0]))+'</td><td>'+esc(modelLabel(x[1]))+'</td><td>'+esc(effOf(x[1],x[2]))+'</td></tr>').join('')).join('');
+    pcFoot(); }
+  function pcFoot(){ const r=coRow(), a=r[1][0], d=r[3]||{}; const e=effOf(a[1],a[2]);
+    $('pcModel').textContent='协调者 '+modelLabel(a[1])+' · 思考：'+e+(d.dual?' · 双脑：'+modelLabel(d.m2)+(d.dm==='备用'?' 备用':' 审计划'):''); }
+  function psGo(k){ document.querySelectorAll('#psNav [data-ps]').forEach(b=>b.setAttribute('aria-current',String(b.dataset.ps===k))); pset.querySelectorAll('[data-pp]').forEach(s=>s.hidden=s.dataset.pp!==k); }
+  function openPset(k){ fillPs(); psGo(k||'gen'); pset.hidden=false; }
+  window.__openPset=openPset;
+  $('psNav').addEventListener('click',e=>{ const b=e.target.closest('[data-ps]'); if(b) psGo(b.dataset.ps); });
+  $('psX').onclick=()=>pset.hidden=true; pset.addEventListener('click',e=>{ if(e.target===pset||e.target.closest('#psTeamGo,#psPermGo')) pset.hidden=true; });
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&!pset.hidden) pset.hidden=true; });
+  pset.addEventListener('change',e=>{ const id=e.target.id, r=coRow(), a=r[1][0]; r[3]=r[3]||{m2:'chatgpt/GPT-6 Astra'};
+    if(id==='psCo'){ a[1]=e.target.value; a[2]=effOf(a[1],a[2]); say('协调者改用 '+modelLabel(a[1])); }
+    else if(id==='psCoE'){ a[2]=e.target.value; say('协调者思考强度：'+a[2]); }
+    else if(id==='psDual'){ r[3].dual=e.target.checked?1:0; }
+    else if(id==='psDm'){ r[3].dm=e.target.value==='bak'?'备用':'审计划'; }
+    else if(id==='psD2'){ r[3].m2=e.target.value; }
+    else if(id==='psD2E'){ r[3].e2=e.target.value; }
+    else if(id==='psTh'){ PS.th=e.target.value; }
+    else if(id==='psThE'){ PS.thE=e.target.value; }
+    else return;
+    fillPs(); drawTeam(teamKey); syncThMeta(); });
+  $('psName').addEventListener('input',e=>{ const v=e.target.value||'未命名项目'; $('pjTitle').textContent=v; $('pjName').textContent=v; const a=document.querySelector('nav a[data-v=tasks] .lb'); if(a) a.textContent=v; });
+  $('psSw').addEventListener('click',e=>{ const i=e.target.closest('i'); if(!i) return; $('psSw').querySelectorAll('i').forEach(x=>x.classList.toggle('on',x===i)); const ic=document.querySelector('nav a[data-v=tasks] .ic'); if(ic) ic.style.background=i.style.background; });
+  pset.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{ const x=b.dataset.pa; say(x==='删除'?'删除前会再让你确认一次（演示）':'已'+x+(x==='重启'?'协调者，讨论串和计划都保留':'项目')+'（演示）'); });
+  $('psMemGo').onclick=()=>{ const v=$('psMemIn').value.trim(); if(!v) return; $('psMemIn').value=''; say('协调者会照“'+v.slice(0,16)+'”改记忆，改完在 MEMORY.md 留一条记录'); };
+  $('pcSet').onclick=()=>openPset('gen');
+  ttb.addEventListener('change',()=>setTimeout(pcFoot));
+  setTimeout(()=>{ drawPanes(); syncThMeta(); pcFoot(); fixHash(); });
+
 })();
 </script>
