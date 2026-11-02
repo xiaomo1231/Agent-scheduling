@@ -460,6 +460,7 @@ nav .newb{margin:2px 0 8px;justify-content:center;display:flex}
 nav a .tg{font-size:10.5px;border:1px solid var(--line);border-radius:8px;padding:0 5px;color:var(--ink-3);font-weight:400}
 nav a .ic{width:8px;height:8px;border-radius:2px;flex:none;margin-right:8px}
 nav a .lb{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+nav .setb{margin-top:auto;border-top:1px solid var(--line-2);border-radius:0;padding-top:10px}
 nav .more{font-size:12px;color:var(--ink-3);padding:4px 8px;text-decoration:none}
 nav details summary{list-style:none;cursor:pointer;font-size:11px;color:var(--ink-3);letter-spacing:.08em;padding:10px 8px 4px}
 nav details summary::-webkit-details-marker{display:none}
@@ -503,7 +504,7 @@ a.btn{text-decoration:none;color:inherit}
 .cn .perm{font-size:12px;display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line-2);padding-top:6px;margin-top:2px}
 .kindbar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
 @media (max-width:1100px){ .split{grid-template-columns:1fr} }
-@media (max-width:680px){ .files{grid-template-columns:1fr} .tree{border-right:0;border-bottom:1px solid var(--line-2);max-height:140px} .ptabs{padding:6px 8px 0} nav details{display:contents} nav details summary{display:none} nav{align-items:center;max-height:48px;overflow-y:hidden} nav a{flex:none} nav .newb{margin:0} nav .sec{display:none} }
+@media (max-width:680px){ .files{grid-template-columns:1fr} .tree{border-right:0;border-bottom:1px solid var(--line-2);max-height:140px} .ptabs{padding:6px 8px 0} nav details{display:contents} nav details summary{display:none} nav{align-items:center;max-height:48px;overflow-y:hidden} nav .setb{margin-top:0;border-top:0;padding-top:6px} nav a{flex:none} nav .newb{margin:0} nav .sec{display:none} }
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
 </style>
 
@@ -519,7 +520,7 @@ a.btn{text-decoration:none;color:inherit}
 
   <nav id="nav">
     <a href="#home" data-v="home" class="newb btn">＋ 新建</a>
-    <div class="sec">已置顶</div>
+    <div class="sec">项目</div>
     <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert">1</span></a>
     <a href="#tasks" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
     <a href="#tasks" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
@@ -529,18 +530,14 @@ a.btn{text-decoration:none;color:inherit}
     <a href="#chat" data-c="正则怎么匹配大陆手机号"><span class="lb">正则怎么匹配大陆手机号</span></a>
     <a href="#chat" data-c="帮我润色这周的周报"><span class="lb">帮我润色这周的周报</span></a>
     <a href="#chat" class="more">查看全部</a>
-    <details open><summary>设置</summary>
-    <a href="#accounts" data-v="accounts">账号与模型</a>
-    <a href="#connect" data-v="connect">连接平台 <span class="n">3</span></a>
-    <a href="#market" data-v="market">Agent 市场 <span class="n">2 更新</span></a>
-    <a href="#control" data-v="control">调度控制</a>
-    <a href="#channels" data-v="channels">消息渠道</a>
-    <a href="#workspace" data-v="workspace">工作区与协作</a>
-    <a href="#perm" data-v="perm">权限与审批</a>
-    </details>
+    <a href="#accounts" class="setb" id="setb"><span class="lb">⚙ 设置</span><span class="n">2 更新</span></a>
   </nav>
 
   <main>
+    <div class="ptabs" id="stabs" hidden>
+      <span class="pn">设置</span>
+      <a href="#accounts" data-t="accounts">账号与模型</a><a href="#connect" data-t="connect">连接平台</a><a href="#market" data-t="market">Agent 市场 <span class="n">2 更新</span></a><a href="#control" data-t="control">调度控制</a><a href="#channels" data-t="channels">消息渠道</a><a href="#workspace" data-t="workspace">工作区与协作</a><a href="#perm" data-t="perm">权限与审批</a>
+    </div>
     <div class="ptabs" id="ptabs" hidden>
       <span class="pn" id="pjName">shop-web 会员登录</span>
       <a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
@@ -1485,6 +1482,9 @@ app.whenReady().then(() =&gt; {
   const PV=['tasks','team','viz','bus','council','memory'];
   function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
     document.getElementById('ptabs').hidden=!pj;
+    const st=['accounts','connect','market','control','channels','workspace','perm'].includes(v);
+    document.getElementById('stabs').hidden=!st; document.getElementById('setb').classList.toggle('on',st);
+    document.querySelectorAll('#stabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
     document.querySelectorAll('#ptabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
     document.querySelectorAll('nav a[data-pj]').forEach(a=>a.classList.toggle('on', pj && a.dataset.pj===document.getElementById('pjName').textContent));
     document.querySelectorAll('nav a[data-c]').forEach(a=>a.classList.toggle('on', v==='chat' && a.dataset.c===curC));
