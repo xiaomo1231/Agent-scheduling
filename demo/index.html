@@ -1650,13 +1650,14 @@ app.whenReady().then(() =&gt; {
   // v11：模型来源两层 + 分组
   const SRC=[
     {id:'claude',n:'Claude Pro / Max',way:'订阅（应用内登录）',how:'Claude Code 登录',q:'5 小时窗口 46%，13:00 重置',m:[['Opus','Anthropic'],['Fable','Anthropic'],['Sonnet','Anthropic'],['Haiku','Anthropic',0]]},
-    {id:'chatgpt',n:'ChatGPT Plus',way:'订阅（应用内登录）',how:'Codex CLI 登录',q:'今天 64%',m:[['GPT-5 系列','OpenAI'],['GPT-5 Codex','OpenAI']]},
+    {id:'chatgpt',n:'ChatGPT Plus',way:'订阅（应用内登录）',how:'Codex CLI 登录',q:'今天 64%',m:[['GPT-6 Astra','OpenAI'],['GPT-5 系列','OpenAI'],['GPT-5 Codex','OpenAI']]},
     {id:'copilot',n:'GitHub Copilot',way:'订阅（应用内登录）',how:'Copilot CLI 登录',q:'本月 41%',multi:1,m:[['Claude Sonnet','Anthropic'],['GPT-5 系列','OpenAI'],['Gemini','Google',0]]},
     {id:'glm',n:'智谱 GLM Coding Plan',way:'Coding / Token Plan',how:'Anthropic 兼容地址',q:'本周 38%',m:[['GLM-5.3','智谱'],['GLM-5.3-Flash','智谱']]},
     {id:'kimi',n:'Kimi Code Plan',way:'Coding / Token Plan',how:'Anthropic 兼容地址',q:'本周 12%',m:[['Kimi K3','月之暗面'],['Kimi K2.7','月之暗面',0]]},
     {id:'ark',n:'火山方舟 Coding Plan',way:'Coding / Token Plan',how:'OpenAI + Anthropic 兼容',q:'本周 20%',multi:1,m:[['Doubao','字节'],['GLM-5.3','智谱',0],['Kimi K3','月之暗面',0],['DeepSeek V4.1','DeepSeek']]},
     {id:'ocgo',n:'OpenCode Go',way:'Coding / Token Plan',how:'OpenAI + Anthropic 兼容',q:'本月 $18 / $60',multi:1,more:26,m:[['DeepSeek V4 Pro','DeepSeek'],['DeepSeek V4.1 Flash','DeepSeek'],['Kimi K3','月之暗面'],['GLM-5.3','智谱'],['Qwen3.8 Max','阿里',0],['MiniMax M3','MiniMax',0]]},
     {id:'ds',n:'DeepSeek API',way:'API key',how:'按量付费',q:'本月 ¥23.40',m:[['DeepSeek V4 Pro','DeepSeek'],['DeepSeek V4.1 Flash','DeepSeek']]},
+    {id:'ant',n:'Anthropic API',way:'API key',how:'按量付费',q:'本月 ¥4.20',m:[['Fable','Anthropic'],['Opus','Anthropic'],['Sonnet','Anthropic',0]]},
     {id:'oai',n:'OpenAI API',way:'API key',how:'按量付费',q:'本月 ¥9.00',m:[['GPT-5 系列','OpenAI']]},
     {id:'ollama',n:'本地 Ollama',way:'本地模型',how:'127.0.0.1:11434',q:'免费',m:[['qwen3:14b','阿里（本地）']]}
   ];
@@ -1688,7 +1689,7 @@ app.whenReady().then(() =&gt; {
   document.getElementById('addGroup').onclick=()=>{ readPools(); GRP.push({n:'新分组',h:'还没有项目在用',r:[['执行','','',0]]}); drawPools(); const g=[...document.querySelectorAll('#pools .gname')].pop(); g.focus(); g.select(); };
   // 添加来源
   const PROV={
-    login:{b:'打开官方登录',note:'会在内置终端里运行官方 CLI 的登录命令，账号密码只在官方页面输入，中枢不读取登录凭据。',l:[['Claude Pro / Max（Claude Code）',[['Opus','Anthropic'],['Fable','Anthropic'],['Sonnet','Anthropic'],['Haiku','Anthropic']]],['ChatGPT Plus / Pro（Codex CLI）',[['GPT-5 系列','OpenAI'],['GPT-5 Codex','OpenAI']]],['Google AI Pro（Gemini CLI）',[['Gemini Pro','Google'],['Gemini Flash','Google']]],['GitHub Copilot（Copilot CLI）',[['Claude Sonnet','Anthropic'],['GPT-5 系列','OpenAI'],['Gemini','Google']],1]]},
+    login:{b:'打开官方登录',note:'会在内置终端里运行官方 CLI 的登录命令，账号密码只在官方页面输入，中枢不读取登录凭据。',l:[['Claude Pro / Max（Claude Code）',[['Opus','Anthropic'],['Fable','Anthropic'],['Sonnet','Anthropic'],['Haiku','Anthropic']]],['ChatGPT Plus / Pro（Codex CLI）',[['GPT-6 Astra','OpenAI'],['GPT-5 系列','OpenAI'],['GPT-5 Codex','OpenAI']]],['Google AI Pro（Gemini CLI）',[['Gemini Pro','Google'],['Gemini Flash','Google']]],['GitHub Copilot（Copilot CLI）',[['Claude Sonnet','Anthropic'],['GPT-5 系列','OpenAI'],['Gemini','Google']],1]]},
     plan:{b:'测试连接',note:'DeepSeek 官方没有 Coding Plan。想用包月额度跑 DeepSeek，可以选火山方舟、阿里云百炼或 OpenCode Go，它们里面带 DeepSeek 模型；腾讯云的 Coding Plan 已经下线。',l:[['智谱 GLM Coding Plan',[['GLM-5.3','智谱'],['GLM-5.3-Flash','智谱']]],['Kimi Code Plan',[['Kimi K3','月之暗面'],['Kimi K2.7','月之暗面']]],['MiniMax Token Plan',[['MiniMax M3','MiniMax'],['MiniMax M2.7','MiniMax']]],['小米 MiMo',[['MiMo-V2.6-Pro','小米'],['MiMo-V2.6-Flash','小米']]],['阿里云百炼 Coding Plan（多家模型）',[['Qwen3.8 Max','阿里'],['DeepSeek V4 Pro','DeepSeek']],1],['火山方舟 Coding Plan（多家模型）',[['Doubao','字节'],['GLM-5.3','智谱'],['Kimi K3','月之暗面'],['DeepSeek V4.1','DeepSeek']],1],['OpenCode Go（多家模型）',[['DeepSeek V4 Pro','DeepSeek'],['Kimi K3','月之暗面'],['GLM-5.3','智谱'],['Qwen3.8 Max','阿里'],['MiniMax M3','MiniMax'],['MiMo-V2.6-Pro','小米']],1]]},
     key:{b:'测试连接',note:'key 存进系统钥匙串。OpenRouter、硅基流动这类聚合平台一个 key 能用多家模型，保存时可以只勾你要的。',l:[['DeepSeek API',[['DeepSeek V4 Pro','DeepSeek'],['DeepSeek V4.1 Flash','DeepSeek']]],['Anthropic API',[['Opus','Anthropic'],['Sonnet','Anthropic']]],['OpenAI API',[['GPT-5 系列','OpenAI']]],['Google Gemini API',[['Gemini Pro','Google']]],['智谱 API',[['GLM-5.3','智谱']]],['Moonshot API（Kimi）',[['Kimi K3','月之暗面']]],['阿里云百炼 API',[['Qwen3.8 Max','阿里']]],['火山方舟 API',[['Doubao','字节']]],['MiniMax API',[['MiniMax M3','MiniMax']]],['OpenRouter（多家模型）',[['Opus','Anthropic'],['GPT-5 系列','OpenAI'],['DeepSeek V4 Pro','DeepSeek'],['Kimi K3','月之暗面']],1],['硅基流动（多家模型）',[['DeepSeek V4 Pro','DeepSeek'],['Qwen3.8 Max','阿里'],['GLM-5.3','智谱']],1],['自定义（OpenAI 兼容）',[['自动读取模型列表','自定义']]]]},
     local:{b:'检测',note:'填本机或局域网地址，模型列表自动读取。',l:[['Ollama',[['qwen3:14b','阿里（本地）'],['deepseek-r1:8b','DeepSeek（本地）']]],['LM Studio',[['已加载的模型','本地']]],['vLLM',[['已部署的模型','本地']]]]}
@@ -1896,20 +1897,27 @@ app.whenReady().then(() =&gt; {
   rlDraw(); rsDraw();
   // 团队表（重做）
   const TEAM={
-    code:[['协调者',[['中枢内置（只派活）','grp:代码/协调']],''],['前端',[['Claude Code','grp:代码/执行'],['DSH','ds/DeepSeek V4 Pro']],'写 + 审'],['后端',[['Codex CLI','chatgpt/GPT-5 Codex']],''],['测试',[['DSH','grp:便宜干活/执行']],'']],
+    code:[['协调者',[['中枢内置（只派活）','claude/Fable']],'',{dual:1,m2:'chatgpt/GPT-6 Astra'}],['前端',[['Claude Code','grp:代码/执行'],['DSH','ds/DeepSeek V4 Pro']],'写 + 审'],['后端',[['Codex CLI','chatgpt/GPT-5 Codex']],''],['测试',[['DSH','grp:便宜干活/执行']],'']],
     research:[['协调者',[['中枢内置（只派活）','chatgpt/GPT-5 系列']],''],['检索',[['OpenCode','kimi/Kimi K3']],''],['整理',[['OpenCode','ocgo/DeepSeek V4.1 Flash']],''],['核查',[['Gemini CLI','glm/GLM-5.3']],''],['统稿',[['Claude Code','claude/Opus']],'']],
     single:[['协调者',[['由 Claude Code 兼任','claude/Opus']],''],['全部任务',[['Claude Code','grp:代码/执行']],'']]
   };
+  function runNote(k){ if(!k) return ''; if(k.startsWith('grp:')){ const [g,r]=k.slice(4).split('/'); const G=GRP.find(x=>x.n===g); const R=G&&G.r.find(x=>x[0]===r); k=R?R[1]:''; }
+    const id=(k||'').split('/')[0], x=SRC.find(q=>q.id===id); if(!x) return '';
+    if(x.way.startsWith('订阅')) return '订阅额度：由 '+x.how.replace(' 登录','')+' 代跑，只能派活，派活、审批、留痕仍经过中枢';
+    return '中枢引擎直接调用，全程可控'; }
   const TAG=['Claude Code','Codex CLI','OpenCode','DSH','Gemini CLI','Qwen Code','Kimi CLI','GitHub Copilot CLI'];
   const MODE_TIP={'分工':'协调者把子任务分给两边各做一部分','主备':'先用第一个，额度用完或出错换第二个','并行对比':'同一件事两边都做，你挑一个','写 + 审':'第一个写，第二个审，审不过打回'};
   drawTeam=function(k){ teamKey=k; const t=document.getElementById('teamTable'), rows=TEAM[k];
     t.innerHTML='<tr><th>岗位</th><th>谁来干 · 用什么模型</th><th>挂两个 agent 时怎么配合</th></tr>'+rows.map((r,i)=>{ const coord=r[0]==='协调者';
-      return '<tr data-r="'+i+'"><td><b>'+esc(r[0])+'</b></td><td>'+r[1].map((a,j)=>'<div class="ag2" data-a="'+j+'"><select class="s" data-f="ag" aria-label="agent">'+(coord?['中枢内置（只派活）','由 Claude Code 兼任']:TAG).map(o=>'<option'+(o===a[0]?' selected':'')+'>'+o+'</option>').join('')+'</select><select class="s" data-f="md" aria-label="模型">'+grpOpts(a[1])+'</select>'+(j>0?'<button data-rm title="去掉">×</button>':'<span></span>')+'</div>').join('')
+      return '<tr data-r="'+i+'"><td><b>'+esc(r[0])+'</b></td><td>'+r[1].map((a,j)=>'<div class="ag2" data-a="'+j+'"><select class="s" data-f="ag" aria-label="agent">'+(coord?['中枢协调者（只派活）']:TAG).map(o=>'<option'+(o===a[0]?' selected':'')+'>'+o+'</option>').join('')+'</select><select class="s" data-f="md" aria-label="模型">'+grpOpts(a[1])+'</select>'+(j>0?'<button data-rm title="去掉">×</button>':'<span></span>')+'</div>').join('')
+        +(coord?'<div class="hint" style="margin:-2px 0 6px">'+esc(runNote(r[1][0][1]))+'</div><label class="check" style="font-size:12.5px"><input type="checkbox" data-f="dual"'+(r[3]&&r[3].dual?' checked':'')+'>双脑：再用一个模型审计划，或者当备用</label>'+(r[3]&&r[3].dual?'<div class="ag2" style="margin-top:6px"><select class="s" data-f="dmode"><option>审计划</option><option'+(r[3].dm==='备用'?' selected':'')+'>备用</option></select><select class="s" data-f="m2">'+grpOpts(r[3].m2)+'</select><span></span></div><div class="hint">'+esc(runNote(r[3].m2))+'</div>':''):'')
         +(coord||r[1].length>1?'':'<button class="lnk" data-add2>+ 再挂一个 agent</button>')+'</td><td class="mode">'+(coord?'<span class="hint">只派活，不写代码</span>':r[1].length>1?'<select class="s" data-f="mode">'+Object.keys(MODE_TIP).map(o=>'<option'+(o===r[2]?' selected':'')+'>'+o+'</option>').join('')+'</select><span class="hint">'+MODE_TIP[r[2]||'分工']+'</span>':'<span class="hint">只有一个 agent</span>')+'</td></tr>'; }).join('');
     document.getElementById('teamRs').hidden=k!=='research'; document.getElementById('teamSingle').hidden=k!=='single'; };
   const ttb=document.getElementById('teamTable');
   ttb.onchange=e=>{ const f=e.target.dataset.f; if(!f) return; const r=TEAM[teamKey][+e.target.closest('tr').dataset.r];
-    if(f==='mode'){ r[2]=e.target.value; drawTeam(teamKey); return; } const a=r[1][+e.target.closest('.ag2').dataset.a]; if(f==='ag') a[0]=e.target.value; else a[1]=e.target.value; };
+    if(f==='mode'){ r[2]=e.target.value; drawTeam(teamKey); return; }
+    if(f==='dual'){ r[3]=r[3]||{m2:'chatgpt/GPT-6 Astra'}; r[3].dual=e.target.checked?1:0; drawTeam(teamKey); return; }
+    if(f==='m2'){ r[3].m2=e.target.value; drawTeam(teamKey); return; } if(f==='dmode'){ r[3].dm=e.target.value; return; } const a=r[1][+e.target.closest('.ag2').dataset.a]; if(f==='ag') a[0]=e.target.value; else { a[1]=e.target.value; if(r[0]==='协调者') drawTeam(teamKey); } };
   ttb.addEventListener('click',e=>{ const tr=e.target.closest('tr'); if(!tr||!tr.dataset.r) return; const r=TEAM[teamKey][+tr.dataset.r];
     if(e.target.closest('[data-add2]')){ e.stopImmediatePropagation(); r[1].push(['DSH','grp:便宜干活/执行']); r[2]='写 + 审'; drawTeam(teamKey); say('已挂上第二个 agent，默认一个写一个审'); }
     if(e.target.closest('[data-rm]')){ e.stopImmediatePropagation(); r[1].splice(+e.target.closest('.ag2').dataset.a,1); drawTeam(teamKey); } },true);
