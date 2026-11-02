@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pendingApprovals, threadStatus, type Approval, type Message, type State, type Thread } from '@zhongshu/core';
 import { send } from './api';
 import { attempt, toast } from './toast';
-import { EffortPicker, ModelPicker, STATUS_TEXT, label, time } from './ui';
+import { Dialog, EffortPicker, ModelPicker, STATUS_TEXT, label, time } from './ui';
 
 function ApprovalCard({ a }: { a: Approval }) {
   const decide = (approve: boolean, always = false) => attempt(send({ type: 'approval.decide', approvalId: a.id, approve, always }), approve ? '已批准' : '已拒绝');
@@ -30,7 +30,7 @@ function MessageView({ m, st, onOpen }: { m: Message; st: State; onOpen: (thread
   const me = m.author.kind === 'user';
   const sys = m.author.kind === 'system';
   return (
-    <div className={'msg' + (me ? ' me' : sys ? ' sys' : '')}>
+    <div className={'msg' + (me ? ' me' : sys ? ' sys' : '')} data-mid={m.id}>
       {!me && (
         <div className="who">
           <span>{m.authorLabel}</span>
@@ -69,6 +69,16 @@ function MessageView({ m, st, onOpen }: { m: Message; st: State; onOpen: (thread
             </div>
           );
         }
+        if (c.kind === 'side') {
+          const t = st.threads[c.threadId];
+          if (!t) return null;
+          const OUT: Record<string, string> = { discard: '已丢弃', conclusion: '结论已带回', all: '已整段带回' };
+          return (
+            <button key={i} className="mcard" style={{ display: 'block', textAlign: 'left', width: '100%' }} onClick={() => onOpen(t.id)}>
+              <div className="row"><b>追问</b><span className="muted" style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>「{c.quote}」</span><span className="pill">{t.parent?.outcome ? OUT[t.parent.outcome] : '进行中'}</span></div>
+            </button>
+          );
+        }
         if (c.kind !== 'planDiff') return null;
         const seq = c.undoToken ? Number(c.undoToken.split(':')[1]) : 0;
         return (
@@ -86,14 +96,44 @@ function MessageView({ m, st, onOpen }: { m: Message; st: State; onOpen: (thread
 export function Messages({ st, threadId, onOpen }: { st: State; threadId: string; onOpen: (id: string) => void }) {
   const list = st.messages[threadId] ?? [];
   const end = useRef<HTMLDivElement>(null);
+  const box = useRef<HTMLDivElement>(null);
+  const [sel, setSel] = useState<{ quote: string; mid?: string; x: number; y: number } | null>(null);
+  const [ask, setAsk] = useState<{ quote: string; mid?: string } | null>(null);
+  const [q, setQ] = useState('');
   useEffect(() => {
     end.current?.scrollIntoView({ block: 'end' });
   }, [list.length]);
+  // 划词：选中一段文字后浮出“追问”
+  const onUp = () => {
+    const s = window.getSelection();
+    const text = s?.toString().trim() ?? '';
+    if (!s || !text || s.rangeCount === 0 || !box.current?.contains(s.anchorNode)) return setSel(null);
+    const el = (s.anchorNode instanceof Element ? s.anchorNode : s.anchorNode?.parentElement)?.closest('[data-mid]');
+    const r = s.getRangeAt(0).getBoundingClientRect();
+    setSel({ quote: text.slice(0, 2000), ...(el ? { mid: el.getAttribute('data-mid')! } : {}), x: Math.min(r.left + r.width / 2, window.innerWidth - 60), y: Math.max(r.top - 36, 8) });
+  };
+  const go = async () => {
+    if (!ask) return;
+    const r = await attempt(send<{ threadId: string }>({ type: 'thread.side', threadId, quote: ask.quote, question: q.trim(), ...(ask.mid ? { messageId: ask.mid } : {}) }));
+    if (r) {
+      setAsk(null);
+      setQ('');
+      onOpen(r.threadId);
+    }
+  };
   return (
-    <div className="msgs">
+    <div className="msgs" ref={box} onMouseUp={onUp} onTouchEnd={() => setTimeout(onUp, 50)}>
       {list.length === 0 && <div className="empty">还没有消息</div>}
       {list.map((m) => <MessageView key={m.id} m={m} st={st} onOpen={onOpen} />)}
       <div ref={end} />
+      {sel && !ask && (
+        <button className="btn pri sm selask" style={{ left: sel.x, top: sel.y }} onMouseDown={(e) => e.preventDefault()} onClick={() => { setAsk({ quote: sel.quote, ...(sel.mid ? { mid: sel.mid } : {}) }); setSel(null); }}>追问</button>
+      )}
+      <Dialog open={!!ask} onClose={() => setAsk(null)} title="追问这段" footer={<><button className="btn" onClick={() => setAsk(null)}>取消</button><button className="btn pri" onClick={go}>开侧枝</button></>}>
+        <blockquote className="quote">{ask?.quote}</blockquote>
+        <label className="f">想问什么（空着就是“展开讲讲”）<textarea className="inp" rows={3} value={q} onChange={(e) => setQ(e.target.value)} autoFocus /></label>
+        <p className="muted" style={{ margin: 0 }}>会开一个侧枝讨论串单独聊，不打扰这里。聊完可以丢掉，或者把结论带回来。</p>
+      </Dialog>
     </div>
   );
 }
@@ -225,15 +265,17 @@ export function ThreadView({ st, threadId, onBack, onOpen }: { st: State; thread
   const p = st.projects[t.projectId]!;
   const choice = t.model ?? p.settings.threadDefault.model;
   const hasWait = t.steps.some((x) => x.state === 'wait' || x.state === 'queue');
+  // 关掉的追问、评审讨论串都是“归档”状态，不再接着聊
+  const closed = t.kind === 'review' || !!t.parent?.outcome;
   return (
     <>
       <header>
         {onBack && <button className="btn ghost sm" onClick={onBack} aria-label="返回列表">←</button>}
         <b style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.title}</b>
         <span className={'pill ' + s}>{STATUS_TEXT[s]}</span>
-        <button className="btn ghost sm" onClick={() => setShowSet(!showSet)} aria-expanded={showSet}>模型</button>
+        {t.kind !== 'review' && <button className="btn ghost sm" onClick={() => setShowSet(!showSet)} aria-expanded={showSet}>模型</button>}
         {!t.resolved && hasWait && <button className="btn sm" onClick={() => attempt(send({ type: 'thread.continue', threadId: t.id }))}>继续</button>}
-        {t.resolved
+        {closed ? null : t.resolved
           ? <button className="btn sm" onClick={() => attempt(send({ type: 'thread.reopen', threadId: t.id }), '已重新打开')}>重新打开</button>
           : <button className="btn sm" onClick={() => attempt(send({ type: 'thread.resolve', threadId: t.id }), '已放到已解决')}>解决</button>}
       </header>
@@ -245,12 +287,32 @@ export function ThreadView({ st, threadId, onBack, onOpen }: { st: State; thread
           <button className="btn sm" onClick={() => attempt(send({ type: 'thread.stop', threadId: t.id }), '已停下')}>停止运行</button>
         </div>
       )}
+      {t.parent && (
+        <div className="sidebar-note">
+          <div className="muted" style={{ fontSize: 12 }}>从 <a href={`#/p/${t.projectId}/${st.threads[t.parent.threadId]?.kind === 'coord' ? '' : t.parent.threadId}`}>{st.threads[t.parent.threadId]?.kind === 'coord' ? '协调者' : st.threads[t.parent.threadId]?.title ?? '原讨论串'}</a> 划出来的：</div>
+          <blockquote className="quote">{t.parent.quote}</blockquote>
+          {!t.parent.outcome ? (
+            <div className="row">
+              <span className="muted">聊完了？</span>
+              <button className="btn sm pri" onClick={() => attempt(send({ type: 'thread.sideClose', threadId: t.id, outcome: 'conclusion' }), '结论已带回')}>带回结论</button>
+              <button className="btn sm" onClick={() => attempt(send({ type: 'thread.sideClose', threadId: t.id, outcome: 'all' }), '已整段带回')}>整段带回</button>
+              <button className="btn sm" onClick={() => attempt(send({ type: 'thread.sideClose', threadId: t.id, outcome: 'discard' }), '已丢弃')}>丢弃</button>
+            </div>
+          ) : <div className="muted">已关闭（{({ discard: '丢弃', conclusion: '带回了结论', all: '整段带回' } as Record<string, string>)[t.parent.outcome]}）</div>}
+        </div>
+      )}
+      {t.review && (
+        <div className="sidebar-note">
+          <div className="row"><b>群评审</b><span className={'pill ' + (t.review.state === 'running' ? 'running' : t.review.state === 'decided' ? 'done' : 'wait')}>{({ running: '讨论中', decided: '已拍板', failed: '没完成' } as Record<string, string>)[t.review.state]}</span></div>
+          <div className="muted" style={{ fontSize: 12 }}>{t.review.roles.map((r) => `${r.devil ? '😈 ' : ''}${r.name}`).join(' · ')} · {t.review.rounds} 轮</div>
+        </div>
+      )}
       <div className="body">
-        <Plan t={t} />
-        {t.resolved && <div className="muted" style={{ padding: '6px 12px' }}>{t.resolved.by === 'user' ? '你' : '协调者'}在 {time(t.resolved.at)} 解决了它：{t.resolved.reason}。发消息会重新打开。</div>}
+        {t.kind !== 'side' && t.kind !== 'review' && <Plan t={t} />}
+        {t.resolved && !closed && <div className="muted" style={{ padding: '6px 12px' }}>{t.resolved.by === 'user' ? '你' : '协调者'}在 {time(t.resolved.at)} 解决了它：{t.resolved.reason}。发消息会重新打开。</div>}
         <Messages st={st} threadId={t.id} onOpen={onOpen} />
       </div>
-      <Composer threadId={t.id} placeholder="追加要求：“再加一步…”“先做 T3”“取消 T2”，回车发送" />
+      {closed ? null : <Composer threadId={t.id} placeholder={t.kind === 'side' ? '接着追问，回车发送' : '追加要求：“再加一步…”“先做 T3”“取消 T2”，回车发送'} />}
     </>
   );
 }

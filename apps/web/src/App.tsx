@@ -6,6 +6,8 @@ import { ModelsPage } from './models';
 import { LogPage, SecurityPage } from './security';
 import { SkillsPage } from './skills';
 import { Toasts } from './toast';
+import { UsagePage } from './usage';
+import { ChannelsPage } from './channels';
 
 export function App() {
   const st = useStore();
@@ -32,6 +34,8 @@ export function App() {
     case 'security': view = <SecurityPage st={st} />; break;
     case 'skills': view = <SkillsPage st={st} />; break;
     case 'log': view = <LogPage st={st} />; break;
+    case 'usage': view = <UsagePage st={st} />; break;
+    case 'channels': view = <ChannelsPage st={st} />; break;
     default: view = <Home st={st} go={go} />;
   }
   return (
@@ -56,6 +60,8 @@ export function App() {
         })}
         <div className="sec">设置</div>
         {link('models', page === 'models', '模型')}
+        {link('usage', page === 'usage', '用量', Object.keys(st.quota).length ? <span className="n alert">等</span> : null)}
+        {link('channels', page === 'channels', '消息渠道')}
         {link('security', page === 'security', '权限与安全', pending ? <span className="n alert">{pending}</span> : null)}
         {link('skills', page === 'skills', 'Skills')}
         {link('log', page === 'log', '留痕')}

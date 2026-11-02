@@ -44,6 +44,8 @@ demo/        早期的单文件可点击原型，只作参考
 | `audit/` | 安全体检：找出放松了的设置，给出一键修复 |
 | `models/` | 模型目录、思考强度挡位、用途分组解析 |
 | `skills/` | SKILL.md 解析、`metadata.zhongshu` 校验、静态扫描、工具名映射、投放目录 |
+| `memory/` | 记忆检索（中文两字切词）、按字节截断、放进提示词的记忆段 |
+| `review/` | 群评审的 7 套预设班子 |
 
 ### server 里有什么
 
@@ -51,11 +53,16 @@ demo/        早期的单文件可点击原型，只作参考
 |---|---|
 | `store/` | 事件日志写入与读取（每个工作区一个 `events.jsonl`），启动时回放 |
 | `secrets/` | 密钥存取接口；桌面版接系统钥匙串，测试用内存实现；日志打码 |
-| `providers/` | 模型适配：Anthropic、OpenAI 兼容（GLM / Kimi / DeepSeek / OpenCode / Ollama 等）、模拟 |
+| `providers/` | 模型适配：Anthropic、OpenAI 兼容（GLM / Kimi / DeepSeek / OpenCode / Ollama 等）、模拟；`MeteredProvider` 记用量、碰到 429 等恢复再重试 |
 | `coordinator/` | 协调者引擎：把用户消息变成工具调用（开讨论串、改计划、派活、请求审批、解决） |
 | `runners/` | agent 运行器：内置 agent（工具全在中枢手里）、CLI agent（Claude Code / Codex 等无界面模式） |
 | `approvals/` | 审批队列：指纹绑定、超时兜底、白名单“以后都允许” |
 | `skills/` | Skill 安装服务：预览转换、带锁安装、校验、投放到各平台目录 |
+| `worktrees/` | 每个讨论串一个 git worktree：开分支、提交、合并、丢弃 |
+| `memory/` | 项目记忆：桌面页、条目、每日整理 |
+| `review/` | 群评审：角色轮流发言、唱反调、拍板 |
+| `side/` | 划词追问：侧枝讨论串、关掉时带回结论 |
+| `channels/` | 消息渠道：Telegram 长轮询 + 配对、飞书 / 钉钉 / 企业微信 Webhook |
 | `gateway/` | 本地网关：HTTP API + WebSocket 事件流，只绑 127.0.0.1，带 token，校验 Host 和 Origin |
 | `app/` | 组装：把以上模块接起来，命令的 zod 校验和分发；对外只暴露 `createApp(options)` |
 
@@ -105,11 +112,20 @@ demo/        早期的单文件可点击原型，只作参考
 - OpenAI 兼容接口只用 `/chat/completions` 的通用部分；GPT 系列的挡位映射到 `reasoning_effort`。
 - 订阅账号只通过官方 CLI 自己的登录使用，中枢不碰它们的凭据，也不加放开权限的参数。
 
+- 所有经 `providerFor` 拿到的模型都包了 `MeteredProvider`：调用一次记一条 `usage.recorded`；429 时发 `source.quota` 并等待。新代码要拿模型，一律走 `providerFor`（带上 `projectId`），不要自己 new 适配器。
+
 ## 8. 桌面外壳约定
 
 - 窗口 `contextIsolation`、`sandbox` 开，`nodeIntegration` 关，不加 preload；token 通过地址的 `#token=` 传给页面，页面读完就从地址栏抹掉。
 - 只能停留在本地网关的页面，外部链接交给系统浏览器；拒绝所有权限请求。
 
-## 9. 现在做到哪、后面接什么
+## 9. 新功能的约定
+
+- 新的状态一律先在 core 里加类型和事件，再在 reducer 里处理；server 的服务只发事件，不直接改状态。
+- 从外部来的内容（网页、渠道消息之外的第三方文本、其他角色的发言、记忆）进提示词时要包起来并说明“只当资料”。
+- 渠道只认配对过的聊天；Webhook 只发往官方域名；token 只进密钥库。
+- 子 agent 只给只读工具；读过外部内容的结论按外部内容处理。
+
+## 10. 现在做到哪、后面接什么
 
 见 `docs/roadmap.md`。

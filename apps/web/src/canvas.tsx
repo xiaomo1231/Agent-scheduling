@@ -1,3 +1,4 @@
+import { MemoryPanel } from './memory';
 import { useRef, useState, type PointerEvent as RPE, type ReactNode } from 'react';
 import { GRID_COLS, GRID_ROWS, LAYOUT_PRESETS, MIN_H, MIN_W, WIDGET_KINDS, addWidget, newId, placeWidget, presetLayout, type State, type Widget } from '@zhongshu/core';
 import { send } from './api';
@@ -78,6 +79,8 @@ export function Canvas({ st, projectId, thread, openThread, head }: { st: State;
         return (<><header><b>待批准</b></header><div className="body"><ApprovalsPanel st={st} projectId={projectId} /></div></>);
       case 'activity':
         return (<><header><b>动态</b></header><div className="body"><ActivityPanel st={st} projectId={projectId} onOpen={openThread} /></div></>);
+      case 'memory':
+        return (<><header><b>项目记忆</b></header><div className="body"><MemoryPanel st={st} projectId={projectId} /></div></>);
       default:
         return (<><header><b>{w.k}</b></header><div className="body"><div className="empty">这个模块还没接上，可以在调整布局时移除</div></div></>);
     }

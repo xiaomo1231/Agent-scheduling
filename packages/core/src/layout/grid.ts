@@ -100,6 +100,7 @@ export const WIDGET_KINDS: Record<string, { label: string; w: number; h: number 
   thread: { label: '当前讨论串', w: 6, h: 8 },
   approvals: { label: '待批准', w: 4, h: 3 },
   activity: { label: '动态', w: 4, h: 3 },
+  memory: { label: '项目记忆', w: 4, h: 5 },
 };
 
 export const LAYOUT_PRESETS: Record<string, { label: string; widgets: Preset }> = {

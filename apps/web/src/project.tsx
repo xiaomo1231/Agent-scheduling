@@ -3,6 +3,7 @@ import { LAYOUT_PRESETS, type ProjectSettings, type State } from '@zhongshu/core
 import { send } from './api';
 import { attempt } from './toast';
 import { Canvas } from './canvas';
+import { ReviewDialog } from './review';
 import { Dialog, EffortPicker, ModelPicker } from './ui';
 
 export function Home({ st, go }: { st: State; go: (p: string) => void }) {
@@ -87,6 +88,9 @@ function ProjectSettingsDialog({ st, projectId, open, onClose }: { st: State; pr
       </div>
       <h2 style={{ margin: 0 }}>解决</h2>
       <label className="chk"><input type="checkbox" checked={s.autoResolve} onChange={(e) => save({ autoResolve: e.target.checked })} />计划都做完、没有待批准、不用等你回答时，协调者自动把讨论串放到已解决</label>
+      <h2 style={{ margin: 0 }}>运行</h2>
+      <label className="chk"><input type="checkbox" checked={s.useWorktrees} onChange={(e) => save({ useWorktrees: e.target.checked })} />工作目录是 git 仓库时，每个讨论串在自己的分支和 worktree 里改，做完由你决定合并还是丢弃</label>
+      <label className="chk"><input type="checkbox" checked={s.autoContinueAfterQuotaReset} onChange={(e) => save({ autoContinueAfterQuotaReset: e.target.checked })} />碰到额度上限时等它恢复，然后自动继续</label>
       <h2 style={{ margin: 0 }}>项目说明</h2>
       <textarea className="inp" rows={5} value={instr} onChange={(e) => setInstr(e.target.value)} onBlur={() => instr !== s.instructions && save({ instructions: instr })} placeholder="比如：用 pnpm；提交前跑测试；代码风格看 CONTRIBUTING.md" />
       <h2 style={{ margin: 0 }}>危险操作</h2>
@@ -100,6 +104,7 @@ function ProjectSettingsDialog({ st, projectId, open, onClose }: { st: State; pr
 
 export function ProjectPage({ st, projectId, thread, go }: { st: State; projectId: string; thread: string | null; go: (p: string) => void }) {
   const [open, setOpen] = useState(false);
+  const [rv, setRv] = useState(false);
   const p = st.projects[projectId];
   if (!p) return <div className="view"><div className="empty">找不到这个项目。<a href="#/">回首页</a></div></div>;
   return (
@@ -111,9 +116,11 @@ export function ProjectPage({ st, projectId, thread, go }: { st: State; projectI
           <h1>{p.name}</h1>
           <span className="muted">{p.goal}</span>
           <span className="spacer" />
+          <button className="btn" onClick={() => setRv(true)}>群评审</button>
           <button className="btn" onClick={() => setOpen(true)}>项目设置</button>
         </>}
       />
+      <ReviewDialog st={st} projectId={projectId} open={rv} onClose={() => setRv(false)} onOpen={(id) => go(`p/${projectId}/${id}`)} />
       <ProjectSettingsDialog st={st} projectId={projectId} open={open} onClose={() => setOpen(false)} />
     </div>
   );
