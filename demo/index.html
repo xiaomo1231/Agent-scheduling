@@ -1,4 +1,4 @@
-<title>调度台</title>
+<title>中枢</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -184,9 +184,26 @@ td .m{font-size:12px;color:var(--ink-3)}
 .risk{max-width:820px;margin-top:16px}
 .risk .entry{grid-template-columns:1fr auto}
 
+/* 预设与工作区选项 */
+.chip{border:1px solid var(--line);background:var(--raise);border-radius:14px;padding:3px 12px;font-size:12.5px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.chip.add{border-style:dashed;color:var(--ink-2)}
+.inp{border:1px solid var(--line);border-radius:var(--r);padding:5px 8px;background:var(--raise)}
+.role{display:grid;grid-template-columns:140px 1fr 140px auto;gap:8px;align-items:start}
+.role textarea{border:1px solid var(--line);border-radius:var(--r);padding:5px 8px;background:var(--raise);min-height:52px;width:100%}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;max-width:1100px}
+.opt{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.opt .oh{display:flex;align-items:center;gap:8px}
+.opt p{margin:0;font-size:12.5px;color:var(--ink-2)}
+.opt .cost{color:var(--ink-3);font-size:12px;border-top:1px dashed var(--line);padding-top:6px}
+.opt .seg{flex-wrap:wrap;align-self:flex-start}
+[hidden]{display:none!important}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
 @media (max-width:900px){
   .tasks,.council,.mem{grid-template-columns:1fr}
   .levels{grid-template-columns:1fr}
+  .role{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
 }
 @media (max-width:680px){
   body{padding-block:0}
@@ -206,7 +223,7 @@ td .m{font-size:12px;color:var(--ink-3)}
 
 <div class="app">
   <div class="top">
-    <div class="brand"><i></i>调度台</div>
+    <div class="brand"><i></i>中枢</div>
     <label class="proj">项目 <select id="proj"><option>shop-web 会员登录</option><option>周报自动化</option></select></label>
     <div class="spacer"></div>
     <div class="meter" title="本月预算">本月 <span class="mono">¥186 / ¥300</span><span class="bar"><b style="width:62%"></b></span></div>
@@ -223,6 +240,7 @@ td .m{font-size:12px;color:var(--ink-3)}
     <div class="sec">配置</div>
     <a href="#market" data-v="market">Agent 市场 <span class="n">2 更新</span></a>
     <a href="#accounts" data-v="accounts">账号与模型</a>
+    <a href="#workspace" data-v="workspace">工作区与协作</a>
     <a href="#perm" data-v="perm">权限与审批</a>
   </nav>
 
@@ -293,17 +311,26 @@ td .m{font-size:12px;color:var(--ink-3)}
 
     <!-- 群聊评审 -->
     <section class="view" id="v-council">
-      <h1>需求评审：要不要做“记住此设备 30 天”</h1>
-      <p class="sub">每个 agent 带着自己的记忆和角色发言。反方会专门找方案的毛病。结论由你拍板，或交给只看论据的决策者。</p>
+      <h1 id="cTitle">需求评审：要不要做“记住此设备 30 天”</h1>
+      <p class="sub">每个 agent 带着自己的记忆和角色发言。每个预设都有一个专门挑毛病的角色。结论由你拍板，或交给只看论据的决策者。</p>
+      <div class="toolbar" id="presets" role="group" aria-label="评审预设"></div>
+      <div class="box" id="newPreset" hidden style="margin-bottom:16px">
+        <header><strong>新建评审预设</strong><span class="spacer"></span><button class="btn ghost" id="npClose">取消</button></header>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+          <label class="field">预设名称<input id="npName" class="inp" placeholder="例如：合同条款审查"></label>
+          <div id="npRoles" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div><button class="btn" id="npAdd">添加角色</button></div>
+          <div class="toolbar" style="margin:0">
+            <label class="field">最多几轮<select class="s" id="npRounds"><option>2</option><option selected>3</option><option>5</option></select></label>
+            <label class="field">结论由谁定<select class="s" id="npJudge"><option>我来定</option><option>交给决策者</option></select></label>
+          </div>
+          <div><button class="btn pri" id="npSave">保存预设</button></div>
+        </div>
+      </div>
       <div class="council">
         <div class="box">
-          <div class="seats">
-            <span class="seat"><span class="av">产</span>产品 · 记得用户访谈</span>
-            <span class="seat"><span class="av x">安</span>安全 · 记得等保要求</span>
-            <span class="seat"><span class="av g">前</span>前端 · 记得现有登录页</span>
-            <span class="seat devil"><span class="av c">反</span>反方 · 专挑毛病</span>
-          </div>
-          <div class="thread">
+          <div class="seats" id="seats"></div>
+          <div class="thread" id="cThread">
             <div class="msg"><div class="av">产</div><div><div class="who"><b>产品</b>第 1 轮</div><p>访谈里 9 个用户有 6 个抱怨每次都要收验证码。做 30 天免登录能明显降低流失。</p></div></div>
             <div class="msg"><div class="av x">安</div><div><div class="who"><b>安全</b>第 1 轮</div><p>可以做，但必须绑定设备指纹，并在改密码、换手机号时让所有设备失效。公共电脑默认不勾选。</p></div></div>
             <div class="msg"><div class="av c">反</div><div><div class="who"><b>反方</b>第 1 轮</div><p>6/9 的样本太小。另外我们没有“退出所有设备”的入口，先做免登录，出了盗号用户没有自救办法。建议先补退出入口。</p></div></div>
@@ -409,6 +436,50 @@ td .m{font-size:12px;color:var(--ink-3)}
       <p class="note">各家订阅条款不同，Anthropic 自 2026 年 2 月起不允许第三方工具直接使用订阅登录凭据，所以这里只负责启动官方 CLI，登录和调用都由官方程序完成。</p>
     </section>
 
+    <!-- 工作区与协作 -->
+    <section class="view" id="v-workspace">
+      <h1>工作区与协作</h1>
+      <p class="sub">这些选项决定 agent 在哪里干活、能碰什么、怎么交付。不确定就保持推荐值，每一项都写了开启后的效果和代价。</p>
+      <div class="opts" id="opts">
+        <div class="opt">
+          <div class="oh"><b>worktree 隔离</b><span class="pill done">推荐</span></div>
+          <p>给每个 agent 一份独立的代码副本（同一仓库的不同分支）。几个 agent 同时改代码不会互相覆盖，做砸了也只影响它自己那份。</p>
+          <div class="seg" role="group" aria-label="worktree 隔离"><button aria-pressed="true">每个 agent 一份</button><button aria-pressed="false">共用一份</button></div>
+          <p class="cost">代价：多占磁盘；做完要合并回主分支，偶尔需要处理冲突。</p>
+        </div>
+        <div class="opt">
+          <div class="oh"><b>沙箱</b><span class="pill done">推荐</span></div>
+          <p>限制 agent 能碰的文件和网络。就算它执行了危险命令，损害也只会留在工作区里。</p>
+          <div class="seg" role="group" aria-label="沙箱"><button aria-pressed="false">关闭</button><button aria-pressed="true">只能碰工作区</button><button aria-pressed="false">工作区 + 网络白名单</button><button aria-pressed="false">Docker 容器</button></div>
+          <p class="cost">代价：越严越安全，但有些安装、联网命令会被挡住；容器模式需要先装 Docker。</p>
+        </div>
+        <div class="opt">
+          <div class="oh"><b>策略约束</b></div>
+          <p>提前写好的规矩，agent 每次动手前先对照检查，违反就停下来问你。</p>
+          <ul class="rules">
+            <li><label class="check"><input type="checkbox" id="p1" checked>禁止 rm -rf、格式化磁盘等破坏性命令</label></li>
+            <li><label class="check"><input type="checkbox" id="p2" checked>不准修改 .env 和密钥文件</label></li>
+            <li><label class="check"><input type="checkbox" id="p3" checked>单个任务花费不超过 ¥20</label></li>
+            <li><label class="check"><input type="checkbox" id="p4">不准修改 migrations 目录</label></li>
+          </ul>
+          <div class="toolbar" style="margin:0"><input class="inp" id="newRule" placeholder="用一句话写一条新规则" style="flex:1;min-width:0"><button class="btn" id="addRule">添加</button></div>
+          <p class="cost">代价：规则越多，agent 越常停下来等你。</p>
+        </div>
+        <div class="opt">
+          <div class="oh"><b>协作方式</b></div>
+          <p>agent 之间怎么说话。所有消息都会出现在通信总线里，你随时能看、能拦。</p>
+          <div class="seg" role="group" aria-label="协作方式"><button aria-pressed="true">可以直接对话</button><button aria-pressed="false">只通过协调者</button></div>
+          <p class="cost">代价：直接对话更快但消息更多；只走协调者更可控，但协调者容易成为瓶颈。</p>
+        </div>
+        <div class="opt">
+          <div class="oh"><b>一键开 PR</b></div>
+          <p>任务做完后把分支推到 GitHub，开一个合并请求（PR）。你在网页上看每一处改动，确认后再点合并。</p>
+          <div class="seg" role="group" aria-label="一键开 PR"><button aria-pressed="false">自动开</button><button aria-pressed="true">做完问我</button><button aria-pressed="false">不开</button></div>
+          <p class="cost">需要连接 GitHub 账号。项目不在 GitHub 上时，只在本地生成分支。</p>
+        </div>
+      </div>
+    </section>
+
     <!-- 权限 -->
     <section class="view" id="v-perm">
       <h1>权限与审批</h1>
@@ -445,7 +516,7 @@ td .m{font-size:12px;color:var(--ink-3)}
 
 <script>
 (function(){
-  const views=['tasks','bus','council','memory','market','accounts','perm'];
+  const views=['tasks','bus','council','memory','market','accounts','workspace','perm'];
   function show(){
     let v=(location.hash||'#tasks').slice(1); if(!views.includes(v)) v='tasks';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -522,6 +593,48 @@ td .m{font-size:12px;color:var(--ink-3)}
   document.getElementById('mk').addEventListener('click',e=>{ const b=e.target.closest('[data-up]'); if(!b) return;
     const tr=b.closest('tr'); const latest=tr.children[2].textContent; tr.children[1].textContent=latest; b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'最新'})); });
   document.getElementById('updAll').onclick=()=>document.querySelectorAll('#mk [data-up]').forEach(b=>{ if(b.textContent==='更新') b.click(); });
+
+  // 评审预设
+  const presets=[
+    {n:'需求评审',t:'需求评审：要不要做“记住此设备 30 天”',r:[['产品','记得用户访谈',''],['安全','记得等保要求','x'],['前端','记得现有登录页','g'],['反方','专挑毛病','c',1]]},
+    {n:'技术方案辩论',r:[['正方','为方案 A 辩护',''],['反方','为方案 B 辩护','c',1],['裁判','只看论据打分','x']]},
+    {n:'代码评审',r:[['安全','找漏洞','x'],['性能','找慢的地方',''],['可读性','看命名和结构','g'],['挑刺','专挑毛病','c',1]]},
+    {n:'上线前风险检查',r:[['运维','看监控和容量',''],['安全','看权限和数据','x'],['回滚','准备退路','g'],['反方','假设一定会出事','c',1]]},
+    {n:'头脑风暴',r:[['发散 1','只提新点子',''],['发散 2','换个角度提','g'],['收敛','挑出最可行的','x',1]]},
+    {n:'用户视角',r:[['新手','第一次用',''],['老用户','每天都用','g'],['运营','关心转化','x'],['挑刺','找让人困惑的地方','c',1]]}
+  ];
+  const presetBar=document.getElementById('presets'), seats=document.getElementById('seats'), cThread=document.getElementById('cThread'), cTitle=document.getElementById('cTitle');
+  const sample=cThread.innerHTML;
+  function seat(r){ const s=document.createElement('span'); s.className='seat'+(r[3]?' devil':''); const a=document.createElement('span'); a.className='av '+r[2]; a.textContent=r[0].slice(0,1); s.append(a, r[0]+' · '+r[1]); return s; }
+  function pick(i){ const p=presets[i];
+    presetBar.querySelectorAll('.chip[data-i]').forEach(c=>c.setAttribute('aria-pressed',c.dataset.i==i));
+    seats.replaceChildren(...p.r.map(seat));
+    cTitle.textContent=p.t||p.n+'：输入议题后开始讨论';
+    if(i===0) cThread.innerHTML=sample; else cThread.innerHTML='<p class="hint" style="margin:0">这个预设还没有讨论记录。在任务台里选一段需求，或在这里输入议题后开始讨论。</p>';
+  }
+  function drawBar(){ presetBar.replaceChildren(...presets.map((p,i)=>Object.assign(document.createElement('button'),{className:'chip',textContent:p.n,onclick:()=>pick(i),type:'button'})), Object.assign(document.createElement('button'),{className:'chip add',textContent:'新建预设',type:'button',onclick:()=>{document.getElementById('newPreset').hidden=false; if(!roleBox.children.length){addRole('','',false);addRole('挑刺','你的任务是找出方案最可能失败的三个原因，并给出证据。',true);} }}));
+    presetBar.querySelectorAll('.chip').forEach((c,i)=>{ if(i<presets.length) c.dataset.i=i; }); }
+  const roleBox=document.getElementById('npRoles');
+  function addRole(name,prompt,devil){ const d=document.createElement('div'); d.className='role';
+    d.innerHTML='<input class="inp" placeholder="角色名"><textarea placeholder="角色提示词：它是谁、关注什么、怎么发言"></textarea><select class="s"><option>Claude</option><option>GPT</option><option>DeepSeek</option><option>本地 Ollama</option></select><button class="btn ghost" type="button">移除</button>';
+    d.querySelector('input').value=name; d.querySelector('textarea').value=prompt; if(devil) d.dataset.devil=1;
+    d.querySelector('button').onclick=()=>d.remove(); roleBox.appendChild(d); }
+  document.getElementById('npAdd').onclick=()=>addRole('','',false);
+  document.getElementById('npClose').onclick=()=>document.getElementById('newPreset').hidden=true;
+  document.getElementById('npSave').onclick=()=>{
+    const name=document.getElementById('npName').value.trim()||'我的预设';
+    const roles=[...roleBox.children].map((d,k)=>[d.querySelector('input').value.trim()||('角色 '+(k+1)), (d.querySelector('textarea').value.trim()||'自定义角色').slice(0,10), ['','x','g','c'][k%4], d.dataset.devil?1:0]);
+    presets.push({n:name,r:roles}); drawBar(); pick(presets.length-1);
+    document.getElementById('newPreset').hidden=true; roleBox.replaceChildren(); document.getElementById('npName').value='';
+  };
+  drawBar(); pick(0);
+
+  // 工作区选项
+  document.getElementById('opts').addEventListener('click',e=>{ const b=e.target.closest('.seg button'); if(!b) return;
+    b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
+  document.getElementById('addRule').onclick=()=>{ const i=document.getElementById('newRule'), v=i.value.trim(); if(!v) return;
+    const li=document.createElement('li'); li.innerHTML='<label class="check"><input type="checkbox" checked><span></span></label>'; li.querySelector('span').textContent=v;
+    document.querySelector('#opts .rules').appendChild(li); i.value=''; };
 
   // 权限
   document.querySelectorAll('#levels .level').forEach(b=>b.onclick=()=>{
