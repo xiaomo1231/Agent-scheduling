@@ -742,6 +742,59 @@ nav .thl:hover .ok,nav .thl:focus-within .ok{visibility:visible}
 nav .thl .ok:hover{background:var(--good-soft);color:var(--good)}
 nav .thl.more{font-size:11.5px;color:var(--ink-3)}
 @media (max-width:1100px){ .panes{display:flex!important;flex-direction:column;height:auto} .panes .pane{grid-area:auto!important;height:max(260px,var(--mh,400px));flex:none} .panes.editing{background:none} .panes .rz,.panes .szl{display:none} }
+/* v21 设置侧栏、Skills、体检、繁忙程度 */
+main.setmode{display:grid;grid-template-columns:200px minmax(0,1fr);align-content:start;align-items:start}
+main.setmode>.snav{grid-row:1 / span 60;grid-column:1;flex-direction:column;align-items:stretch;flex-wrap:nowrap;position:sticky;top:0;max-height:calc(100vh - 90px);overflow:auto;padding:12px 8px;border-bottom:0;border-right:1px solid var(--line);gap:1px;align-self:stretch}
+main.setmode>.view{grid-column:2}
+.snav a{border-bottom:0!important;border-radius:var(--r);padding:6px 10px!important;display:flex;justify-content:space-between;align-items:center}
+.snav a.on{background:var(--accent-soft)}
+.snav a[hidden]{display:none}
+.snav .sback{color:var(--ink-3)!important;font-size:12px!important}
+.snav .pn{font-size:18px!important;padding:4px 10px}
+.snav .inp{margin:4px 2px;font-size:12.5px}
+.snav .sask{margin:2px 2px 6px;border:1px solid var(--line);background:var(--raise);border-radius:var(--r);padding:5px 8px;text-align:left;font-size:12px;color:var(--accent)}
+.snav .sg{font-size:11px;color:var(--ink-3);padding:10px 10px 2px;letter-spacing:.06em}
+.snav .sg.hide{display:none}
+.snav .sver{margin-top:auto;padding:10px;font-size:11px;color:var(--ink-3)}
+@media (max-width:680px){ main.setmode{display:block} main.setmode>.snav{flex-direction:row;max-height:none;position:static;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)} .snav .sg,.snav .sver,.snav .sask,.snav .pn,.snav .inp{display:none} .snav a{flex:none;white-space:nowrap} }
+.skin,.skflow{max-width:980px;margin-bottom:14px}
+.skin{padding:12px;display:flex;flex-direction:column;gap:6px}
+.skrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.skrow .inp{flex:1;min-width:200px}
+.sksteps{margin:0;padding:10px 12px 10px 34px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.sksteps li.done{color:var(--ink-2)}
+.sksteps li.done::marker{color:var(--good)}
+.sksteps li.run{font-weight:600}
+.sksteps li .hint{margin-left:6px;font-weight:400}
+#skConfirm{padding:0 12px 12px;border-top:1px solid var(--line-2)}
+#skConfirm h3{font-size:13px;margin:12px 0 6px}
+.skgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.skperm,.skscan{margin:0;padding-left:18px;font-size:12.5px;display:flex;flex-direction:column;gap:3px}
+.skperm b{display:inline-block;width:52px;color:var(--ink-3);font-weight:500}
+.skscan .warn{color:var(--warn)}
+.skdiff{margin:0 0 10px;padding:10px 12px;background:var(--bg);border:1px solid var(--line-2);border-radius:6px;font-size:12px;white-space:pre-wrap}
+.skdiff .d{color:var(--bad)} .skdiff .a{color:var(--good)}
+.au{max-width:980px}
+.aui{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line-2)}
+.aui.fixed{opacity:.6}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.auok{padding:10px 12px;font-size:12.5px}
+.auok summary{cursor:pointer;color:var(--good)}
+.auok ul{margin:6px 0 0;padding-left:18px;color:var(--ink-2)}
+option.danger{color:var(--bad)}
+.risk header{flex-wrap:wrap;gap:6px}
+.risk header .s{max-width:100%}
+.risk .mini{display:block;overflow-x:auto}
+.busyb{border:1px solid var(--line);background:transparent;border-radius:12px;padding:1px 10px;cursor:pointer}
+.busyb:hover{background:var(--line-2)}
+.busyp{position:fixed;right:24px;top:56px;z-index:50;width:min(420px,calc(100vw - 32px));background:var(--raise);border:1px solid var(--line);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.busyp[hidden]{display:none}
+.busyp header{display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line-2)}
+.bstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 12px}
+.bstat div{border:1px solid var(--line-2);border-radius:6px;padding:6px 8px;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
+.bstat span{font-size:11px;color:var(--ink-3)}
+.bstat b{font-size:15px}
+.bstat i{position:absolute;left:0;bottom:0;height:3px;width:var(--w);background:var(--accent)}
 /* 项目设置弹窗 */
 .pset{position:fixed;inset:0;z-index:60;background:rgba(10,14,12,.38);display:flex;align-items:center;justify-content:center;padding:16px}
 .pset[hidden]{display:none}
@@ -781,6 +834,7 @@ nav .thl.more{font-size:11.5px;color:var(--ink-3)}
     <div class="brand"><i></i>中枢</div>
     
     <div class="spacer"></div>
+    <button class="meter busyb" id="busyB" aria-expanded="false" title="系统繁忙程度">运行中 <span class="mono">4 / 24</span></button>
     <div class="meter" title="本月预算">本月 <span class="mono">¥186 / ¥300</span><span class="bar"><b style="width:62%"></b></span></div>
     <div class="meter">权限 <span class="pill run" id="lvlTop">部分权限</span></div>
     <span class="kbd">Ctrl K</span>
@@ -803,9 +857,16 @@ nav .thl.more{font-size:11.5px;color:var(--ink-3)}
   </nav>
 
   <main>
-    <div class="ptabs" id="stabs" hidden>
+    <div class="ptabs snav" id="stabs" hidden>
+      <a href="#home" class="sback">← 返回应用 <span class="kbd">Esc</span></a>
       <span class="pn">设置</span>
-      <a href="#accounts" data-t="accounts">账号与模型</a><a href="#connect" data-t="connect">连接平台</a><a href="#market" data-t="market">Agent 市场 <span class="n">2 个更新</span></a><a href="#control" data-t="control">调度控制</a><a href="#relays" data-t="relays">接力流程</a><a href="#channels" data-t="channels">消息渠道</a><a href="#workspace" data-t="workspace">工作区与协作</a><a href="#perm" data-t="perm">权限与审批</a>
+      <input class="inp" id="setQ" placeholder="搜索设置…" aria-label="搜索设置">
+      <button class="sask" id="setAsk">问中枢：一句话改设置</button>
+      <div class="sg">连接</div><a href="#accounts" data-t="accounts" data-k="订阅 plan key 模型 分组 额度">账号与模型</a><a href="#connect" data-t="connect" data-k="github gitlab linear 飞书 notion">连接平台</a><a href="#channels" data-t="channels" data-k="微信 telegram slack 钉钉 配对">消息渠道</a>
+      <div class="sg">agent 与工具</div><a href="#market" data-t="market" data-k="安装 更新 cli">Agent 市场 <span class="n">2 个更新</span></a><a href="#skills" data-t="skills" data-k="skill 技能 导入 转换 模板">Skills</a><a href="#relays" data-t="relays" data-k="接力 预设 提示词">接力流程</a>
+      <div class="sg">隐私与安全</div><a href="#perm" data-t="perm" data-k="审批 白名单 命令 沙箱">权限与审批</a><a href="#audit" data-t="audit" data-k="体检 安全 密钥 紧急停止">安全体检 <span class="n alert">1</span></a>
+      <div class="sg">系统</div><a href="#control" data-t="control" data-k="并发 预算 暂停 定时">调度控制</a><a href="#workspace" data-t="workspace" data-k="工作树 团队 协作 共享">工作区与协作</a>
+      <span class="sver mono">中枢 0.9.3 · 运行 13 天</span>
     </div>
     <div class="ptabs" id="ptabs" hidden>
       <span class="pn" id="pjName">shop-web 会员登录</span>
@@ -1538,6 +1599,49 @@ app.whenReady().then(() =&gt; {
     </section>
 
     <!-- 权限 -->
+    <section class="view" id="v-skills">
+      <h1>Skills</h1>
+      <p class="sub">中枢用 SKILL.md 开放标准做通用模板，Claude Code、Codex、Gemini CLI、OpenCode、OpenClaw 都认这个格式。导入只适配单个平台的 skill 时，会派一个转换 agent 改写成通用模板，你确认权限后再安装，然后投放给团队里用得上的 agent。</p>
+      <div class="box skin">
+        <div class="skrow"><input class="inp" id="skIn" placeholder="粘贴 GitHub / ClawHub 链接，或选一个本地文件夹" value="github.com/someone/claude-skills/pdf-report"><button class="btn" id="skPick">选文件夹</button><button class="btn pri" id="skGo">导入</button></div>
+        <div class="hint">支持：Claude Code / Codex / OpenClaw 的 SKILL.md 文件夹、Cursor rules、Copilot instructions、Gemini 扩展、一段纯文字提示词。</div>
+      </div>
+      <div class="box skflow" id="skFlow" hidden>
+        <header><strong id="skName">pdf-report</strong><span class="hint">来源：Claude Code skill</span><span class="spacer"></span><span class="pill run" id="skSt">转换中</span></header>
+        <ol class="sksteps" id="skSteps"></ol>
+        <div id="skConfirm" hidden>
+          <div class="skgrid">
+            <div><h3>它申请的权限</h3><ul class="skperm"><li><b>文件</b>只读项目文件，写到 output/</li><li><b>命令</b>python3（跑 scripts/render.py）</li><li><b>网络</b>不联网</li><li><b>发消息</b>不发</li></ul></div>
+            <div><h3>扫描结果</h3><ul class="skscan"><li class="ok">没有 curl | sh、编码过的命令</li><li class="ok">没有写死的密钥</li><li class="warn">原文里写死了 <code>~/Desktop</code> 作为输出目录，已改成 <code>{baseDir}/output</code></li><li class="ok">复核模型：意思没变，没有多出动作</li></ul></div>
+          </div>
+          <h3>改了什么</h3>
+          <pre class="skdiff mono"><span class="d">- allowed-tools: Bash(python3:*) Read Write</span>
+<span class="a">+ metadata.zhongshu.tools: [read_file, write_file, run_command]</span>
+<span class="a">+ metadata.zhongshu.permissions: { files: read, shell: [python3], network: [] }</span>
+<span class="d">- 用 TodoWrite 记录每一页的进度</span>
+<span class="a">+ 记录每一页的进度（Claude Code 的写法移到 adapters/claude-code.md）</span></pre>
+          <div class="skrow"><span class="hint">投放到：</span><label class="check"><input type="checkbox" checked>Claude Code</label><label class="check"><input type="checkbox" checked>Codex CLI</label><label class="check"><input type="checkbox">Gemini CLI</label><label class="check"><input type="checkbox">OpenCode</label><label class="check"><input type="checkbox" checked>中枢内置</label><span class="spacer" style="flex:1"></span><button class="btn bad ghost" id="skNo">拒绝</button><button class="btn" id="skEdit">改权限</button><button class="btn pri" id="skOk">安装</button></div>
+        </div>
+      </div>
+      <div class="box"><header><strong>已安装</strong><span class="spacer"></span><button class="btn ghost" id="skExport">导出成某个平台的格式</button></header>
+        <table class="mini" id="skList"><tr><td><b>名称</b></td><td><b>来源</b></td><td><b>权限</b></td><td><b>投放到</b></td><td><b>状态</b></td></tr>
+          <tr><td>weekly-report</td><td class="hint">Claude Code → 通用</td><td>读文件 · python3 · api.feishu.cn</td><td><span class="chip">Claude Code</span><span class="chip">中枢内置</span></td><td><span class="pill wait">文件被改过</span></td></tr>
+          <tr><td>review-pr</td><td class="hint">Codex → 通用</td><td>读文件 · git</td><td><span class="chip">Claude Code</span><span class="chip">Codex CLI</span><span class="chip">OpenCode</span></td><td><span class="pill done">指纹一致</span></td></tr>
+          <tr><td>competitor-price</td><td class="hint">OpenClaw → 通用</td><td>联网（3 个域名）· 只读</td><td><span class="chip">中枢内置</span></td><td><span class="pill done">指纹一致</span></td></tr></table>
+      </div>
+    </section>
+
+    <section class="view" id="v-audit">
+      <div class="toolbar"><h1 style="margin:0">安全体检</h1><span class="spacer" style="flex:1"></span><span class="hint">上次体检：刚刚 · 新装、升级、改权限后会自动再跑</span><button class="btn" id="auRun">重新体检</button><button class="btn bad" id="auStop">紧急停止</button></div>
+      <p class="sub">检查有没有偏离安全默认值的地方。能自动修的点一下就修，修完写进审计记录。</p>
+      <div class="box au" id="auList">
+        <div class="aui bad"><span class="pill bad">高</span><div><b>消息渠道 Telegram 允许陌生人直接私信</b><div class="hint">没开配对码，任何人都能给协调者下任务。建议改成配对码 + 白名单。</div></div><button class="btn pri" data-fix>一键修复</button></div>
+        <div class="aui warn"><span class="pill wait">中</span><div><b>skill weekly-report 的 scripts/ 在安装后被改过</b><div class="hint">文件指纹和安装时不一致。重新确认之前，它的脚本不会再运行。</div></div><button class="btn" data-fix>重新确认</button></div>
+        <div class="aui warn"><span class="pill wait">中</span><div><b>工作区 shop-web 的 .env 里有 2 个疑似密钥</b><div class="hint">agent 读文件时可能读到。建议移进系统钥匙串，用引用代替。</div></div><button class="btn" data-fix>移进钥匙串</button></div>
+        <div class="aui warn"><span class="pill wait">中</span><div><b>DSH 同时有联网和执行命令权限</b><div class="hint">被网页里的提示注入骗到时，可能把本地文件发出去。</div></div><button class="btn" data-fix>拆开</button></div>
+        <details class="auok"><summary>通过的 9 项</summary><ul><li>本地网关只监听 127.0.0.1，带随机 token</li><li>审批绑定命令指纹，改动即作废</li><li>python -c 这类内联代码一律审批</li><li>没人审批时默认拒绝</li><li>子 agent、定时任务默认进沙箱</li><li>外部内容标记为不可信数据</li><li>日志和通信总线里的密钥自动打码</li><li>所有危险开关都是关的</li><li>群聊里必须 @ 才响应</li></ul></details>
+      </div>
+    </section>
     <section class="view" id="v-perm">
       <h1>权限与审批</h1>
       <p class="sub">选一个档位作为默认值，下面的高风险事项可以单独决定要不要每次问你。</p>
@@ -1554,6 +1658,26 @@ app.whenReady().then(() =&gt; {
         <div class="entry"><div>安装新依赖或全局软件</div><input type="checkbox" id="r4" checked aria-label="安装依赖时问我"></div>
         <div class="entry"><div>单个任务花费超过 ¥20</div><input type="checkbox" id="r5" checked aria-label="超预算时问我"></div>
         <div class="entry"><div>访问工作区外的网络服务并写入</div><input type="checkbox" id="r6" aria-label="外部写入时问我"></div>
+      </div>
+      <div class="box risk">
+        <header><strong>命令怎么放行</strong><span class="spacer"></span><select class="s" id="cmdPol" aria-label="命令策略"><option>禁止执行命令</option><option>只放行白名单</option><option selected>白名单外的问我</option><option>白名单外先让审查模型看，拿不准再问我</option><option class="danger">全部放行（危险）</option></select></header>
+        <div class="entry"><div>python -c、node -e 这类内联代码一律问我<div class="src">即使 python 在白名单里，也只放行跑脚本文件</div></div><input type="checkbox" checked aria-label="内联代码一律问我"></div>
+        <div class="entry"><div>没人审批时（你离线或超时）<div class="src">默认拒绝，讨论串进“等你处理”</div></div><select class="s" aria-label="无人审批时"><option>拒绝</option><option>只放行白名单</option></select></div>
+        <div class="entry"><div>批准后命令、目录或 agent 被改动，批准作废<div class="src">审批绑定命令全文的指纹，消息渠道里的审批也一样</div></div><input type="checkbox" checked disabled aria-label="批准防篡改"></div>
+      </div>
+      <div class="box risk">
+        <header><strong>命令白名单</strong><span class="spacer"></span><span class="hint">在审批卡片上点“以后都允许这类”会自动加到这里</span></header>
+        <table class="mini" id="alw"><tr><td><b>命令</b></td><td><b>参数限制</b></td><td><b>谁能用</b></td><td><b>来源</b></td><td></td></tr>
+          <tr><td class="mono">git</td><td class="mono">status|diff|log …</td><td>所有 agent</td><td class="hint">默认</td><td><button class="btn ghost" data-alx>删除</button></td></tr>
+          <tr><td class="mono">npm</td><td class="mono">test|run lint</td><td>前端、测试</td><td class="hint">默认</td><td><button class="btn ghost" data-alx>删除</button></td></tr>
+          <tr><td class="mono">pytest</td><td class="mono">任意</td><td>后端、测试</td><td class="hint">默认</td><td><button class="btn ghost" data-alx>删除</button></td></tr>
+          <tr><td class="mono">git</td><td class="mono">push origin agent/*</td><td>后端</td><td class="hint">你 10 月 29 日点了“以后都允许”</td><td><button class="btn ghost" data-alx>删除</button></td></tr></table>
+      </div>
+      <div class="box risk">
+        <header><strong>沙箱与工具</strong></header>
+        <div class="entry"><div>子 agent、定时任务、第三方 skill 脚本在沙箱里跑<div class="src">独立容器 + 工作树，只能访问声明过的域名</div></div><input type="checkbox" checked aria-label="默认沙箱"></div>
+        <div class="entry"><div>同一个 agent 不能同时有“联网”和“执行命令”<div class="src">调研组能联网但只读，代码组能执行但不联网</div></div><input type="checkbox" checked aria-label="联网和执行分开"></div>
+        <div class="entry"><div>网页、邮件、PR 评论、群消息一律当不可信数据<div class="src">里面的“指令”不会触发任何工具</div></div><input type="checkbox" checked disabled aria-label="外部内容不可信"></div>
       </div>
     </section>
   </main>
@@ -1579,6 +1703,17 @@ app.whenReady().then(() =&gt; {
   </div>
   <footer><button class="btn bad ghost" id="cfgOff">断开</button><span class="spacer" style="flex:1"></span><button class="btn" id="cfgTest">发一条测试消息</button><button class="btn pri" id="cfgSave">保存</button></footer>
 </aside>
+<div class="busyp" id="busyP" hidden role="dialog" aria-label="系统繁忙程度">
+  <header><b>系统繁忙程度</b><span class="spacer" style="flex:1"></span><button class="btn ghost" id="busyX" aria-label="关闭">×</button></header>
+  <table class="mini"><tr><td><b>通道</b></td><td><b>活跃</b></td><td><b>排队</b></td><td><b>阻塞</b></td></tr>
+    <tr><td>主讨论串</td><td class="mono">2 / 8</td><td class="mono">1</td><td>—</td></tr>
+    <tr><td>子 agent</td><td class="mono">2 · 上限 3 / 讨论串</td><td class="mono">0</td><td>—</td></tr>
+    <tr><td>定时任务</td><td class="mono">0 / 4</td><td class="mono">0</td><td>—</td></tr>
+    <tr><td>记忆整理</td><td class="mono">0 / 1</td><td class="mono">0</td><td class="hint">今晚 03:00</td></tr>
+    <tr><td>审批</td><td class="mono">—</td><td class="mono">1</td><td><span class="pill wait">等你</span></td></tr></table>
+  <div class="bstat"><div><span>额度 · Claude 订阅</span><b class="mono">46%</b><i style="--w:46%"></i></div><div><span>额度 · ChatGPT</span><b class="mono">64%</b><i style="--w:64%"></i></div><div><span>额度 · GLM Plan</span><b class="mono">38%</b><i style="--w:38%"></i></div><div><span>本地网关 CPU</span><b class="mono">4%</b><i style="--w:4%"></i></div><div><span>内存</span><b class="mono">412 MB</b><i style="--w:20%"></i></div><div><span>延迟 P99</span><b class="mono">21 ms</b><i style="--w:10%"></i></div></div>
+  <div class="hint" style="padding:0 12px 10px">运行 13 天 · 磁盘剩余 62 GB</div>
+</div>
 <div class="pset" id="pset" hidden role="dialog" aria-modal="true" aria-label="项目设置">
   <div class="dlg">
     <div class="pn" id="psNav"><b>项目设置</b><button data-ps="gen" aria-current="true">通用</button><button data-ps="team">团队与模型</button><button data-ps="mem">记忆</button><button data-ps="env">环境</button><button data-ps="use">使用情况</button><button data-ps="perm">权限</button></div>
@@ -1635,7 +1770,7 @@ app.whenReady().then(() =&gt; {
 </div>
 <script>
 (function(){
-  const views=['home','chat','threads','tasks','team','connect','relays','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','threads','tasks','team','connect','relays','skills','audit','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
     let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -1985,7 +2120,7 @@ app.whenReady().then(() =&gt; {
   const PV=['threads','tasks','team','viz','bus','council','memory'];
   function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
     document.getElementById('ptabs').hidden=!pj||v==='tasks'||v==='threads';
-    const st=['accounts','relays','connect','market','control','channels','workspace','perm'].includes(v);
+    const st=['accounts','relays','connect','market','control','channels','workspace','perm','skills','audit'].includes(v); document.querySelector('main').classList.toggle('setmode',st);
     document.getElementById('stabs').hidden=!st; document.getElementById('setb').classList.toggle('on',st);
     document.querySelectorAll('#stabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
     document.querySelectorAll('#ptabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
@@ -2456,6 +2591,42 @@ app.whenReady().then(() =&gt; {
   $('pcSet').onclick=()=>openPset('gen');
   ttb.addEventListener('change',()=>setTimeout(pcFoot));
   setTimeout(()=>{ drawTh(); drawTov(); drawPanes(); syncThMeta(); pcFoot(); fixHash(); });
+
+  // v21：设置搜索、问中枢、Esc 返回
+  const setQ=document.getElementById('setQ');
+  setQ.addEventListener('input',()=>{ const q=setQ.value.trim().toLowerCase(); const links=[...document.querySelectorAll('#stabs a[data-t]')];
+    links.forEach(a=>a.hidden=!!q&&!(a.textContent+' '+(a.dataset.k||'')).toLowerCase().includes(q));
+    document.querySelectorAll('#stabs .sg').forEach(g=>{ let n=g.nextElementSibling, any=false; while(n&&n.tagName==='A'){ if(!n.hidden) any=true; n=n.nextElementSibling; } g.classList.toggle('hide',!any); }); });
+  setQ.addEventListener('keydown',e=>{ if(e.key==='Enter'){ const a=[...document.querySelectorAll('#stabs a[data-t]')].find(x=>!x.hidden); if(a) location.hash=a.dataset.t; } });
+  document.getElementById('setAsk').onclick=()=>say('（演示）比如说“夜里的定时任务都暂停”，协调者会改好并列出改了哪几项');
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&document.querySelector('main').classList.contains('setmode')&&document.getElementById('pset').hidden&&!e.target.closest('input,textarea,select')) location.hash='home'; });
+  // 繁忙程度
+  const busyP=document.getElementById('busyP'), busyB=document.getElementById('busyB');
+  busyB.onclick=e=>{ e.stopPropagation(); busyP.hidden=!busyP.hidden; busyB.setAttribute('aria-expanded',String(!busyP.hidden)); };
+  addEventListener('hashchange',()=>{ busyP.hidden=true; busyB.setAttribute('aria-expanded','false'); });
+  document.getElementById('busyX').onclick=()=>{ busyP.hidden=true; busyB.setAttribute('aria-expanded','false'); };
+  document.addEventListener('click',e=>{ if(!busyP.hidden&&!e.target.closest('#busyP')){ busyP.hidden=true; busyB.setAttribute('aria-expanded','false'); } });
+  // 权限页：白名单删除、危险策略
+  document.getElementById('alw').addEventListener('click',e=>{ const b=e.target.closest('[data-alx]'); if(b){ const tr=b.closest('tr'); say('已从白名单删掉 '+tr.cells[0].textContent+' '+tr.cells[1].textContent); tr.remove(); } });
+  document.getElementById('cmdPol').onchange=e=>{ if(e.target.selectedOptions[0].classList.contains('danger')){ if(!confirm('全部放行后，agent 执行任何命令都不再问你。确定吗？（会写进审计记录，体检会标红）')){ e.target.selectedIndex=2; return; } say('已切到全部放行，体检会一直标红提醒'); } else say('命令策略：'+e.target.value); };
+  // Skills 导入流程
+  const SKS=[['识别来源','Claude Code 的 SKILL.md，3 个文件'],['静态扫描（不执行任何东西）','发现 1 处写死的桌面路径'],['转换 agent 改写成通用模板','DeepSeek V4.1 Flash · 只读沙箱 · 不联网'],['换一个模型复核','GLM-5.3：意思没变，没有多出动作'],['等你确认权限','']];
+  function skDraw(k){ document.getElementById('skSteps').innerHTML=SKS.map((x,i)=>'<li class="'+(i<k?'done':i===k?'run':'')+'">'+esc(x[0])+(i<k&&x[1]?'<span class="hint">'+esc(x[1])+'</span>':'')+'</li>').join(''); }
+  document.getElementById('skGo').onclick=()=>{ const v=document.getElementById('skIn').value.trim(); if(!v) return; const n=v.split('/').pop()||'new-skill';
+    document.getElementById('skName').textContent=n; document.getElementById('skFlow').hidden=false; document.getElementById('skConfirm').hidden=true; const st=document.getElementById('skSt'); st.textContent='转换中'; st.className='pill run';
+    let k=0; skDraw(0); const t=setInterval(()=>{ k++; skDraw(k); if(k>=4){ clearInterval(t); document.getElementById('skConfirm').hidden=false; st.textContent='等你确认'; st.className='pill wait'; } },450); };
+  document.getElementById('skPick').onclick=()=>say('（演示）会打开系统的选择文件夹窗口');
+  document.getElementById('skEdit').onclick=()=>say('可以把“命令”改成每次都问你，或者去掉某个投放目标');
+  document.getElementById('skNo').onclick=()=>{ document.getElementById('skFlow').hidden=true; say('已拒绝，没有写入任何文件'); };
+  document.getElementById('skOk').onclick=()=>{ const n=document.getElementById('skName').textContent, to=[...document.querySelectorAll('#skConfirm .check input:checked')].map(c=>'<span class="chip">'+esc(c.parentElement.textContent)+'</span>').join('');
+    document.getElementById('skList').insertAdjacentHTML('beforeend','<tr><td>'+esc(n)+'</td><td class="hint">Claude Code → 通用</td><td>读文件 · python3</td><td>'+to+'</td><td><span class="pill done">指纹一致</span></td></tr>');
+    document.getElementById('skFlow').hidden=true; say('已安装，并写进了各 agent 的 skills 目录'); };
+  document.getElementById('skExport').onclick=()=>say('可以导出成 Claude Code、Codex、OpenClaw 的原生格式，或者去掉中枢扩展的标准版');
+  // 安全体检
+  document.getElementById('auList').addEventListener('click',e=>{ const b=e.target.closest('[data-fix]'); if(!b) return; const it=b.closest('.aui'); it.classList.add('fixed'); it.querySelector('.pill').className='pill done'; it.querySelector('.pill').textContent='已修'; b.replaceWith(Object.assign(document.createElement('span'),{className:'hint',textContent:'已修复，写进审计'}));
+    const left=document.querySelectorAll('#auList .aui:not(.fixed)').length; const n=document.querySelector('#stabs a[data-t=audit] .n'); if(n) n.textContent=document.querySelectorAll('#auList .aui.bad:not(.fixed)').length||''; say(left?'还剩 '+left+' 项':'全部通过'); });
+  document.getElementById('auRun').onclick=()=>say('体检完成，结果和上次一样');
+  document.getElementById('auStop').onclick=()=>{ if(confirm('紧急停止会：暂停所有 agent 和定时任务、断开消息渠道、列出建议轮换的密钥、导出一份审计包。继续吗？')) say('已全部暂停。恢复时在这里点“解除”，再逐个确认渠道'); };
 
 })();
 </script>
