@@ -138,6 +138,21 @@ export interface Thread {
   model: ModelChoice | null;
   effort?: string;
   steps: Step[];
+  /** 在独立 worktree 里干活时的信息 */
+  worktree?: Worktree;
+}
+
+export interface Worktree {
+  /** 原仓库根目录 */
+  repo: string;
+  /** worktree 目录 */
+  path: string;
+  branch: string;
+  /** 从哪个分支开出来，合并时合回这里 */
+  base: string;
+  state: 'active' | 'ready' | 'merged' | 'discarded';
+  /** 做完后的改动摘要（git diff --stat） */
+  summary?: string;
 }
 
 export interface Message {
@@ -157,7 +172,8 @@ export interface Message {
 export type MessageCard =
   | { kind: 'thread'; threadId: string }
   | { kind: 'approval'; approvalId: string }
-  | { kind: 'planDiff'; summary: string; undoToken?: string };
+  | { kind: 'planDiff'; summary: string; undoToken?: string }
+  | { kind: 'worktree'; threadId: string };
 
 // ---------- 权限与审批 ----------
 export type CommandMode = 'deny' | 'allowlist' | 'ask' | 'review' | 'dangerouslyAllowAll';

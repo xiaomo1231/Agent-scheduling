@@ -7,3 +7,4 @@ export * from './coordinator/index.js';
 export * from './skills/index.js';
 export * from './app/index.js';
 export * from './gateway/index.js';
+export * from './worktrees/index.js';

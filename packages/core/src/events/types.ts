@@ -1,6 +1,6 @@
 import type {
   Actor, Approval, ApprovalState, AllowRule, InstalledSkill, Message, ModelGroup, ModelSource, Policy, Project,
-  ProjectSettings, Step, StepState, Thread, Widget, ModelChoice,
+  ProjectSettings, Step, StepState, Thread, Widget, ModelChoice, Worktree,
 } from '../model/types.js';
 
 /** 事件正文：已经发生的事。名字用“领域.动作”。 */
@@ -14,6 +14,7 @@ export type EventBody =
   | { type: 'thread.resolved'; threadId: string; by: 'coordinator' | 'user'; reason: string }
   | { type: 'thread.reopened'; threadId: string; by: 'coordinator' | 'user' }
   | { type: 'thread.settings'; threadId: string; model?: ModelChoice | null; effort?: string; title?: string }
+  | { type: 'thread.worktree'; threadId: string; worktree: Worktree | null }
   | { type: 'plan.changed'; threadId: string; steps: Step[]; summary: string; previous: Step[] }
   | { type: 'step.state'; threadId: string; stepId: string; state: StepState }
   | { type: 'approval.requested'; approval: Approval }

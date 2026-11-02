@@ -52,6 +52,24 @@ function MessageView({ m, st, onOpen }: { m: Message; st: State; onOpen: (thread
             </button>
           ) : null;
         }
+        if (c.kind === 'worktree') {
+          const w = st.threads[c.threadId]?.worktree;
+          if (!w) return null;
+          const STATE: Record<string, string> = { active: '正在改', ready: '等你决定', merged: '已合并', discarded: '已丢弃' };
+          return (
+            <div key={i} className={'mcard' + (w.state === 'ready' ? ' ask' : '')}>
+              <div className="row"><b>独立工作区 · {STATE[w.state]}</b><span className="spacer" /><span className="mono muted">{w.branch} → {w.base}</span></div>
+              {w.summary && <pre className="mono" style={{ margin: '4px 0', whiteSpace: 'pre-wrap', fontSize: 12 }}>{w.summary}</pre>}
+              {w.state === 'ready' && (
+                <div className="row" style={{ marginTop: 6 }}>
+                  <button className="btn pri sm" onClick={() => attempt(send({ type: 'thread.merge', threadId: c.threadId }), '已合并')}>合并到 {w.base}</button>
+                  <button className="btn bad sm" onClick={() => { if (confirm('丢弃这些改动？丢了找不回来。')) void attempt(send({ type: 'thread.discard', threadId: c.threadId }), '已丢弃'); }}>丢弃</button>
+                </div>
+              )}
+            </div>
+          );
+        }
+        if (c.kind !== 'planDiff') return null;
         const seq = c.undoToken ? Number(c.undoToken.split(':')[1]) : 0;
         return (
           <div key={i} className="mcard row">

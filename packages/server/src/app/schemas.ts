@@ -75,6 +75,8 @@ export const CommandS = z.discriminatedUnion('type', [
   z.object({ type: z.literal('thread.reopen'), threadId: id('thr') }),
   z.object({ type: z.literal('thread.settings'), threadId: id('thr'), model: ModelChoiceS.nullable().optional(), effort: text(20).optional(), title: text(60).min(1).optional() }),
   z.object({ type: z.literal('thread.stop'), threadId: id('thr') }),
+  z.object({ type: z.literal('thread.merge'), threadId: id('thr') }),
+  z.object({ type: z.literal('thread.discard'), threadId: id('thr') }),
   z.object({ type: z.literal('thread.continue'), threadId: id('thr') }),
   z.object({ type: z.literal('plan.apply'), threadId: id('thr'), ops: z.array(PlanOpS).max(50) }),
   z.object({ type: z.literal('plan.undo'), threadId: id('thr'), seq: z.number().int().positive() }),

@@ -92,6 +92,13 @@ export function reduce(s: State, e: ZEvent): State {
       };
       break;
     }
+    case 'thread.worktree': {
+      const t = s.threads[b.threadId];
+      if (!t) break;
+      const { worktree: _old, ...rest } = t;
+      next.threads = { ...s.threads, [t.id]: b.worktree ? { ...rest, worktree: b.worktree } : rest };
+      break;
+    }
     case 'plan.changed': {
       const t = s.threads[b.threadId];
       if (t) next.threads = { ...s.threads, [t.id]: { ...t, steps: b.steps, updatedAt: e.ts } };

@@ -37,5 +37,6 @@ export function autoResolveBlocker(i: AutoResolveInput): string | null {
   if (pendingApprovals(t.id, i.approvals).length) return '还有等你批准的事';
   if (i.waitingQuestion) return '还在等你回答';
   if (i.openPullRequests) return '还有没合并的 PR';
+  if (t.worktree && (t.worktree.state === 'active' || t.worktree.state === 'ready')) return '还有没合并的改动';
   return null;
 }

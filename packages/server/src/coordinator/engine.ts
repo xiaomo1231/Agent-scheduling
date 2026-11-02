@@ -8,6 +8,7 @@ import type { Runner, StepTask, ExecFile } from '../runners/index.js';
 import { redact } from '../secrets/index.js';
 import { COORD_TOOLS } from './tools.js';
 import { RuleBrain } from './rule-brain.js';
+import type { Worktrees } from '../worktrees/index.js';
 import { CliBrain } from './cli-brain.js';
 
 export interface CoordinatorDeps {
@@ -22,6 +23,8 @@ export interface CoordinatorDeps {
   random?: () => number;
   /** 已装 skill 的说明，拼进 agent 的提示里 */
   skillNotes?: () => string;
+  /** 有就按项目设置给每个讨论串开独立 worktree */
+  worktrees?: Worktrees;
 }
 
 const COORD: Actor = { kind: 'coordinator', id: 'coord' };
@@ -333,13 +336,21 @@ export class Coordinator {
         this.say(threadId, '还没给这个讨论串选执行模型。在讨论串设置或项目设置里选一个，再让我继续。');
         return;
       }
+      let root: string;
+      try {
+        root = await this.workdir(threadId);
+      } catch (err) {
+        this.d.ws.commit({ type: 'step.state', threadId, stepId: step.id, state: 'wait' }, COORD);
+        this.say(threadId, `${(err as Error).message}。可以在项目设置里关掉 worktree 再继续。`);
+        return;
+      }
       this.d.ws.commit({ type: 'step.state', threadId, stepId: step.id, state: 'run' }, COORD);
       const agent: Actor = { kind: 'agent', id: step.assignee || '@agent' };
       const label = `${step.assignee || '@agent'}${model ? ` · ${model.model.label}` : ''}`;
       const task: StepTask = {
         projectId: p.id, threadId, stepId: step.id, title: step.title, threadTitle: t.title, goal: p.goal,
         instructions: [p.settings.instructions, this.d.skillNotes?.() ?? ''].filter(Boolean).join('\n\n'),
-        workspaceRoot: this.d.folderFor(p), agentId: agent.id, model, ...(t.effort ? { effort: t.effort } : {}), signal: ac.signal,
+        workspaceRoot: root, agentId: agent.id, model, ...(t.effort ? { effort: t.effort } : {}), signal: ac.signal,
       };
       let rep;
       try {
@@ -355,7 +366,72 @@ export class Coordinator {
         return;
       }
     }
+    await this.finishWorktree(threadId);
     this.maybeAutoResolve(threadId);
+  }
+
+  /** 这个讨论串该在哪个目录干活：开了 worktree 就用 worktree */
+  private async workdir(threadId: string): Promise<string> {
+    const t = this.st.threads[threadId]!;
+    const p = this.st.projects[t.projectId]!;
+    const folder = this.d.folderFor(p);
+    const w = t.worktree;
+    if (w && (w.state === 'active' || w.state === 'ready')) {
+      if (w.state === 'ready') this.d.ws.commit({ type: 'thread.worktree', threadId, worktree: { ...w, state: 'active' } }, COORD);
+      return w.path;
+    }
+    if (!p.settings.useWorktrees || !this.d.worktrees) return folder;
+    const created = await this.d.worktrees.create(t, folder);
+    if (!created) return folder; // 不是 git 仓库，直接在项目目录里干
+    this.d.ws.commit({ type: 'thread.worktree', threadId, worktree: created }, COORD);
+    this.say(threadId, `在独立的 worktree 里干活（分支 ${created.branch}，从 ${created.base} 开出），不会动你正在用的目录。`);
+    return created.path;
+  }
+
+  /** 步骤都做完后，把 worktree 里的改动提交到分支，等你合并或丢弃 */
+  private async finishWorktree(threadId: string): Promise<void> {
+    const t = this.st.threads[threadId];
+    const w = t?.worktree;
+    if (!t || !w || w.state !== 'active' || !this.d.worktrees) return;
+    if (t.steps.some((s) => s.state === 'queue' || s.state === 'run' || s.state === 'wait')) return;
+    try {
+      const summary = await this.d.worktrees.commit(w, t.title);
+      if (!summary) {
+        await this.d.worktrees.remove(w);
+        this.d.ws.commit({ type: 'thread.worktree', threadId, worktree: { ...w, state: 'discarded' } }, COORD);
+        return;
+      }
+      this.d.ws.commit(
+        [
+          { type: 'thread.worktree', threadId, worktree: { ...w, state: 'ready', summary } },
+          { type: 'thread.message', message: { id: newId('msg', this.rnd), threadId, author: COORD, authorLabel: this.coordLabel(threadId), text: `改动已经提交到分支 ${w.branch}，看过没问题就合并回 ${w.base}。`, ts: Date.now(), cards: [{ kind: 'worktree', threadId }] } },
+        ],
+        COORD,
+      );
+    } catch (err) {
+      this.say(threadId, `提交改动时出错：${(err as Error).message}`, { kind: 'system', id: 'worktree' }, '系统');
+    }
+  }
+
+  async mergeWorktree(threadId: string): Promise<void> {
+    const t = this.st.threads[threadId];
+    const w = t?.worktree;
+    if (!t || !w || w.state !== 'ready' || !this.d.worktrees) throw new Error('没有等待合并的改动');
+    const r = await this.d.worktrees.merge(w, `合并讨论串：${t.title}`);
+    if (!r.ok) throw new Error(r.error);
+    this.d.ws.commit({ type: 'thread.worktree', threadId, worktree: { ...w, state: 'merged' } }, { kind: 'user', id: 'me' });
+    this.say(threadId, `已合并回 ${w.base}，worktree 和分支已清理。`);
+    this.maybeAutoResolve(threadId);
+  }
+
+  async discardWorktree(threadId: string): Promise<void> {
+    const t = this.st.threads[threadId];
+    const w = t?.worktree;
+    if (!t || !w || (w.state !== 'ready' && w.state !== 'active') || !this.d.worktrees) throw new Error('没有可以丢弃的改动');
+    this.stop(threadId);
+    await this.d.worktrees.remove(w);
+    this.d.ws.commit({ type: 'thread.worktree', threadId, worktree: { ...w, state: 'discarded' } }, { kind: 'user', id: 'me' });
+    this.say(threadId, `已丢弃分支 ${w.branch} 上的改动。`);
   }
 
   maybeAutoResolve(threadId: string): void {

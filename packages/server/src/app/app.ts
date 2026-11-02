@@ -11,6 +11,7 @@ import { providerFor, type ChatProvider } from '../providers/index.js';
 import { BuiltinRunner, CliRunner, SimRunner, cliInvocation, execFile as realExecFile, execShell as realExecShell, type ExecFile, type ExecShell } from '../runners/index.js';
 import { Coordinator } from '../coordinator/index.js';
 import { SkillService } from '../skills/index.js';
+import { Worktrees } from '../worktrees/index.js';
 import { CommandS, type Command } from './schemas.js';
 
 export interface AppOptions {
@@ -84,6 +85,7 @@ export class App {
       runners: { builtin, cli: new CliRunner(this.exec), sim: new SimRunner(o.simDelayMs ?? 800) },
       folderFor: (p) => this.folderFor(p), simulate: o.simulate ?? false, random: this.rnd,
       skillNotes: () => this.skills.notes(),
+      worktrees: new Worktrees(this.exec, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'worktrees')),
     });
   }
 
@@ -211,6 +213,12 @@ export class App {
       case 'thread.settings':
         this.thread(c.threadId);
         this.ws.commit({ type: 'thread.settings', threadId: c.threadId, ...(c.model !== undefined ? { model: c.model } : {}), ...(c.effort !== undefined ? { effort: c.effort } : {}), ...(c.title ? { title: c.title } : {}) }, ME);
+        return;
+      case 'thread.merge':
+        await this.coordinator.mergeWorktree(this.thread(c.threadId).id);
+        return;
+      case 'thread.discard':
+        await this.coordinator.discardWorktree(this.thread(c.threadId).id);
         return;
       case 'thread.stop':
         this.coordinator.stop(this.thread(c.threadId).id);
