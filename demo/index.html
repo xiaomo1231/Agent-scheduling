@@ -283,6 +283,51 @@ td .m{font-size:12px;color:var(--ink-3)}
 .verdict.blank .score,.verdict.blank .score~*{display:none}
 .rules-box{border:1px solid var(--accent);background:var(--accent-soft);border-radius:6px;padding:8px 12px;font-size:12.5px}
 .rules-box ol{margin:4px 0 0;padding-left:18px}
+/* 首页 */
+.home{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-top:24px}
+.hello{font-size:24px;letter-spacing:.01em}
+.bigc{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.bigc textarea{border:0;background:transparent;resize:vertical;font-size:15px;outline:none;min-height:64px}
+.bigc-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bigc-row .spacer{flex:1}
+.wiz .wizb{padding:14px;display:flex;flex-direction:column;gap:12px;max-width:620px}
+.homegrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
+.projs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.proj-card{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;min-width:0}
+.proj-card:hover{border-color:var(--ink-3)}
+.proj-card .m{font-size:12px;color:var(--ink-3)}
+.proj-card.add{border-style:dashed;background:transparent}
+.recent{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.recent a{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line-2);color:inherit;text-decoration:none}
+.recent a:last-child{border-bottom:0}
+.recent a:hover{background:var(--line-2)}
+.recent .m{font-size:12px;color:var(--ink-3);white-space:nowrap}
+/* 问答 */
+.chatwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.chatmain .thread{max-height:none}
+.chatside{display:flex;flex-direction:column;gap:12px;min-width:0}
+.ctxm{display:flex;align-items:center;gap:6px}
+.ctxm .bar{width:70px}
+.lnk{border:0;background:none;padding:0 2px;color:var(--ink-3);font-size:12px}
+.lnk:hover{color:var(--accent)}
+.acts{display:flex;gap:10px;margin-top:4px;opacity:.55}
+.cm:hover .acts{opacity:1}
+.pinned>div:last-child{border-left:2px solid var(--warn);padding-left:8px}
+.pin-tag{font-size:11px;color:var(--warn);margin-left:6px}
+.br{margin-left:8px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.cmpc{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--raise);display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.cmpc p{margin:0}
+.cmp.one{grid-template-columns:1fr}
+.cmp.one .cmpc{border:0;background:none;padding:0}
+.code{border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0}
+.codeh{display:flex;align-items:center;gap:8px;padding:4px 10px;background:var(--line-2);font-size:12px}
+.code pre{margin:0;padding:10px;font-size:12px;overflow-x:auto;background:var(--raise)}
+.pinlist{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.pi{font-size:12.5px;border-left:2px solid var(--warn);padding-left:8px}
+.pains{margin:0;padding:10px 12px 12px 28px;font-size:12.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:5px}
+.pains b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:6px 14px;border-radius:6px;font-size:12.5px;z-index:40;display:none}
 /* 身份与留痕、状态详细 */
 .ids{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .idc{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--panel);border-radius:5px;padding:4px 10px;font-size:12.5px;line-height:1.35}
@@ -351,6 +396,8 @@ td .m{font-size:12px;color:var(--ink-3)}
   .tasks,.council,.mem{grid-template-columns:1fr}
   .levels{grid-template-columns:1fr}
   .role{grid-template-columns:1fr}
+  .homegrid,.chatwrap{grid-template-columns:1fr}
+  .projs,.cmp{grid-template-columns:1fr}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rep{grid-template-columns:repeat(3,minmax(0,1fr))}
   .kanban{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -387,7 +434,9 @@ td .m{font-size:12px;color:var(--ink-3)}
   </div>
 
   <nav id="nav">
-    <div class="sec">工作</div>
+    <a href="#home" data-v="home">首页</a>
+    <a href="#chat" data-v="chat">问答</a>
+    <div class="sec">当前项目</div>
     <a href="#tasks" data-v="tasks">任务台 <span class="n alert">1</span></a>
     <a href="#viz" data-v="viz">工作可视化</a>
     <a href="#bus" data-v="bus">通信总线 <span class="n alert" id="busN">2</span></a>
@@ -403,6 +452,104 @@ td .m{font-size:12px;color:var(--ink-3)}
   </nav>
 
   <main>
+    <!-- 首页 -->
+    <section class="view" id="v-home">
+      <div class="home">
+        <h1 class="hello">今天要做什么？</h1>
+        <div class="bigc">
+          <textarea id="homeIn" rows="3" placeholder="直接提问，或者描述一个要交给 agent 团队的项目"></textarea>
+          <div class="bigc-row">
+            <div class="seg" role="group" aria-label="模式" id="homeMode"><button aria-pressed="true" data-hm="ask">提问</button><button aria-pressed="false" data-hm="proj">新建项目</button></div>
+            <select class="s" aria-label="模型" id="homeModel"><option>自动（按账号池）</option><option>Claude 系</option><option>GPT 系</option><option>国产模型</option><option>本地 Ollama</option></select>
+            <label class="check"><input type="checkbox" id="homeCmp">两个模型同时回答，对比着看</label>
+            <span class="spacer"></span>
+            <button class="btn pri" id="homeGo">开始</button>
+          </div>
+        </div>
+
+        <div class="box wiz" id="wiz" hidden>
+          <header><strong>新建项目</strong><span class="spacer"></span><button class="btn ghost" id="wizClose">取消</button></header>
+          <div class="wizb">
+            <label class="field">项目名称<input class="inp" id="wzName" placeholder="例如：会员中心手机号登录"></label>
+            <div class="field">项目类型<div class="toolbar" style="margin:0" id="wzType"><button class="chip" aria-pressed="true" type="button">编程</button><button class="chip" aria-pressed="false" type="button">调研</button><button class="chip" aria-pressed="false" type="button">写作与运营</button><button class="chip" aria-pressed="false" type="button">自定义</button></div></div>
+            <label class="field">代码或资料放在哪<span class="toolbar" style="margin:0"><input class="inp" id="wzPath" placeholder="D:\projects\shop-web 或 GitHub 仓库地址" style="flex:1;min-width:0"><button class="btn" type="button">选择文件夹</button></span></label>
+            <label class="field">agent 团队<select class="s" id="wzTeam"><option>小团队：协调者 + 前端 + 后端 + 测试</option><option>调研组：检索 + 核查 + 反证 + 统稿</option><option>单个 agent：只用 Claude Code</option><option>我自己挑</option></select></label>
+            <label class="field">默认权限<select class="s"><option>部分权限（推荐）</option><option>限制</option><option>完全权限</option></select></label>
+            <label class="check"><input type="checkbox" checked>带上我的全局记忆（偏好和约定）</label>
+            <div><button class="btn pri" id="wzGo">创建并进入</button></div>
+          </div>
+        </div>
+
+        <div class="homegrid">
+          <div>
+            <h2>项目</h2>
+            <div class="projs">
+              <a class="proj-card" href="#tasks"><b>shop-web 会员登录</b><span class="m">编程 · 4 个 agent</span><span class="pill wait">1 项等你批准</span></a>
+              <a class="proj-card" href="#tasks"><b>周报自动化</b><span class="m">写作与运营 · 2 个 agent</span><span class="pill idle">空闲</span></a>
+              <a class="proj-card" href="#council"><b>短信登录转化调研</b><span class="m">调研 · 4 个 agent</span><span class="pill done">已出报告</span></a>
+              <button class="proj-card add" id="newProj" type="button"><b>新建项目</b><span class="m">选文件夹、选团队，一分钟建好</span></button>
+            </div>
+          </div>
+          <div>
+            <h2>最近对话</h2>
+            <div class="recent">
+              <a href="#chat"><span>Electron 和 Tauri 怎么选</span><span class="m">10 分钟前</span></a>
+              <a href="#chat"><span>正则怎么匹配大陆手机号</span><span class="m">昨天</span></a>
+              <a href="#chat"><span>帮我润色这周的周报</span><span class="m">10 月 31 日</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 问答 -->
+    <section class="view" id="v-chat">
+      <div class="chatwrap">
+        <div class="box chatmain">
+          <header><strong>Electron 和 Tauri 怎么选</strong><span class="spacer"></span><span class="ctxm" title="上下文窗口用量"><span class="bar"><b style="width:18%"></b></span><span class="mono hint">上下文 18%</span></span><button class="btn" id="toProj">转为项目</button></header>
+          <div class="thread askable" id="chatThread">
+            <div class="msg cm" data-id="c1"><div class="av u">我</div><div><div class="who"><b>你</b>10:20 <span class="br hint" id="brNav"><button class="lnk" data-br="-1" aria-label="上一个分支">‹</button> 分支 <span id="brI">2</span>/2 <button class="lnk" data-br="1" aria-label="下一个分支">›</button></span></div><p id="brText">我要做一个管理多个 AI agent 的桌面应用，界面要好看，三个系统都要支持，选 Electron 还是 Tauri？</p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="fork">改写并分支</button></div></div></div>
+            <div class="msg cm" data-id="c2"><div class="av">C</div><div><div class="who"><b>Claude</b>10:20</div>
+              <div class="cmp" id="cmp">
+                <div class="cmpc"><div class="hint">Claude 系</div><p>选 Electron。你的应用要嵌入终端、调用基于 Node 的 CLI，并且要求三系统显示一致，这三点都是 Electron 的强项。代价是安装包约 100MB 起。</p><button class="btn" data-adopt>采用这个回答</button></div>
+                <div class="cmpc"><div class="hint">国产模型 · DeepSeek</div><p>倾向 Tauri。体积小、内存低、安全默认值更好；终端可以用 Rust 的 pty 库。但 Linux 下 WebKitGTK 渲染需要额外适配。</p><button class="btn" data-adopt>采用这个回答</button></div>
+              </div>
+              <div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>
+            <div class="msg cm pinned" data-id="c3"><div class="av u">我</div><div><div class="who"><b>你</b>10:24 <span class="pin-tag">已钉住</span></div><p>约束：团队只会 TypeScript，不想写 Rust。</p><div class="acts"><button class="lnk" data-act="pin">取消钉住</button><button class="lnk" data-act="fork">改写并分支</button></div></div></div>
+            <div class="msg cm" data-id="c4"><div class="av">C</div><div><div class="who"><b>Claude</b>10:24</div>
+              <p>那就定 Electron。启动骨架可以这样：</p>
+              <div class="code"><div class="codeh"><span class="mono">main.ts</span><span class="spacer"></span><button class="lnk" data-act="copycode">复制</button><button class="lnk" data-act="savecode">存为文件</button></div><pre class="mono">import { app, BrowserWindow } from 'electron'
+app.whenReady().then(() =&gt; {
+  const win = new BrowserWindow({ width: 1280, height: 800 })
+  win.loadURL('http://localhost:5173')
+})</pre></div>
+              <p>后台进程用 node-pty 拉起各家 CLI，界面用 xterm.js 显示终端。</p>
+              <div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>
+          </div>
+          <div class="composer"><select class="s" aria-label="模型"><option>自动（按账号池）</option><option>Claude 系</option><option>GPT 系</option></select><input id="chatIn" placeholder="继续问，选中上面任意文字可以单独追问"><button class="btn pri" id="chatSend">发送</button></div>
+        </div>
+        <aside class="chatside">
+          <div class="box">
+            <header><strong>钉住的内容</strong></header>
+            <div class="pinlist" id="pinlist"><div class="pi">约束：团队只会 TypeScript，不想写 Rust。</div></div>
+            <p class="hint" style="margin:0;padding:0 12px 10px">钉住的内容在上下文压缩时永远保留，不会被忘掉。</p>
+          </div>
+          <div class="box">
+            <header><strong>这段对话里解决了的痛点</strong></header>
+            <ul class="pains">
+              <li><b>选词提问</b>：选中任意文字单独追问，不打断主线，结束时选择是否合并。</li>
+              <li><b>钉住</b>：关键约束不会被上下文压缩吃掉。</li>
+              <li><b>改写并分支</b>：改一句旧问题重新问，原来的回答保留，可左右切换。</li>
+              <li><b>多模型对比</b>：同一问题两个模型同时回答，采用其中一个。</li>
+              <li><b>上下文用量</b>：快满时提前提醒，并告诉你哪些会被压缩。</li>
+              <li><b>转为项目</b>：聊着聊着发现要动手，一键交给 agent 团队，聊天内容自动成为项目说明。</li>
+              <li><b>存入记忆</b>：好的结论一键存进记忆，下次不用再说。</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
     <!-- 任务台 -->
     <section class="view" id="v-tasks">
       <h1>给会员中心加手机号登录</h1>
@@ -896,9 +1043,9 @@ td .m{font-size:12px;color:var(--ink-3)}
 
 <script>
 (function(){
-  const views=['tasks','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','tasks','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
-    let v=(location.hash||'#tasks').slice(1); if(!views.includes(v)) v='tasks';
+    let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
     document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===v));
   }
@@ -906,12 +1053,13 @@ td .m{font-size:12px;color:var(--ink-3)}
 
   // 选词提问
   const pop=document.getElementById('askPop'), drawer=document.getElementById('drawer'), quote=document.getElementById('quote');
-  let picked='';
+  let picked='', pickedIn='thread';
   document.addEventListener('mouseup',e=>{
     if(drawer.contains(e.target)||e.target===pop) return;
     const s=getSelection(), t=s?String(s).trim():'';
-    const inThread=s&&s.anchorNode&&document.getElementById('thread').contains(s.anchorNode);
-    if(t&&inThread){ const r=s.getRangeAt(0).getBoundingClientRect(); picked=t;
+    const node=s&&s.anchorNode, host=node&&(node.nodeType===1?node:node.parentElement).closest('#thread,.askable');
+    if(t&&host){ const r=s.getRangeAt(0).getBoundingClientRect(); picked=t; pickedIn=host.id;
+      document.getElementById('askA').textContent = host.id==='chatThread' ? '这里指 Electron 自带 Node 运行时。中枢可以直接用它执行 npm install 安装各家 CLI，用户电脑上不需要先装 Node，对普通用户能省掉最容易出错的一步。' : '这是一个新字段，记录手机号被验证的时间。老用户这一列为空，不影响现在的邮箱登录；他们第一次用手机号登录时才会写入。迁移只加列，不改已有数据。';
       pop.style.left=Math.min(innerWidth-130,Math.max(8,r.left))+'px'; pop.style.top=Math.max(8,r.top-34)+'px'; pop.style.display='block';
     } else pop.style.display='none';
   });
@@ -919,9 +1067,10 @@ td .m{font-size:12px;color:var(--ink-3)}
   document.getElementById('closeD').onclick=()=>drawer.classList.remove('on');
   drawer.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
     const m=b.dataset.m; drawer.classList.remove('on'); if(m==='drop') return;
-    const last=document.querySelector('#thread .msg:last-child > div:last-child');
+    const last=document.querySelector('#'+pickedIn+' .msg:last-child > div:last-child');
     const d=document.createElement('div'); d.className='merged';
-    d.textContent = m==='sum' ? '追问结论：'+picked.slice(0,24)+' 只加新列，不影响老用户邮箱登录。' : '追问 '+quote.textContent+'：'+document.getElementById('askA').textContent;
+    const sumTxt = pickedIn==='chatThread' ? ' Electron 自带 Node，用户不用自己装。' : ' 只加新列，不影响老用户邮箱登录。';
+    d.textContent = m==='sum' ? '追问结论：'+picked.slice(0,24)+sumTxt : '追问 '+quote.textContent+'：'+document.getElementById('askA').textContent;
     last.appendChild(d);
   });
 
@@ -973,6 +1122,48 @@ td .m{font-size:12px;color:var(--ink-3)}
   document.getElementById('mk').addEventListener('click',e=>{ const b=e.target.closest('[data-up]'); if(!b) return;
     const tr=b.closest('tr'); const latest=tr.children[2].textContent; tr.children[1].textContent=latest; b.replaceWith(Object.assign(document.createElement('span'),{className:'pill done',textContent:'最新'})); });
   document.getElementById('updAll').onclick=()=>document.querySelectorAll('#mk [data-up]').forEach(b=>{ if(b.textContent==='更新') b.click(); });
+
+  // 提示条
+  const toast=document.createElement('div'); toast.className='toast'; document.body.appendChild(toast); let tt;
+  function say(t){ toast.textContent=t; toast.style.display='block'; clearTimeout(tt); tt=setTimeout(()=>toast.style.display='none',1800); }
+  // 首页
+  const wiz=document.getElementById('wiz');
+  function openWiz(name){ wiz.hidden=false; if(name) document.getElementById('wzName').value=name; document.getElementById('wzName').focus(); }
+  document.getElementById('homeMode').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+    b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    document.getElementById('homeGo').textContent=b.dataset.hm==='proj'?'下一步':'开始'; });
+  document.getElementById('homeGo').onclick=()=>{ const v=document.getElementById('homeIn').value.trim(), proj=document.querySelector('#homeMode [aria-pressed=true]').dataset.hm==='proj';
+    if(proj){ openWiz(v.slice(0,20)); return; }
+    location.hash='chat'; if(v){ addChat(v); } };
+  document.getElementById('newProj').onclick=()=>openWiz('');
+  document.getElementById('wizClose').onclick=()=>wiz.hidden=true;
+  document.getElementById('wzType').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
+  document.getElementById('wzGo').onclick=()=>{ const n=document.getElementById('wzName').value.trim()||'新项目'; const sel=document.getElementById('proj');
+    const o=document.createElement('option'); o.textContent=n; sel.prepend(o); sel.value=n; wiz.hidden=true; say('已创建“'+n+'”，协调者在等你下达第一个任务'); location.hash='tasks'; };
+  // 问答
+  const ct=document.getElementById('chatThread');
+  function addChat(v){ ct.insertAdjacentHTML('beforeend','<div class="msg cm"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p></p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="fork">改写并分支</button></div></div></div><div class="msg cm"><div class="av">C</div><div><div class="who"><b>Claude</b>刚刚</div><p>（演示）这里会是模型的回答。选中任意一段文字，可以单独追问。</p><div class="acts"><button class="lnk" data-act="pin">钉住</button><button class="lnk" data-act="mem">存入记忆</button><button class="lnk" data-act="copy">复制</button></div></div></div>');
+    const ps=ct.querySelectorAll('.msg'); ps[ps.length-2].querySelector('p').textContent=v; }
+  document.getElementById('chatSend').onclick=()=>{ const i=document.getElementById('chatIn'); if(!i.value.trim()) return; addChat(i.value.trim()); i.value=''; };
+  document.getElementById('chatIn').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('chatSend').click(); });
+  const pinlist=document.getElementById('pinlist');
+  function drawPins(){ pinlist.replaceChildren(...[...ct.querySelectorAll('.pinned')].map(m=>{ const d=document.createElement('div'); d.className='pi'; d.textContent=m.querySelector('p').textContent.slice(0,60); return d; })); if(!pinlist.children.length) pinlist.innerHTML='<span class="hint">还没有钉住的内容</span>'; }
+  ct.addEventListener('click',e=>{
+    const a=e.target.closest('[data-act]'); const ad=e.target.closest('[data-adopt]'); const br=e.target.closest('[data-br]');
+    if(ad){ const c=ad.closest('.cmp'); [...c.children].forEach(x=>{ if(x!==ad.parentElement) x.remove(); }); ad.remove(); c.classList.add('one'); say('已采用，另一个回答保存在分支里'); return; }
+    if(br){ const i=document.getElementById('brI'), n=+i.textContent===1?2:1; i.textContent=n;
+      document.getElementById('brText').textContent = n===1 ? 'Electron 和 Tauri 有什么区别？' : '我要做一个管理多个 AI agent 的桌面应用，界面要好看，三个系统都要支持，选 Electron 还是 Tauri？'; return; }
+    if(!a) return; const m=a.closest('.msg');
+    if(a.dataset.act==='pin'){ const on=!m.classList.contains('pinned'); m.classList.toggle('pinned',on); a.textContent=on?'取消钉住':'钉住';
+      const w=m.querySelector('.who'); let tg=w.querySelector('.pin-tag'); if(on&&!tg){ tg=document.createElement('span'); tg.className='pin-tag'; tg.textContent='已钉住'; w.appendChild(tg);} if(!on&&tg) tg.remove(); drawPins(); }
+    if(a.dataset.act==='mem') say('已存入记忆：项目共享 · 来源本对话');
+    if(a.dataset.act==='copy'||a.dataset.act==='copycode') say('已复制');
+    if(a.dataset.act==='savecode') say('已保存到 当前项目/main.ts');
+    if(a.dataset.act==='fork'){ const p=m.querySelector('p'); const v=p.textContent; const ta=document.createElement('textarea'); ta.className='inp'; ta.style.width='100%'; ta.value=v; p.replaceWith(ta); ta.focus();
+      a.textContent='重新提问'; a.dataset.act='refork'; return; }
+    if(a.dataset.act==='refork'){ const ta=m.querySelector('textarea'); const p=document.createElement('p'); p.textContent=ta.value; ta.replaceWith(p); a.textContent='改写并分支'; a.dataset.act='fork'; say('已新建分支，原来的回答还在，可以切回去'); }
+  });
+  document.getElementById('toProj').onclick=()=>{ location.hash='home'; openWiz('Electron 桌面应用骨架'); say('对话内容会作为项目说明带过去'); };
 
   // Agent 状态简约/详细
   document.getElementById('stMode').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
