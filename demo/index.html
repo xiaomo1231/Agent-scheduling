@@ -795,6 +795,10 @@ option.danger{color:var(--bad)}
 .bstat span{font-size:11px;color:var(--ink-3)}
 .bstat b{font-size:15px}
 .bstat i{position:absolute;left:0;bottom:0;height:3px;width:var(--w);background:var(--accent)}
+.themes{display:flex;gap:8px;flex-wrap:wrap;padding:12px}
+.themes button{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--raise);border-radius:6px;padding:7px 12px;font-size:12.5px}
+.themes button i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.themes button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
 /* 项目设置弹窗 */
 .pset{position:fixed;inset:0;z-index:60;background:rgba(10,14,12,.38);display:flex;align-items:center;justify-content:center;padding:16px}
 .pset[hidden]{display:none}
@@ -862,10 +866,11 @@ option.danger{color:var(--bad)}
       <span class="pn">设置</span>
       <input class="inp" id="setQ" placeholder="搜索设置…" aria-label="搜索设置">
       <button class="sask" id="setAsk">问中枢：一句话改设置</button>
+      <div class="sg">个人</div><a href="#look" data-t="look" data-k="主题 颜色 深色 浅色 语言 通知 免打扰">外观与通知</a>
       <div class="sg">连接</div><a href="#accounts" data-t="accounts" data-k="订阅 plan key 模型 分组 额度">账号与模型</a><a href="#connect" data-t="connect" data-k="github gitlab linear 飞书 notion">连接平台</a><a href="#channels" data-t="channels" data-k="微信 telegram slack 钉钉 配对">消息渠道</a>
-      <div class="sg">agent 与工具</div><a href="#market" data-t="market" data-k="安装 更新 cli">Agent 市场 <span class="n">2 个更新</span></a><a href="#skills" data-t="skills" data-k="skill 技能 导入 转换 模板">Skills</a><a href="#relays" data-t="relays" data-k="接力 预设 提示词">接力流程</a>
+      <div class="sg">agent 与工具</div><a href="#market" data-t="market" data-k="安装 更新 cli">Agent 市场 <span class="n">2 个更新</span></a><a href="#skills" data-t="skills" data-k="skill 技能 导入 转换 模板">Skills</a><a href="#relays" data-t="relays" data-k="接力 预设 提示词">接力流程</a><a href="#mcp" data-t="mcp" data-k="mcp 搜索 工具 服务器">MCP 与搜索</a>
       <div class="sg">隐私与安全</div><a href="#perm" data-t="perm" data-k="审批 白名单 命令 沙箱">权限与审批</a><a href="#audit" data-t="audit" data-k="体检 安全 密钥 紧急停止">安全体检 <span class="n alert">1</span></a>
-      <div class="sg">系统</div><a href="#control" data-t="control" data-k="并发 预算 暂停 定时">调度控制</a><a href="#workspace" data-t="workspace" data-k="工作树 团队 协作 共享">工作区与协作</a>
+      <div class="sg">系统</div><a href="#control" data-t="control" data-k="并发 预算 暂停 定时">调度控制</a><a href="#workspace" data-t="workspace" data-k="工作树 团队 协作 共享">工作区与协作</a><a href="#sys" data-t="sys" data-k="日志 更新 网关 端口 实验室 调试 自检 隐私 遥测">系统与更新</a>
       <span class="sver mono">中枢 0.9.3 · 运行 13 天</span>
     </div>
     <div class="ptabs" id="ptabs" hidden>
@@ -1114,7 +1119,7 @@ app.whenReady().then(() =&gt; {
             <div class="approve" style="margin:0" id="approve">
               <div class="h">需要你批准 · 高风险：修改数据库结构</div>
               <p style="margin:4px 0 0;font-size:12.5px">后端 agent 想在测试库执行 <code>ALTER TABLE users ADD phone_verified_at</code>。已自动备份表结构。</p>
-              <div class="row"><button class="btn pri" data-ap="ok">批准执行</button><button class="btn" data-ap="diff">查看脚本</button><button class="btn bad" data-ap="no">拒绝</button></div>
+              <div class="row"><button class="btn pri" data-ap="ok">批准执行</button><button class="btn" data-ap="diff">查看脚本</button><button class="btn ghost" id="apAlways" title="加进命令白名单，以后不再问">以后测试库迁移都允许</button><button class="btn bad" data-ap="no">拒绝</button></div>
             </div>
           </div>
           <div class="composer"><input id="cmd" placeholder="随时补充：加需求、改顺序、取消某一步，协调者会自动调整计划"><button class="btn pri" id="send">发送</button></div>
@@ -1642,6 +1647,60 @@ app.whenReady().then(() =&gt; {
         <details class="auok"><summary>通过的 9 项</summary><ul><li>本地网关只监听 127.0.0.1，带随机 token</li><li>审批绑定命令指纹，改动即作废</li><li>python -c 这类内联代码一律审批</li><li>没人审批时默认拒绝</li><li>子 agent、定时任务默认进沙箱</li><li>外部内容标记为不可信数据</li><li>日志和通信总线里的密钥自动打码</li><li>所有危险开关都是关的</li><li>群聊里必须 @ 才响应</li></ul></details>
       </div>
     </section>
+    <section class="view" id="v-look">
+      <h1>外观与通知</h1>
+      <p class="sub">偏好会在你的设备之间同步；密钥不会同步。</p>
+      <div class="box risk" style="margin-top:0"><header><strong>主题</strong></header>
+        <div class="themes" id="themes"><button data-th="moss" aria-pressed="true"><i style="background:#2f6b57"></i><i style="background:#a35f12"></i>铜绿</button><button data-th="sea" aria-pressed="false"><i style="background:#2c5f8a"></i><i style="background:#b07a1e"></i>海蓝</button><button data-th="ochre" aria-pressed="false"><i style="background:#9a4a22"></i><i style="background:#3d6f6a"></i>赭石</button><button data-th="ink" aria-pressed="false"><i style="background:#2b2f33"></i><i style="background:#8a6a2a"></i>墨色</button><button data-th="plum" aria-pressed="false"><i style="background:#6a3d7a"></i><i style="background:#3f7a5a"></i>梅子</button><button data-th="import" aria-pressed="false">导入主题</button></div>
+        <div class="entry"><div>颜色模式</div><div class="seg" role="group" id="mode"><button aria-pressed="true" data-md="">跟随系统</button><button aria-pressed="false" data-md="light">浅色</button><button aria-pressed="false" data-md="dark">深色</button></div></div>
+        <div class="entry"><div>语言</div><select class="s"><option>简体中文</option><option>English</option></select></div>
+      </div>
+      <div class="box risk"><header><strong>通知</strong><span class="spacer"></span><span class="hint">推送到桌面，也可以发到你绑定的消息渠道</span></header>
+        <div class="entry"><div>有事等你批准或回答</div><input type="checkbox" checked aria-label="审批通知"></div>
+        <div class="entry"><div>讨论串完成或被协调者解决</div><input type="checkbox" checked aria-label="完成通知"></div>
+        <div class="entry"><div>额度快用完（剩 10%）</div><input type="checkbox" checked aria-label="额度通知"></div>
+        <div class="entry"><div>安全体检出现高风险项</div><input type="checkbox" checked disabled aria-label="安全通知"></div>
+        <div class="entry"><div>免打扰时段<div class="src">期间只有高风险安全提醒会推送</div></div><span class="mono">23:00 – 08:00</span></div>
+      </div>
+    </section>
+    <section class="view" id="v-mcp">
+      <h1>MCP 与搜索</h1>
+      <p class="sub">MCP 服务器给 agent 加工具。每个服务器也按“申请权限”来：用到哪些工具、能访问哪里，你批了才生效。</p>
+      <div class="box risk" style="margin-top:0"><header><strong>MCP 服务器</strong><span class="spacer"></span><button class="btn" id="mcpAdd">+ 添加</button></header>
+        <table class="mini" id="mcpT"><tr><td><b>名称</b></td><td><b>工具</b></td><td><b>给谁用</b></td><td><b>状态</b></td></tr>
+          <tr><td>中枢（内置）</td><td>任务图、讨论串、派活、审批、记忆、审计</td><td>协调者</td><td><span class="pill done">运行中</span></td></tr>
+          <tr><td>GitHub</td><td>读 issue / PR、提交评论</td><td>所有岗位</td><td><span class="pill done">运行中</span></td></tr>
+          <tr><td>飞书</td><td>读写多维表格、发消息（要审批）</td><td>调研、整理</td><td><span class="pill done">运行中</span></td></tr>
+          <tr><td>Playwright</td><td>打开网页、截图</td><td>测试</td><td><span class="pill idle">沙箱里</span></td></tr></table></div>
+      <div class="box risk"><header><strong>网页搜索</strong></header>
+        <div class="entry"><div>搜索服务<div class="src">调研组优先用；没配时用模型自带的搜索</div></div><select class="s"><option>模型自带</option><option>Bing</option><option>Tavily</option><option>SearXNG（自建）</option></select></div>
+        <div class="entry"><div>每天搜索上限</div><span class="mono">200 次</span></div>
+        <div class="entry"><div>抓网页时拦截内网地址<div class="src">防止 agent 被骗去访问 127.0.0.1、192.168.x.x</div></div><input type="checkbox" checked disabled aria-label="拦截内网"></div>
+      </div>
+    </section>
+    <section class="view" id="v-sys">
+      <h1>系统与更新</h1>
+      <p class="sub">本地网关、自检、日志、更新和实验功能。</p>
+      <div class="box risk" style="margin-top:0"><header><strong>本地网关</strong><span class="spacer"></span><button class="btn" id="sysDoc">运行自检</button></header>
+        <div class="entry"><div>监听地址<div class="src">只在本机；手机和其他电脑用扫码配对连接</div></div><span class="mono">127.0.0.1:47820</span></div>
+        <div class="entry"><div>访问 token<div class="src">每次启动重新生成，存进系统钥匙串</div></div><button class="btn ghost" id="sysTok">立即更换</button></div>
+        <div class="entry"><div>已配对设备</div><span>iPhone · MacBook（工作）</span></div>
+        <div class="entry"><div>沙箱运行时</div><select class="s"><option>Docker</option><option>Podman</option><option>系统沙箱（macOS / Windows）</option></select></div>
+      </div>
+      <div class="box risk"><header><strong>日志</strong><span class="spacer"></span><button class="btn ghost" id="sysLog">导出最近 24 小时</button></header>
+        <div class="entry"><div>日志里的密钥、手机号、邮箱自动打码</div><input type="checkbox" checked disabled aria-label="日志打码"></div>
+        <div class="entry"><div>保留天数</div><span class="mono">30 天</span></div>
+      </div>
+      <div class="box risk"><header><strong>更新</strong></header>
+        <div class="entry"><div>版本<div class="src">中枢 0.9.3 · 已是最新</div></div><select class="s"><option>稳定版</option><option>测试版</option></select></div>
+        <div class="entry"><div>自动更新<div class="src">更新后自动跑一次安全体检；出问题可以回滚到上一版</div></div><input type="checkbox" checked aria-label="自动更新"></div>
+      </div>
+      <div class="box risk"><header><strong>隐私与实验室</strong></header>
+        <div class="entry"><div>匿名使用统计</div><input type="checkbox" aria-label="匿名统计"></div>
+        <div class="entry"><div>启动时检查新版本</div><input type="checkbox" checked aria-label="检查更新"></div>
+        <div class="entry"><div>实验：协调者自动调整团队人数<div class="src">还不稳定，可能多花额度</div></div><input type="checkbox" aria-label="实验功能"></div>
+      </div>
+    </section>
     <section class="view" id="v-perm">
       <h1>权限与审批</h1>
       <p class="sub">选一个档位作为默认值，下面的高风险事项可以单独决定要不要每次问你。</p>
@@ -1770,7 +1829,7 @@ app.whenReady().then(() =&gt; {
 </div>
 <script>
 (function(){
-  const views=['home','chat','threads','tasks','team','connect','relays','skills','audit','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','threads','tasks','team','connect','relays','skills','audit','look','mcp','sys','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
     let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -2120,7 +2179,7 @@ app.whenReady().then(() =&gt; {
   const PV=['threads','tasks','team','viz','bus','council','memory'];
   function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
     document.getElementById('ptabs').hidden=!pj||v==='tasks'||v==='threads';
-    const st=['accounts','relays','connect','market','control','channels','workspace','perm','skills','audit'].includes(v); document.querySelector('main').classList.toggle('setmode',st);
+    const st=['accounts','relays','connect','market','control','channels','workspace','perm','skills','audit','look','mcp','sys'].includes(v); document.querySelector('main').classList.toggle('setmode',st);
     document.getElementById('stabs').hidden=!st; document.getElementById('setb').classList.toggle('on',st);
     document.querySelectorAll('#stabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
     document.querySelectorAll('#ptabs [data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t===v));
@@ -2628,5 +2687,19 @@ app.whenReady().then(() =&gt; {
   document.getElementById('auRun').onclick=()=>say('体检完成，结果和上次一样');
   document.getElementById('auStop').onclick=()=>{ if(confirm('紧急停止会：暂停所有 agent 和定时任务、断开消息渠道、列出建议轮换的密钥、导出一份审计包。继续吗？')) say('已全部暂停。恢复时在这里点“解除”，再逐个确认渠道'); };
 
+  // v22：外观、MCP、系统
+  const THEMES={moss:['#2f6b57','#6fb59a','#dde9e3','#233a31'],sea:['#2c5f8a','#7fb0dc','#dfe9f3','#1f3346'],ochre:['#9a4a22','#e09a6c','#f3e3d8','#3e2a1f'],ink:['#2b2f33','#c9ced3','#e3e5e7','#2c3135'],plum:['#6a3d7a','#c49ad4','#ece2f0','#352540']};
+  function setTheme(k){ const t=THEMES[k]; if(!t) return; const dark=document.documentElement.dataset.theme==='dark'||(!document.documentElement.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches);
+    const r=document.documentElement.style; r.setProperty('--accent',dark?t[1]:t[0]); r.setProperty('--accent-soft',dark?t[3]:t[2]); try{ localStorage.setItem('zs-theme',k); }catch(_){} }
+  document.getElementById('themes').addEventListener('click',e=>{ const b=e.target.closest('[data-th]'); if(!b) return; if(b.dataset.th==='import'){ say('粘贴主题链接或 JSON，只存在这台设备上'); return; }
+    document.querySelectorAll('#themes [data-th]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); setTheme(b.dataset.th); });
+  document.getElementById('mode').addEventListener('click',e=>{ const b=e.target.closest('[data-md]'); if(!b) return; document.querySelectorAll('#mode [data-md]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+    if(b.dataset.md) document.documentElement.dataset.theme=b.dataset.md; else delete document.documentElement.dataset.theme; const cur=document.querySelector('#themes [aria-pressed=true]'); if(cur) setTheme(cur.dataset.th); });
+  try{ const k=localStorage.getItem('zs-theme'); if(k&&THEMES[k]){ setTheme(k); document.querySelectorAll('#themes [data-th]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.th===k))); } }catch(_){}
+  document.getElementById('mcpAdd').onclick=()=>say('填服务器地址或命令；会先列出它提供的工具和要访问的地方，你批了才生效');
+  document.getElementById('sysDoc').onclick=()=>say('自检通过：网关、钥匙串、沙箱、3 个官方 CLI 都正常');
+  document.getElementById('sysTok').onclick=()=>say('已更换 token，已配对的设备会自动重新认证');
+  document.getElementById('sysLog').onclick=()=>say('已导出（密钥已打码）');
+  document.getElementById('apAlways').onclick=()=>{ document.getElementById('alw').insertAdjacentHTML('beforeend','<tr><td class="mono">npm</td><td class="mono">run migrate --env=test</td><td>后端</td><td class="hint">你刚刚点了“以后都允许”</td><td><button class="btn ghost" data-alx>删除</button></td></tr>'); const ok=document.querySelector('#approve [data-ap=ok]'); if(ok) ok.click(); say('已批准，并把“测试库迁移”加进命令白名单；正式库仍然每次问你'); };
 })();
 </script>
