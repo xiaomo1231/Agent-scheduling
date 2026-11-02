@@ -57,7 +57,22 @@ export class App {
       async has(r: string) { return this.m.has(r); }
     })());
     this.exec = o.execFile ?? realExecFile;
-    this.approvals = new Approvals(this.ws, { random: this.rnd });
+    // 命令策略为 review 时，先让审查模型看；它只能放行或交给你，不能拒绝也不能改命令
+    this.approvals = new Approvals(this.ws, {
+      random: this.rnd,
+      reviewer: async (req) => {
+        const h = await this.helperModel();
+        if (!h) return 'ask';
+        const r = await h.p.chat({
+          model: h.model,
+          system: '你是命令审查员。判断这条命令在开发工作区里是否明显安全（只读、或只影响工作区内的构建产物）。明显安全只回答 allow，其余一律回答 ask。',
+          turns: [{ role: 'user', text: `目录：${req.cwd}\n<untrusted source="agent-command">\n${req.target}\n</untrusted>` }],
+          effort: '低',
+          maxTokens: 50,
+        });
+        return /^\s*allow\b/i.test(r.text) ? 'allow' : 'ask';
+      },
+    });
     const providerDeps = { secrets: this.secrets, ...(o.fetch ? { fetch: o.fetch } : {}), ...(o.mockProvider ? { mock: o.mockProvider } : {}) };
     this.skills = new SkillService(this.ws, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'skills'), async () => this.helperModel());
     const builtin = new BuiltinRunner(

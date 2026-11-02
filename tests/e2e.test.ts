@@ -135,3 +135,16 @@ describe('网关', () => {
     ws.close();
   });
 });
+
+describe('审查模式', () => {
+  it('审查模型说 allow 就放行，否则交给你', async () => {
+    const mock = new MockProvider((req) => ({ text: req.turns[0]!.role === 'user' && (req.turns[0] as any).text.includes('make clean') ? 'allow' : 'ask', toolCalls: [], stop: 'end' }));
+    app = createApp({ mockProvider: mock });
+    await cmd(app, { type: 'source.save', source: { id: 'src_mock02', kind: 'apikey', name: '模拟', transport: 'mock', models: [{ id: 'm', label: 'M', vendor: 'x', enabled: true }] } });
+    await cmd(app, { type: 'policy.set', policy: { ...app.ws.current.policy, commandMode: 'review' } });
+    const req = (target: string) => ({ agentId: 'a', threadId: 'thr_x', kind: 'command' as const, target, cwd: '/w', workspaceRoot: '/w' });
+    expect((await app.approvals.gate(req('make clean'), { kind: 'agent', id: 'a' })).ok).toBe(true);
+    void app.approvals.gate(req('make deploy'), { kind: 'agent', id: 'a' });
+    await until(() => Object.values(app!.ws.current.approvals).some((a) => a.state === 'pending'));
+  });
+});

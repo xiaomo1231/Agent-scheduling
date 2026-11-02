@@ -23,24 +23,3 @@ export function useRoute(): [string[], (path: string) => void] {
   }, []);
   return [r, go];
 }
-
-/** 本机偏好（布局里不重要的东西），读写都包 try/catch */
-export function useLocal<T>(key: string, init: T): [T, (v: T) => void] {
-  const [v, setV] = useState<T>(() => {
-    try {
-      const s = localStorage.getItem('zs.' + key);
-      return s ? (JSON.parse(s) as T) : init;
-    } catch {
-      return init;
-    }
-  });
-  const set = useCallback((nv: T) => {
-    setV(nv);
-    try {
-      localStorage.setItem('zs.' + key, JSON.stringify(nv));
-    } catch {
-      /* 忽略 */
-    }
-  }, [key]);
-  return [v, set];
-}

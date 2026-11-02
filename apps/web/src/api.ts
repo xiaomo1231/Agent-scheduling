@@ -21,8 +21,7 @@ function readToken(): string {
   }
 }
 
-const desktop = (globalThis as { zhongshu?: { token?: string } }).zhongshu;
-export const token = desktop?.token ?? readToken();
+export const token = readToken();
 
 export class ApiError extends Error {}
 
