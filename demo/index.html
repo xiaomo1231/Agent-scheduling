@@ -524,6 +524,35 @@ a.btn{text-decoration:none;color:inherit}
 .tgl[aria-pressed="true"]{background:var(--accent)}
 .tgl[aria-pressed="true"]::after{left:16px}
 @media (max-width:680px){ .subag .sb{grid-template-columns:1fr} }
+
+/* v15 讨论串总览 */
+.tsec{max-width:980px;margin-bottom:18px}
+.tsec h2{font-size:13px;color:var(--ink-2);font-weight:600;margin:0 0 8px}
+.tsec summary{cursor:pointer;list-style:none}
+.tsec summary::-webkit-details-marker{display:none}
+.tlist{display:flex;flex-direction:column}
+.trow{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 10px;border-radius:6px;cursor:pointer;text-align:left;border:0;background:transparent;width:100%;color:inherit;font:inherit}
+.trow:hover{background:var(--line-2)}
+.trow .tt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.trow .tt b{font-weight:500;font-size:14px}
+.trow .prog{font-size:11.5px;border:1px solid var(--line);border-radius:10px;padding:0 7px;color:var(--ink-2)}
+.trow .who{font-size:11.5px;color:var(--ink-3)}
+.trow .tm{font-size:12px;color:var(--ink-3)}
+.spin,.idlec,.donec{display:block;box-sizing:border-box}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:sp 1s linear infinite}
+.idlec{width:14px;height:14px;border-radius:50%;border:2px dashed var(--ink-3);opacity:.6}
+.donec{width:14px;height:14px;border-radius:50%;background:var(--good);color:#fff;font-size:9px;display:grid;place-items:center}
+@keyframes sp{to{transform:rotate(360deg)}}
+.thumbs{display:flex;gap:8px;padding:0 10px 8px 42px;flex-wrap:wrap}
+.thumb{width:120px;height:90px;border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:8px;font-size:11px;overflow:hidden;color:var(--ink-2);cursor:pointer}
+.thumb b{display:block;font-size:11.5px;color:var(--ink);margin-bottom:4px}
+.thumb i{display:block;height:4px;background:var(--line-2);border-radius:2px;margin:4px 0;font-style:normal}
+.wcard{border:1px solid var(--warn);background:var(--warn-soft,var(--raise));border-radius:6px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.wcard .from{font-size:11.5px;color:var(--ink-3);width:100%}
+.wcard .spacer{flex:1}
+.wempty{border:1px dashed var(--line);border-radius:6px;padding:16px;text-align:center;color:var(--ink-3);font-size:12.5px}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:680px){ .thumbs{padding-left:10px} #thQ{width:100%!important} }
 /* v13 讨论串 */
 .ckl{border-bottom:1px solid var(--line-2);padding:8px 12px;font-size:12.5px;background:var(--raise)}
 .ckl .h{display:flex;align-items:center;gap:8px;color:var(--ink-3);font-size:11.5px;margin-bottom:4px}
@@ -634,10 +663,10 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
   <nav id="nav">
     <a href="#home" data-v="home" class="newb btn">＋ 新建</a>
     <div class="sec">项目</div>
-    <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert" title="1 项等你批准">1</span></a>
+    <a href="#threads" data-v="threads" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert" title="1 项等你批准">1</span></a>
     <div id="navTh"></div>
-    <a href="#tasks" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
-    <a href="#tasks" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
+    <a href="#threads" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
+    <a href="#threads" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
     <div class="sec">对话和任务</div>
     <a href="#chat" data-v="chat" data-c="Electron 和 Tauri 怎么选"><span class="lb">Electron 和 Tauri 怎么选</span></a>
     <a href="#chat" data-c="整理本周竞品价格"><span class="lb">整理本周竞品价格</span><span class="tg">任务</span></a>
@@ -654,7 +683,7 @@ nav .thl.on{color:var(--ink);background:var(--line-2)}
     </div>
     <div class="ptabs" id="ptabs" hidden>
       <span class="pn" id="pjName">shop-web 会员登录</span>
-      <a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN" title="条消息等你放行">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
+      <a href="#threads" data-t="threads">讨论串 <span class="n alert" title="2 件事等你处理">2</span></a><a href="#tasks" data-t="tasks">工作台</a><a href="#team" data-t="team">团队与模型</a><a href="#viz" data-t="viz">工作可视化</a><a href="#bus" data-t="bus">通信总线 <span class="n alert" id="busN" title="条消息等你放行">2</span></a><a href="#council" data-t="council">群聊评审</a><a href="#memory" data-t="memory">记忆</a>
       <span class="spacer"></span><span class="conn">已连接 <span class="chip">GitHub</span><span class="chip">Linear</span></span>
     </div>
     <!-- 首页 -->
@@ -1105,6 +1134,16 @@ app.whenReady().then(() =&gt; {
       <p class="note">登录走各平台官方授权（OAuth）或 MCP，令牌存在系统钥匙串里。agent 用连接做的每一步（读了哪个 issue、开了哪个 PR）都带身份编号记进通信总线留痕。合并、删除、对外发消息这类动作默认要你批准。</p>
     </section>
 
+    <!-- 讨论串总览 -->
+    <section class="view" id="v-threads">
+      <div class="toolbar"><h1 style="margin:0">讨论串</h1><span class="spacer" style="flex:1"></span><input class="inp" id="thQ" placeholder="搜索讨论串" style="width:200px"><button class="btn pri" id="thNew">新讨论串</button></div>
+      <p class="sub">项目里每件事一个讨论串，各自有计划和产出。随时往里面追加要求，协调者会自动改计划。</p>
+      <div class="tsec"><h2>等你处理 · <span id="thWaitN">2</span></h2><div id="thWait"></div></div>
+      <div class="tsec"><h2>进行中 · 3</h2><div class="tlist" id="thRun"></div></div>
+      <div class="tsec"><h2>空闲 · 2</h2><div class="tlist" id="thIdle"></div></div>
+      <details class="tsec"><summary><h2 style="display:inline">已解决 · 12</h2></summary><div class="tlist" id="thDone"></div></details>
+    </section>
+
     <!-- 团队与模型 -->
     <section class="view" id="v-team">
       <h1>团队与模型</h1>
@@ -1383,7 +1422,7 @@ app.whenReady().then(() =&gt; {
 </aside>
 <script>
 (function(){
-  const views=['home','chat','tasks','team','connect','relays','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
+  const views=['home','chat','threads','tasks','team','connect','relays','viz','bus','council','memory','market','accounts','control','channels','workspace','perm'];
   function show(){
     let v=(location.hash||'#home').slice(1); if(!views.includes(v)) v='home';
     views.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
@@ -1457,6 +1496,32 @@ app.whenReady().then(() =&gt; {
     if(e.target.closest('[data-undo]')&&lastUndo){ TH[lastUndo.i].steps=lastUndo.steps; lastUndo=null; drawCkl(); e.target.closest('.acts').innerHTML='<span class="hint">已撤销，计划恢复原样</span>'; }
     if(e.target.closest('[data-why]')) say('（演示）协调者会给出判断依据：关键词、和现有步骤的相似度、影响到的依赖'); });
   setTimeout(drawTh);
+
+  // v15：讨论串总览
+  const TOV={
+    wait:[{t:'T1 数据库迁移等你批准：给 users 表加 phone_verified_at',th:'手机号登录',k:'ap'},{t:'@frontend-01 问：倒计时放在按钮里，还是按钮旁边？',th:'手机号登录',k:'q',o:['按钮里','按钮旁边']}],
+    run:[{n:'手机号登录',p:'1/5',who:'4 个 agent',tm:'5 分钟',i:0},{n:'夜间回归脚本',p:'2/4',who:'@qa-01',tm:'12 分钟'},{n:'接口文档同步到飞书',p:'0/3',who:'@sub-01',tm:'1 小时'}],
+    idle:[{n:'登录页埋点',who:'排队，等手机号登录做完',tm:'昨天',i:1,th:[['埋点事件清单','6 个事件']]},{n:'老用户数据迁移方案',who:'等你看方案',tm:'2 天',th:[['迁移方案','分三批迁'],['回滚预案','一键回滚']]}],
+    done:[{n:'短信服务商选型',tm:'10 月 30 日'},{n:'登录页改版设计稿',tm:'10 月 28 日'},{n:'Redis 限流方案',tm:'10 月 27 日'}]
+  };
+  function trow(x,icon){ return '<button class="trow" data-open="'+(x.i===undefined?'':x.i)+'" data-n="'+esc(x.n)+'"><span>'+icon+'</span><span class="tt"><b>'+esc(x.n)+'</b>'+(x.p?'<span class="prog">'+x.p+'</span>':'')+'<span class="who">'+esc(x.who||'')+'</span></span><span class="tm">'+esc(x.tm)+'</span></button>'; }
+  function drawTov(){ const q=(document.getElementById('thQ').value||'').trim(); const f=a=>a.filter(x=>!q||x.n.includes(q));
+    const w=document.getElementById('thWait'); document.getElementById('thWaitN').textContent=TOV.wait.length;
+    w.innerHTML=TOV.wait.length?TOV.wait.map((x,i)=>'<div class="wcard" data-w="'+i+'"><span class="from">来自讨论串“'+esc(x.th)+'”</span><span>'+esc(x.t)+'</span><span class="spacer"></span>'+(x.k==='ap'?'<button class="btn pri" data-wa="ok">批准</button><button class="btn" data-wa="open">去看看</button>':x.o.map(o=>'<button class="btn" data-wa="pick">'+esc(o)+'</button>').join(''))+'</div>').join(''):'<div class="wempty">没有要你处理的事：审批、决策、权限请求会出现在这里。</div>';
+    document.getElementById('thRun').innerHTML=f(TOV.run).map(x=>trow(x,'<span class="spin"></span>')).join('');
+    document.getElementById('thIdle').innerHTML=f(TOV.idle).map(x=>trow(x,'<span class="idlec"></span>')+(x.th?'<div class="thumbs">'+x.th.map(t=>'<div class="thumb"><b>'+esc(t[0])+'</b>'+esc(t[1])+'<i></i><i style="width:70%"></i><i style="width:85%"></i></div>').join('')+'</div>':'')).join('');
+    document.getElementById('thDone').innerHTML=f(TOV.done).map(x=>trow(x,'<span class="donec">✓</span>')).join('');
+    const badge=document.querySelector('#ptabs [data-t=threads] .n'); if(badge) badge.textContent=TOV.wait.length||''; }
+  document.getElementById('thQ').oninput=drawTov;
+  document.getElementById('v-threads').addEventListener('click',e=>{
+    const r=e.target.closest('.trow'); if(r){ const i=r.dataset.open; if(i!==''){ switchTh(+i); } else { const k=TH.findIndex(t=>t.n===r.dataset.n); if(k>=0) switchTh(k); else newTh(r.dataset.n,'继续“'+r.dataset.n+'”'); } location.hash='tasks'; return; }
+    const b=e.target.closest('[data-wa]'); if(!b) return; const c=b.closest('.wcard'), i=+c.dataset.w;
+    if(b.dataset.wa==='open'){ switchTh(0); location.hash='tasks'; return; }
+    if(b.dataset.wa==='ok'){ const ap=document.querySelector('#approve [data-ap=ok]'); if(ap) ap.click(); say('已批准，T1 开始执行'); }
+    if(b.dataset.wa==='pick') say('已回复 @frontend-01：'+b.textContent);
+    TOV.wait.splice(i,1); drawTov(); });
+  document.getElementById('thNew').onclick=()=>{ newTh('新讨论串'); location.hash='tasks'; setTimeout(()=>document.getElementById('cmd').focus(),50); say('新讨论串已建好，说说要做什么'); };
+  setTimeout(drawTov);
 
   // v14：子 agent
   const SUB={on:true,model:'grp:便宜干活/执行',max:3,budget:2,scope:'只读：查资料、读代码、跑测试',open:false};
@@ -1690,7 +1755,7 @@ app.whenReady().then(() =&gt; {
 
   // v7：项目页签、左侧文件、连接
   let curC='Electron 和 Tauri 怎么选';
-  const PV=['tasks','team','viz','bus','council','memory'];
+  const PV=['threads','tasks','team','viz','bus','council','memory'];
   function layout(){ const v=(location.hash||'#home').slice(1), pj=PV.includes(v);
     document.getElementById('ptabs').hidden=!pj;
     const st=['accounts','relays','connect','market','control','channels','workspace','perm'].includes(v);
