@@ -94,6 +94,29 @@ export const CommandS = z.discriminatedUnion('type', [
   z.object({ type: z.literal('skill.deploy'), name: text(64), platform: z.enum(['claude-code', 'codex', 'gemini-cli', 'opencode', 'openclaw', 'zhongshu']) }),
   z.object({ type: z.literal('skill.remove'), name: text(64) }),
   z.object({ type: z.literal('system.emergencyStop'), on: z.boolean() }),
+  z.object({ type: z.literal('memory.desk'), projectId: id('prj'), desk: text(8000) }),
+  z.object({ type: z.literal('memory.add'), projectId: id('prj'), text: text(500).min(1), tags: z.array(text(30)).max(5).optional(), pinned: z.boolean().optional() }),
+  z.object({ type: z.literal('memory.remove'), projectId: id('prj'), entryId: id('mem') }),
+  z.object({ type: z.literal('memory.consolidate'), projectId: id('prj') }),
+  z.object({
+    type: z.literal('review.start'), projectId: id('prj'), question: text(4000).min(1), preset: text(40).optional(),
+    roles: z.array(z.object({ name: text(30).min(1), stance: text(500), devil: z.boolean().optional(), model: ModelChoiceS.nullable().optional() })).max(8).optional(),
+    rounds: z.number().int().min(1).max(4).optional(), decider: ModelChoiceS.nullable().optional(), replyTo: id('thr').optional(),
+  }),
+  z.object({ type: z.literal('thread.side'), threadId: id('thr'), messageId: id('msg').optional(), quote: text(2000).min(1), question: text(4000) }),
+  z.object({ type: z.literal('thread.sideClose'), threadId: id('thr'), outcome: z.enum(['discard', 'conclusion', 'all']) }),
+  z.object({
+    type: z.literal('channel.save'),
+    channel: z.object({
+      id: id('chn'), kind: z.enum(['telegram', 'feishu', 'dingtalk', 'wecom']), name: text(60).min(1), enabled: z.boolean(),
+      projectId: id('prj').optional(), notify: z.object({ approvals: z.boolean(), results: z.boolean() }),
+    }),
+    secret: text(500).optional(),
+  }),
+  z.object({ type: z.literal('channel.remove'), channelId: id('chn') }),
+  z.object({ type: z.literal('channel.test'), channelId: id('chn') }),
+  z.object({ type: z.literal('channel.pair'), channelId: id('chn') }),
+  z.object({ type: z.literal('channel.unpair'), channelId: id('chn') }),
 ]);
 
 export type Command = z.infer<typeof CommandS>;

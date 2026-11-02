@@ -3,19 +3,27 @@ import type { SecretStore } from '../secrets/index.js';
 import { AnthropicProvider } from './anthropic.js';
 import { OpenAIProvider } from './openai.js';
 import { ProviderError, type ChatProvider } from './types.js';
+import { MeteredProvider, type Meter } from './metered.js';
 
 export interface ProviderDeps {
   secrets: SecretStore;
   fetch?: typeof fetch;
   /** 测试时替换：transport 为 mock 的来源走这里 */
   mock?: ChatProvider;
+  /** 记用量、等额度 */
+  meter?: Meter;
 }
 
 /**
  * 按来源造出能直接对话的适配器。
  * 订阅类（cli-*）不能这样调用，只能交给对应 CLI 代跑，见 runners/cli。
  */
-export async function providerFor(source: ModelSource, deps: ProviderDeps): Promise<ChatProvider> {
+export async function providerFor(source: ModelSource, deps: ProviderDeps, ctx: { projectId?: string } = {}): Promise<ChatProvider> {
+  const p = await bare(source, deps);
+  return deps.meter ? new MeteredProvider(p, source.id, ctx.projectId ?? '', deps.meter) : p;
+}
+
+async function bare(source: ModelSource, deps: ProviderDeps): Promise<ChatProvider> {
   const key = source.secretRef ? await deps.secrets.get(source.secretRef) : undefined;
   switch (source.transport) {
     case 'anthropic':

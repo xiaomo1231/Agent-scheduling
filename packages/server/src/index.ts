@@ -8,3 +8,7 @@ export * from './skills/index.js';
 export * from './app/index.js';
 export * from './gateway/index.js';
 export * from './worktrees/index.js';
+export * from './memory/index.js';
+export * from './review/index.js';
+export * from './side/index.js';
+export * from './channels/index.js';

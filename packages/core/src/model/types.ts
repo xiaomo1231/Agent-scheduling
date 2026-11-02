@@ -128,7 +128,7 @@ export interface Thread {
   id: string;
   projectId: string;
   /** coord 是项目的协调者对话，每个项目一条；work 是普通讨论串。缺省为 work。 */
-  kind?: 'coord' | 'work';
+  kind?: 'coord' | 'work' | 'review' | 'side';
   title: string;
   createdAt: number;
   updatedAt: number;
@@ -140,6 +140,102 @@ export interface Thread {
   steps: Step[];
   /** 在独立 worktree 里干活时的信息 */
   worktree?: Worktree;
+  /** kind 为 review 时：群评审的设置和结论 */
+  review?: ReviewSetup;
+  /** kind 为 side 时：从哪条消息的哪段话岔出来 */
+  parent?: SideParent;
+}
+
+// ---------- 群评审 ----------
+export interface ReviewRole {
+  id: string;
+  name: string;
+  /** 这个角色站在什么立场、看重什么 */
+  stance: string;
+  /** 唱反调：专门找毛病，不许附和 */
+  devil?: boolean;
+  /** 为空时用评审默认模型 */
+  model?: ModelChoice | null;
+}
+
+export interface ReviewSetup {
+  preset: string;
+  question: string;
+  roles: ReviewRole[];
+  /** 讨论几轮（每轮每个角色说一次） */
+  rounds: number;
+  /** 拍板的模型；为空用协调者模型 */
+  decider: ModelChoice | null;
+  state: 'running' | 'decided' | 'failed';
+  decision?: string;
+}
+
+// ---------- 划词追问 ----------
+export interface SideParent {
+  threadId: string;
+  messageId?: string;
+  /** 用户划出来的那段话 */
+  quote: string;
+  /** 关掉时怎么处理：丢掉 / 只把结论带回去 / 整段对话带回去 */
+  outcome?: 'discard' | 'conclusion' | 'all';
+}
+
+// ---------- 用量与额度 ----------
+export interface UsageRow {
+  /** YYYY-MM-DD（本地时间） */
+  day: string;
+  projectId: string;
+  sourceId: string;
+  model: string;
+  calls: number;
+  input: number;
+  output: number;
+}
+
+export interface QuotaWait {
+  sourceId: string;
+  /** 预计什么时候恢复（毫秒时间戳） */
+  until: number;
+  reason: string;
+}
+
+// ---------- 项目记忆 ----------
+/** 桌面页上限（字节）：每次都会放进提示词，所以必须短 */
+export const DESK_LIMIT = 4096;
+export const MEMORY_ENTRY_LIMIT = 500;
+
+export interface MemoryEntry {
+  id: string;
+  text: string;
+  tags: string[];
+  /** 谁记的：agent 编号、协调者或 user */
+  by: string;
+  at: number;
+  pinned?: boolean;
+}
+
+export interface ProjectMemory {
+  /** 桌面页：项目最重要的事实，≤ DESK_LIMIT */
+  desk: string;
+  entries: MemoryEntry[];
+  consolidatedAt?: number;
+}
+
+// ---------- 消息渠道 ----------
+export type ChannelKind = 'telegram' | 'feishu' | 'dingtalk' | 'wecom';
+
+export interface Channel {
+  id: string;
+  kind: ChannelKind;
+  name: string;
+  enabled: boolean;
+  /** bot token 或 webhook 地址存在密钥库里，这里只放引用 */
+  secretRef?: string;
+  /** 消息默认进哪个项目的协调者 */
+  projectId?: string;
+  /** Telegram：已配对的聊天 */
+  paired?: { chatId: string; name?: string; at: number };
+  notify: { approvals: boolean; results: boolean };
 }
 
 export interface Worktree {
@@ -173,7 +269,8 @@ export type MessageCard =
   | { kind: 'thread'; threadId: string }
   | { kind: 'approval'; approvalId: string }
   | { kind: 'planDiff'; summary: string; undoToken?: string }
-  | { kind: 'worktree'; threadId: string };
+  | { kind: 'worktree'; threadId: string }
+  | { kind: 'side'; threadId: string; quote: string };
 
 // ---------- 权限与审批 ----------
 export type CommandMode = 'deny' | 'allowlist' | 'ask' | 'review' | 'dangerouslyAllowAll';

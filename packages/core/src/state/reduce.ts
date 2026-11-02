@@ -1,5 +1,5 @@
 import { defaultPolicy } from '../model/defaults.js';
-import type { Approval, InstalledSkill, Message, ModelGroup, ModelSource, Policy, Project, Thread } from '../model/types.js';
+import { MEMORY_ENTRY_LIMIT, type Approval, type Channel, type InstalledSkill, type Message, type ModelGroup, type ModelSource, type Policy, type Project, type ProjectMemory, type QuotaWait, type Thread, type UsageRow } from '../model/types.js';
 import type { ZEvent } from '../events/types.js';
 import { GENESIS_HASH } from '../events/chain.js';
 
@@ -14,6 +14,11 @@ export interface State {
   groups: Record<string, ModelGroup>;
   skills: Record<string, InstalledSkill>;
   emergencyStop: boolean;
+  /** 键为 日期|项目|来源|模型 */
+  usage: Record<string, UsageRow>;
+  quota: Record<string, QuotaWait>;
+  memory: Record<string, ProjectMemory>;
+  channels: Record<string, Channel>;
   lastSeq: number;
   lastHash: string;
 }
@@ -21,7 +26,7 @@ export interface State {
 export function emptyState(): State {
   return {
     projects: {}, threads: {}, messages: {}, approvals: {}, policy: defaultPolicy(), sources: {}, groups: {}, skills: {},
-    emergencyStop: false, lastSeq: 0, lastHash: GENESIS_HASH,
+    emergencyStop: false, usage: {}, quota: {}, memory: {}, channels: {}, lastSeq: 0, lastHash: GENESIS_HASH,
   };
 }
 
@@ -148,12 +153,63 @@ export function reduce(s: State, e: ZEvent): State {
     case 'system.emergencyStop':
       next.emergencyStop = b.on;
       break;
+    case 'thread.review': {
+      const t = s.threads[b.threadId];
+      if (t) next.threads = { ...s.threads, [t.id]: { ...t, review: b.review, updatedAt: e.ts } };
+      break;
+    }
+    case 'thread.sideClosed': {
+      const t = s.threads[b.threadId];
+      if (t?.parent) next.threads = { ...s.threads, [t.id]: { ...t, parent: { ...t.parent, outcome: b.outcome }, updatedAt: e.ts } };
+      break;
+    }
+    case 'usage.recorded': {
+      const k = usageKey(b);
+      const r = s.usage[k] ?? { day: b.day, projectId: b.projectId, sourceId: b.sourceId, model: b.model, calls: 0, input: 0, output: 0 };
+      next.usage = { ...s.usage, [k]: { ...r, calls: r.calls + 1, input: r.input + b.input, output: r.output + b.output } };
+      break;
+    }
+    case 'source.quota': {
+      const { [b.sourceId]: _x, ...rest } = s.quota;
+      next.quota = b.until === null ? rest : { ...rest, [b.sourceId]: { sourceId: b.sourceId, until: b.until, reason: b.reason ?? '' } };
+      break;
+    }
+    case 'memory.desk': {
+      const m = s.memory[b.projectId] ?? { desk: '', entries: [] };
+      next.memory = { ...s.memory, [b.projectId]: { ...m, desk: b.desk } };
+      break;
+    }
+    case 'memory.added': {
+      const m = s.memory[b.projectId] ?? { desk: '', entries: [] };
+      next.memory = { ...s.memory, [b.projectId]: { ...m, entries: [...m.entries, b.entry].slice(-MEMORY_ENTRY_LIMIT) } };
+      break;
+    }
+    case 'memory.removed': {
+      const m = s.memory[b.projectId];
+      if (m) next.memory = { ...s.memory, [b.projectId]: { ...m, entries: m.entries.filter((x) => x.id !== b.entryId) } };
+      break;
+    }
+    case 'memory.consolidated':
+      next.memory = { ...s.memory, [b.projectId]: { desk: b.desk, entries: b.entries, consolidatedAt: e.ts } };
+      break;
+    case 'channel.saved':
+      next.channels = { ...s.channels, [b.channel.id]: b.channel };
+      break;
+    case 'channel.removed': {
+      const { [b.channelId]: _x, ...rest } = s.channels;
+      next.channels = rest;
+      break;
+    }
     default: {
       const never: never = b;
       void never;
     }
   }
   return next;
+}
+
+export function usageKey(r: { day: string; projectId: string; sourceId: string; model: string }): string {
+  return `${r.day}|${r.projectId}|${r.sourceId}|${r.model}`;
 }
 
 export function replay(events: readonly ZEvent[], from: State = emptyState()): State {

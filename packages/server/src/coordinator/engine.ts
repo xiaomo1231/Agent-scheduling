@@ -1,5 +1,5 @@
 import {
-  applyPlanOps, autoResolveBlocker, choiceLabel, newId, resolveChoice, runsViaCli,
+  applyPlanOps, autoResolveBlocker, memoryPrompt, choiceLabel, newId, resolveChoice, runsViaCli,
   type Actor, type EventBody, type Message, type MessageCard, type ModelChoice, type PlanOp, type Project, type ResolvedModel, type Step, type Thread,
 } from '@zhongshu/core';
 import type { Workspace } from '../store/index.js';
@@ -18,6 +18,8 @@ export interface CoordinatorDeps {
   execFile: ExecFile;
   /** 项目的工作区目录 */
   folderFor: (p: Project) => string;
+  /** 群评审：开一个评审讨论串并开始，结论会贴回 replyTo */
+  startReview?: (projectId: string, question: string, preset: string, replyTo?: string) => { threadId: string } | { error: string };
   /** 没配模型时用模拟运行（离线演示） */
   simulate?: boolean;
   random?: () => number;
@@ -81,7 +83,7 @@ export class Coordinator {
     const make = async (r: ResolvedModel | null): Promise<ChatProvider | null> => {
       if (!r) return null;
       if (runsViaCli(r.source.transport)) return new CliBrain(r.source.transport, this.d.execFile, this.d.folderFor(p));
-      return providerFor(r.source, this.d.providers);
+      return providerFor(r.source, this.d.providers, { projectId: p.id });
     };
     const resolved = resolveChoice(cs.model, this.st.sources, this.st.groups);
     let main: ChatProvider | null = null;
@@ -107,7 +109,7 @@ export class Coordinator {
     return out;
   }
 
-  private systemPrompt(p: Project, here: Thread): string {
+  private systemPrompt(p: Project, here: Thread, query = ''): string {
     const threads = Object.values(this.st.threads).filter((t) => t.projectId === p.id && t.kind !== 'coord' && !t.resolved);
     const fmt = (t: Thread) =>
       `- ${t.id}「${t.title}」\n` + t.steps.map((s, i) => `    T${i + 1} ${s.id} [${s.state}] ${s.title}${s.assignee ? ' ' + s.assignee : ''}`).join('\n');
@@ -120,6 +122,8 @@ export class Coordinator {
       p.settings.instructions ? `项目说明：${p.settings.instructions}` : '',
       `当前讨论串：${here.kind === 'coord' ? '协调者对话' : `${here.id}「${here.title}」`}`,
       threads.length ? `进行中的讨论串：\n${threads.map(fmt).join('\n')}` : '现在没有进行中的讨论串。',
+      memoryPrompt(this.st.memory[p.id], query),
+      '值得长期记住的项目事实（约定、决定、踩过的坑）用 remember 记下来。需要多个角度把关的决定，可以用 start_review 开一次群评审。',
     ].filter(Boolean).join('\n');
   }
 
@@ -149,7 +153,7 @@ export class Coordinator {
     const p = thread && this.st.projects[thread.projectId];
     if (!thread || !p) return;
     const b = await this.brains(p, thread, text);
-    const system = this.systemPrompt(p, thread);
+    const system = this.systemPrompt(p, thread, text);
     const turns = this.history(threadId);
     let brain = b.main;
     let model = b.model;
@@ -276,6 +280,18 @@ export class Coordinator {
         this.d.ws.commit({ type: 'thread.resolved', threadId: t.id, by: 'coordinator', reason: s('reason') || '做完了' }, COORD);
         return { content: '已解决' };
       }
+      case 'remember': {
+        const text = s('text').trim().slice(0, 500);
+        if (!text) return { content: '缺少 text', isError: true };
+        const tags = Array.isArray(input.tags) ? input.tags.filter((x): x is string => typeof x === 'string').slice(0, 5) : [];
+        this.d.ws.commit({ type: 'memory.added', projectId: from.projectId, entry: { id: newId('mem', this.rnd), text: redact(text), tags, by: 'coordinator', at: Date.now() } }, COORD);
+        return { content: '记下了' };
+      }
+      case 'start_review': {
+        if (!this.d.startReview) return { content: '群评审不可用', isError: true };
+        const r = this.d.startReview(from.projectId, s('question'), s('preset') || 'design', from.id);
+        return 'error' in r ? { content: r.error, isError: true } : { content: `已开群评审 ${r.threadId}，结论出来会贴回这里` };
+      }
       default:
         return { content: `不认识的工具 ${c.name}`, isError: true };
     }
@@ -351,6 +367,7 @@ export class Coordinator {
         projectId: p.id, threadId, stepId: step.id, title: step.title, threadTitle: t.title, goal: p.goal,
         instructions: [p.settings.instructions, this.d.skillNotes?.() ?? ''].filter(Boolean).join('\n\n'),
         workspaceRoot: root, agentId: agent.id, model, ...(t.effort ? { effort: t.effort } : {}), signal: ac.signal,
+        memory: memoryPrompt(this.st.memory[p.id], `${t.title} ${step.title}`),
       };
       let rep;
       try {

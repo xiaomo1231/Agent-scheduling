@@ -35,4 +35,14 @@ export const COORD_TOOLS: ToolSpec[] = [
     description: '事情做完、没人欠下一步时，把讨论串标为已解决。拿不准就别调。',
     parameters: { type: 'object', properties: { thread_id: { type: 'string' }, reason: { type: 'string' } }, required: ['thread_id', 'reason'] },
   },
+  {
+    name: 'remember',
+    description: '把以后还会用到的项目事实记进项目记忆：约定、用户的偏好、做过的决定、踩过的坑。不记临时进度，不记密钥。',
+    parameters: { type: 'object', properties: { text: { type: 'string' }, tags: { type: 'array', items: { type: 'string' } } }, required: ['text'] },
+  },
+  {
+    name: 'start_review',
+    description: '开一次群评审：几个角色（其中一个专门唱反调）围绕一个问题讨论，最后由拍板的模型给结论。preset 可选 design 方案评审 / code 代码评审 / product 产品决策 / writing 写作润色 / risk 风险评估 / stack 技术选型 / brainstorm 头脑风暴。',
+    parameters: { type: 'object', properties: { question: { type: 'string', description: '要评审的问题，带上必要的背景' }, preset: { type: 'string' } }, required: ['question'] },
+  },
 ];

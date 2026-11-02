@@ -1,5 +1,6 @@
 import { effortToApi } from '@zhongshu/core';
 import { ProviderError, type ChatProvider, type ChatRequest, type ChatResult, type ChatTurn, type ToolCall } from './types.js';
+import { parseRetryAfter } from './metered.js';
 
 export interface OpenAIOptions {
   apiKey?: string;
@@ -60,7 +61,7 @@ export class OpenAIProvider implements ChatProvider {
     if (!res.ok) {
       const detail = (await res.text().catch(() => '')).slice(0, 300);
       if (res.status === 401 || res.status === 403) throw new ProviderError('密钥不对或没有权限，去模型来源里检查一下', res.status);
-      if (res.status === 429) throw new ProviderError('额度或频率到上限了，稍后会再试', 429, true);
+      if (res.status === 429) throw new ProviderError('额度或频率到上限了，稍后会再试', 429, true, parseRetryAfter(res.headers.get('retry-after')));
       throw new ProviderError(`模型服务返回 ${res.status}：${detail}`, res.status, res.status >= 500);
     }
     const data = (await res.json()) as {

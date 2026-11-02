@@ -47,7 +47,7 @@ export interface ChatProvider {
 }
 
 export class ProviderError extends Error {
-  constructor(message: string, readonly status?: number, readonly retryable = false) {
+  constructor(message: string, readonly status?: number, readonly retryable = false, readonly retryAfterMs?: number) {
     super(message);
   }
 }

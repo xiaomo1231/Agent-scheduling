@@ -1,17 +1,21 @@
 import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import {
-  applyPlanOps, defaultProjectSettings, newId, presetLayout, securityAudit, validateLayout,
-  type Actor, type EventBody, type Message, type ModelSource, type Project, type Thread,
+  applyPlanOps, defaultProjectSettings, newId, presetLayout, resolveChoice, runsViaCli, securityAudit, threadStatus, validateLayout,
+  type Actor, type Channel, type ModelChoice, type EventBody, type Message, type ModelSource, type Project, type Thread,
 } from '@zhongshu/core';
 import { JsonlLog, MemoryLog, Workspace } from '../store/index.js';
 import { FileSecrets, localKeyCipher, redact, type SecretStore } from '../secrets/index.js';
 import { Approvals } from '../approvals/index.js';
-import { providerFor, type ChatProvider } from '../providers/index.js';
+import { providerFor, type ChatProvider, type Meter, type ProviderDeps } from '../providers/index.js';
 import { BuiltinRunner, CliRunner, SimRunner, cliInvocation, execFile as realExecFile, execShell as realExecShell, type ExecFile, type ExecShell } from '../runners/index.js';
 import { Coordinator } from '../coordinator/index.js';
 import { SkillService } from '../skills/index.js';
 import { Worktrees } from '../worktrees/index.js';
+import { MemoryService } from '../memory/index.js';
+import { ReviewService, type ModelFor } from '../review/index.js';
+import { SideService } from '../side/index.js';
+import { ChannelService, checkBotToken, checkWebhook } from '../channels/index.js';
 import { CommandS, type Command } from './schemas.js';
 
 export interface AppOptions {
@@ -27,6 +31,17 @@ export interface AppOptions {
   /** transport 为 mock 的来源用它 */
   mockProvider?: ChatProvider;
   random?: () => number;
+  /** 碰到额度上限后第一次等多久，测试时调小 */
+  quotaBaseDelayMs?: number;
+  /** 启动消息渠道轮询和每日记忆整理。默认有数据目录时开 */
+  background?: boolean;
+  channelPollTimeoutSec?: number;
+}
+
+/** 本地日期 YYYY-MM-DD */
+export function localDay(t = Date.now()): string {
+  const d = new Date(t);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 export type CommandResult = { ok: true; result?: unknown } | { ok: false; error: string };
@@ -41,9 +56,14 @@ export class App {
   readonly approvals: Approvals;
   readonly coordinator: Coordinator;
   readonly skills: SkillService;
+  readonly memory: MemoryService;
+  readonly reviews: ReviewService;
+  readonly sides: SideService;
+  readonly channels: ChannelService;
   private readonly rnd: () => number;
   private readonly dataDir: string | undefined;
   private readonly exec: ExecFile;
+  readonly providerDeps: ProviderDeps;
 
   constructor(private readonly o: AppOptions = {}) {
     this.rnd = o.random ?? Math.random;
@@ -74,19 +94,90 @@ export class App {
         return /^\s*allow\b/i.test(r.text) ? 'allow' : 'ask';
       },
     });
-    const providerDeps = { secrets: this.secrets, ...(o.fetch ? { fetch: o.fetch } : {}), ...(o.mockProvider ? { mock: o.mockProvider } : {}) };
+    this.providerDeps = { secrets: this.secrets, ...(o.fetch ? { fetch: o.fetch } : {}), ...(o.mockProvider ? { mock: o.mockProvider } : {}), meter: this.meter() };
+    const providerDeps = this.providerDeps;
     this.skills = new SkillService(this.ws, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'skills'), async () => this.helperModel());
     const builtin = new BuiltinRunner(
-      async (t) => providerFor(t.model!.source, providerDeps),
+      async (t) => providerFor(t.model!.source, providerDeps, { projectId: t.projectId }),
       { approvals: this.approvals, execShell: o.execShell ?? realExecShell, ...(o.fetch ? { fetch: o.fetch } : {}), allowed: ['read_file', 'write_file', 'edit_file', 'list_files', 'run_command', 'web_fetch'], separateNetworkAndExec: () => this.ws.current.policy.separateNetworkAndExec },
+      30,
+      { subagents: 3, remember: (t, text, tags) => this.memory.add(t.projectId, text, tags, t.agentId, { kind: 'agent', id: t.agentId }) },
     );
+    this.memory = new MemoryService(this.ws, async () => this.helperModel(), this.rnd);
+    const modelFor: ModelFor = (pid, choice) => this.modelFor(pid, choice);
+    this.reviews = new ReviewService(this.ws, modelFor, this.rnd);
+    this.sides = new SideService(this.ws, modelFor, this.rnd);
     this.coordinator = new Coordinator({
       ws: this.ws, providers: providerDeps, execFile: this.exec,
       runners: { builtin, cli: new CliRunner(this.exec), sim: new SimRunner(o.simDelayMs ?? 800) },
       folderFor: (p) => this.folderFor(p), simulate: o.simulate ?? false, random: this.rnd,
       skillNotes: () => this.skills.notes(),
       worktrees: new Worktrees(this.exec, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'worktrees')),
+      startReview: (projectId, question, preset, replyTo) => {
+        try {
+          return this.reviews.start({ projectId, question, preset, ...(replyTo ? { replyTo } : {}) });
+        } catch (e) {
+          return { error: (e as Error).message };
+        }
+      },
     });
+    this.channels = new ChannelService(this.ws, this.secrets, {
+      approve: (id, ok, actor) => this.approvals.decide(id, ok, actor),
+      userMessage: async (projectId, text, via) => {
+        const coord = Object.values(this.ws.current.threads).find((t) => t.projectId === projectId && t.kind === 'coord');
+        if (!coord) throw new Error('这个项目没有协调者');
+        this.ws.commit({ type: 'thread.message', message: this.msg(coord.id, ME, text, `你（${via}）`) }, ME);
+        void this.coordinator.onUserMessage(coord.id, text);
+        return { threadId: coord.id };
+      },
+      status: (projectId) => this.statusText(projectId),
+    }, o.fetch ?? fetch, { ...(o.channelPollTimeoutSec !== undefined ? { pollTimeoutSec: o.channelPollTimeoutSec, retryMs: 50 } : {}) });
+    if (o.background ?? !!this.dataDir) {
+      this.channels.start();
+      this.memory.startDaily({ kind: 'system', id: 'memory' });
+    }
+  }
+
+  private meter(): Meter {
+    const SYS: Actor = { kind: 'system', id: 'meter' };
+    return {
+      record: (u) => this.ws.commit({ type: 'usage.recorded', day: localDay(), ...u }, SYS),
+      waiting: (sourceId, until, reason) => this.ws.commit({ type: 'source.quota', sourceId, until, reason }, SYS),
+      recovered: (sourceId) => {
+        if (this.ws.current.quota[sourceId]) this.ws.commit({ type: 'source.quota', sourceId, until: null }, SYS);
+      },
+      autoContinue: (projectId) => this.ws.current.projects[projectId]?.settings.autoContinueAfterQuotaReset ?? true,
+      ...(this.o.quotaBaseDelayMs !== undefined ? { baseDelayMs: this.o.quotaBaseDelayMs } : {}),
+    };
+  }
+
+  /** 给群评审、追问用的模型：指定的 → 项目协调模型 → 讨论串默认模型 → 任一 API 模型。CLI 订阅不能这样用。 */
+  private async modelFor(projectId: string, choice?: ModelChoice | null): Promise<{ p: ChatProvider; model: string; label: string } | null> {
+    const st = this.ws.current;
+    const p = st.projects[projectId];
+    for (const c of [choice ?? null, p?.settings.coordinator.model ?? null, p?.settings.threadDefault.model ?? null]) {
+      const r = resolveChoice(c, st.sources, st.groups);
+      if (!r || runsViaCli(r.source.transport)) continue;
+      try {
+        return { p: await providerFor(r.source, this.providerDeps, { projectId }), model: r.model.id, label: r.model.label };
+      } catch {
+        /* 下一个 */
+      }
+    }
+    const h = await this.helperModel();
+    return h ? { ...h, label: h.model } : null;
+  }
+
+  /** 渠道里 /status 的回答 */
+  statusText(projectId?: string): string {
+    const st = this.ws.current;
+    const pending = Object.values(st.approvals).filter((a) => a.state === 'pending');
+    const threads = Object.values(st.threads).filter((t) => t.kind !== 'coord' && !t.resolved && (!projectId || t.projectId === projectId));
+    const lines = threads.slice(0, 10).map((t) => {
+      const done = t.steps.filter((s) => s.state === 'done').length;
+      return `· ${t.title}（${({ waiting: '等你', running: '在跑', idle: '空闲', resolved: '已解决' } as Record<string, string>)[threadStatus(t, st.approvals)]}，${done}/${t.steps.length}）`;
+    });
+    return [`待批准 ${pending.length} 个`, threads.length ? `进行中的讨论串：\n${lines.join('\n')}` : '没有进行中的讨论串'].join('\n');
   }
 
   folderFor(p: Project): string {
@@ -101,7 +192,7 @@ export class App {
       const m = src.models.find((x) => x.enabled);
       if (!m) continue;
       try {
-        return { p: await providerFor(src, { secrets: this.secrets, ...(this.o.fetch ? { fetch: this.o.fetch } : {}), ...(this.o.mockProvider ? { mock: this.o.mockProvider } : {}) }), model: m.id };
+        return { p: await providerFor(src, this.providerDeps), model: m.id };
       } catch {
         /* 下一个 */
       }
@@ -188,6 +279,11 @@ export class App {
         if (t.resolved) bodies.push({ type: 'thread.reopened', threadId: t.id, by: 'coordinator' });
         bodies.push({ type: 'thread.message', message: this.msg(t.id, ME, c.text, '你') });
         this.ws.commit(bodies, ME);
+        if (t.kind === 'side') {
+          this.sides.reply(t.id);
+          return;
+        }
+        if (t.kind === 'review') return; // 评审讨论串只看，不派活
         if (/^\s*(继续|重试|continue|retry)\s*$/i.test(c.text) && t.steps.some((s) => s.state === 'wait')) {
           this.coordinator.retryWaiting(t.id);
           this.coordinator.dispatch(t.id);
@@ -281,7 +377,7 @@ export class App {
           if (r.code !== 0) throw new Error(`没找到 ${inv!.program}，或者它跑不起来：${r.stderr.slice(0, 200)}`);
           return { text: `${inv!.program} ${r.stdout.trim()}，记得先在终端里登录一次` };
         }
-        const p = await providerFor(s, { secrets: this.secrets, ...(this.o.fetch ? { fetch: this.o.fetch } : {}), ...(this.o.mockProvider ? { mock: this.o.mockProvider } : {}) });
+        const p = await providerFor(s, this.providerDeps);
         const r = await p.chat({ model, system: '只回答“通了”两个字。', turns: [{ role: 'user', text: '测试连接' }], maxTokens: 200, effort: '低' });
         return { text: r.text.slice(0, 200) || '（连上了，但没有返回文字）', servedBy: r.servedBy };
       }
@@ -302,6 +398,62 @@ export class App {
       case 'skill.remove':
         await this.skills.remove(c.name);
         return;
+      case 'memory.desk':
+        this.project(c.projectId);
+        this.memory.setDesk(c.projectId, c.desk, ME);
+        return;
+      case 'memory.add':
+        this.project(c.projectId);
+        return { entryId: this.memory.add(c.projectId, c.text, c.tags ?? [], 'user', ME, c.pinned ?? false).id };
+      case 'memory.remove':
+        this.memory.remove(c.projectId, c.entryId, ME);
+        return;
+      case 'memory.consolidate':
+        this.project(c.projectId);
+        return this.memory.consolidate(c.projectId, ME);
+      case 'review.start':
+        return this.reviews.start({
+          projectId: c.projectId, question: c.question, ...(c.preset ? { preset: c.preset } : {}), ...(c.roles ? { roles: c.roles as never } : {}),
+          ...(c.rounds ? { rounds: c.rounds } : {}), ...(c.decider !== undefined ? { decider: c.decider } : {}), ...(c.replyTo ? { replyTo: c.replyTo } : {}),
+        });
+      case 'thread.side':
+        return this.sides.open({ threadId: c.threadId, quote: c.quote, question: c.question, ...(c.messageId ? { messageId: c.messageId } : {}) });
+      case 'thread.sideClose':
+        await this.sides.close(c.threadId, c.outcome);
+        return;
+      case 'channel.save': {
+        const prev = st.channels[c.channel.id];
+        const ref = prev?.secretRef ?? `chn:${c.channel.id}`;
+        if (c.secret) {
+          const bad = c.channel.kind === 'telegram' ? checkBotToken(c.secret) : checkWebhook(c.channel.kind, c.secret.trim());
+          if (bad) throw new Error(bad);
+          await this.secrets.set(ref, c.secret.trim());
+        }
+        const has = c.secret ? true : prev?.secretRef ? await this.secrets.has(prev.secretRef) : false;
+        // 换了 token 就要重新配对
+        const keepPair = prev?.paired && !c.secret && prev.kind === c.channel.kind;
+        const channel: Channel = { ...c.channel, ...(has ? { secretRef: ref } : {}), ...(keepPair ? { paired: prev.paired! } : {}) };
+        this.ws.commit({ type: 'channel.saved', channel }, ME);
+        return;
+      }
+      case 'channel.remove': {
+        const ch = st.channels[c.channelId];
+        if (ch?.secretRef) await this.secrets.delete(ch.secretRef);
+        this.ws.commit({ type: 'channel.removed', channelId: c.channelId }, ME);
+        return;
+      }
+      case 'channel.test':
+        await this.channels.test(c.channelId);
+        return;
+      case 'channel.pair':
+        return { code: this.channels.pairCode(c.channelId) };
+      case 'channel.unpair': {
+        const ch = st.channels[c.channelId];
+        if (!ch) throw new Error('找不到这个渠道');
+        const { paired: _p, ...rest } = ch;
+        this.ws.commit({ type: 'channel.saved', channel: rest }, ME);
+        return;
+      }
       case 'system.emergencyStop':
         this.ws.commit({ type: 'system.emergencyStop', on: c.on }, ME);
         if (c.on) {
@@ -313,6 +465,8 @@ export class App {
   }
 
   close(): void {
+    this.channels.close();
+    this.memory.close();
     this.coordinator.stopAll();
     this.approvals.close();
   }

@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { effortToApi } from '@zhongshu/core';
 import { ProviderError, type ChatProvider, type ChatRequest, type ChatResult, type ChatTurn, type ToolCall } from './types.js';
+import { parseRetryAfter } from './metered.js';
 
 export interface AnthropicOptions {
   apiKey: string;
@@ -74,7 +75,7 @@ export class AnthropicProvider implements ChatProvider {
       }
     } catch (err) {
       if (err instanceof Anthropic.AuthenticationError) throw new ProviderError('密钥不对或已失效，去模型来源里重新填一下', 401);
-      if (err instanceof Anthropic.RateLimitError) throw new ProviderError('额度或频率到上限了，稍后会再试', 429, true);
+      if (err instanceof Anthropic.RateLimitError) throw new ProviderError('额度或频率到上限了，稍后会再试', 429, true, parseRetryAfter(err.headers?.get?.('retry-after')));
       if (err instanceof Anthropic.APIError) throw new ProviderError(`模型服务返回错误（${err.status ?? '无状态码'}）：${err.message}`, err.status, (err.status ?? 0) >= 500);
       throw new ProviderError(`连不上模型服务：${(err as Error).message}`, undefined, true);
     }
