@@ -1,0 +1,33 @@
+# 安装包配置。主进程已经打成单文件（bundle/main.mjs），前端放在 resources/web。
+appId: app.zhongshu.desktop
+productName: Zhongshu
+executableName: zhongshu
+artifactName: Zhongshu-${version}-${os}-${arch}.${ext}
+directories:
+  output: release
+  buildResources: build
+files:
+  - bundle/**
+  - package.json
+extraResources:
+  - from: ../web/dist
+    to: web
+asar: true
+mac:
+  icon: build/icon.png
+  category: public.app-category.developer-tools
+  target: [dmg, zip]
+  hardenedRuntime: true
+win:
+  icon: build/icon.png
+  target: [nsis]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+linux:
+  icon: build/icon.png
+  syncDesktopName: true
+  target: [AppImage]
+  category: Development
+  synopsis: 管好模型账号，让 AI agent 团队替你干活
+publish: null

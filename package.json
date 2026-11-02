@@ -4,8 +4,13 @@
   "version": "0.1.0",
   "description": "中枢：管好你的模型账号，再让 AI agent 团队替你干活",
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
-  "engines": { "node": ">=22" },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "npm run build -w @zhongshu/core -w @zhongshu/server && npm run build -w @zhongshu/web && npm run build -w @zhongshu/desktop",
     "typecheck": "tsc -b packages/core packages/server apps/desktop && tsc -p apps/web --noEmit",
@@ -13,7 +18,8 @@
     "check": "npm run typecheck && npm run test",
     "dev:server": "npm run dev -w @zhongshu/server",
     "dev:web": "npm run dev -w @zhongshu/web",
-    "start": "npm run build && npm run start -w @zhongshu/desktop"
+    "start": "npm run build && npm run start -w @zhongshu/desktop",
+    "dist": "npm run build && cd apps/desktop && electron-builder --config electron-builder.yml"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

@@ -1,17 +1,25 @@
 {
   "name": "@zhongshu/desktop",
-  "version": "0.1.0",
+  "productName": "Zhongshu",
+  "version": "0.3.0",
+  "description": "中枢：管好你的模型账号，再让 AI agent 团队替你干活",
   "private": true,
   "type": "module",
-  "main": "dist/main.js",
+  "main": "bundle/main.mjs",
+  "author": "潇墨",
   "scripts": {
-    "build": "tsc -b",
-    "start": "electron ."
-  },
-  "dependencies": {
-    "@zhongshu/server": "0.1.0"
+    "build": "tsc -b && node scripts/bundle.mjs",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder --config electron-builder.yml",
+    "dist:linux": "npm run build && electron-builder --config electron-builder.yml --linux",
+    "dist:mac": "npm run build && electron-builder --config electron-builder.yml --mac",
+    "dist:win": "npm run build && electron-builder --config electron-builder.yml --win"
   },
   "devDependencies": {
-    "electron": "^45.2.1"
-  }
+    "@zhongshu/server": "0.1.0",
+    "electron": "45.2.1",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.27.0"
+  },
+  "desktopName": "zhongshu.desktop"
 }
