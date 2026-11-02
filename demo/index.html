@@ -509,6 +509,38 @@ a.btn{text-decoration:none;color:inherit}
 
 
 
+
+
+.subag{border-bottom:1px solid var(--line-2);font-size:12.5px}
+.subag .sh{display:flex;align-items:center;gap:8px;padding:7px 12px;flex-wrap:wrap}
+.subag .sb{padding:4px 12px 10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
+.subag .sb label{display:flex;flex-direction:column;gap:3px;color:var(--ink-3);font-size:11.5px;min-width:0}
+.subag .sb .s{width:100%}
+.subag .sb .rg{display:flex;align-items:center;gap:6px}
+.subag .sb .rg input{flex:1;accent-color:var(--accent)}
+.subag .live{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}
+.tgl{position:relative;width:32px;height:18px;border-radius:9px;background:var(--line);border:0;flex:none}
+.tgl::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
+.tgl[aria-pressed="true"]{background:var(--accent)}
+.tgl[aria-pressed="true"]::after{left:16px}
+@media (max-width:680px){ .subag .sb{grid-template-columns:1fr} }
+/* v13 讨论串 */
+.ckl{border-bottom:1px solid var(--line-2);padding:8px 12px;font-size:12.5px;background:var(--raise)}
+.ckl .h{display:flex;align-items:center;gap:8px;color:var(--ink-3);font-size:11.5px;margin-bottom:4px}
+.ckl ul{list-style:none;margin:0;padding:0}
+.ckl li{display:grid;grid-template-columns:16px 30px 1fr auto;gap:6px;padding:2px 0;align-items:baseline}
+.ckl li .i{color:var(--ink-3)}
+.ckl li.done .i{color:var(--good)} .ckl li.run .i{color:var(--accent)} .ckl li.wait .i{color:var(--warn)}
+.ckl li.done .t{color:var(--ink-3)}
+.ckl li.new{animation:flash 1.6s ease}
+.ckl li.gone .t{text-decoration:line-through;color:var(--ink-3)}
+@keyframes flash{0%{background:var(--accent-soft)}100%{background:transparent}}
+.diff{border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12.5px;background:var(--raise)}
+.diff .a{color:var(--good)} .diff .r{color:var(--bad)} .diff .mv{color:var(--accent)}
+nav .thl{display:block;padding:3px 8px 3px 26px;font-size:12.5px;color:var(--ink-3);text-decoration:none;border-radius:var(--r);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav .thl.on{color:var(--ink);background:var(--line-2)}
+@media (prefers-reduced-motion:reduce){.ckl li.new{animation:none}}
+@media (max-width:680px){ #navTh{display:none} }
 /* v12 */
 .rslist div{padding:8px 12px;border-bottom:1px solid var(--line-2);cursor:pointer;font-size:13px}
 .rslist div.on{background:var(--accent-soft);font-weight:500}
@@ -603,6 +635,7 @@ a.btn{text-decoration:none;color:inherit}
     <a href="#home" data-v="home" class="newb btn">＋ 新建</a>
     <div class="sec">项目</div>
     <a href="#tasks" data-v="tasks" data-pj="shop-web 会员登录"><i class="ic" style="background:#c0563f"></i><span class="lb">shop-web 会员登录</span><span class="n alert" title="1 项等你批准">1</span></a>
+    <div id="navTh"></div>
     <a href="#tasks" data-pj="周报自动化"><i class="ic" style="background:#3f7fc0"></i><span class="lb">周报自动化</span></a>
     <a href="#tasks" data-pj="短信登录转化调研"><i class="ic" style="background:#5a9a6e"></i><span class="lb">短信登录转化调研</span></a>
     <div class="sec">对话和任务</div>
@@ -821,7 +854,9 @@ app.whenReady().then(() =&gt; {
           </div>
         </div>
         <div class="box rpane">
-          <header><strong>与协调者的对话</strong><span class="spacer"></span><span class="pill run">进行中</span></header>
+          <header><span class="hint">讨论串</span><select class="s" id="thSel" aria-label="讨论串"></select><span class="spacer"></span><span class="pill run" id="thSt">进行中</span></header>
+          <div class="ckl" id="ckl"></div>
+          <div class="subag" id="subag"></div>
           <div class="thread" id="thread">
             <div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>10:02</div><p>给会员中心加手机号 + 验证码登录，沿用现有的用户表，短信先用阿里云。今天下班前要能在测试环境跑通。</p></div></div>
             <div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>Claude · 10:02</div>
@@ -834,7 +869,8 @@ app.whenReady().then(() =&gt; {
               <div class="row"><button class="btn pri" data-ap="ok">批准执行</button><button class="btn" data-ap="diff">查看脚本</button><button class="btn bad" data-ap="no">拒绝</button></div>
             </div>
           </div>
-          <div class="composer"><input id="cmd" placeholder="给协调者下达任务或补充要求"><button class="btn pri" id="send">发送</button></div>
+          <div class="composer"><input id="cmd" placeholder="随时补充：加需求、改顺序、取消某一步，协调者会自动调整计划"><button class="btn pri" id="send">发送</button></div>
+          <div class="hint" style="padding:0 12px 10px">试试：“顺便把夜间回归也跑一下”、“先做前端”、“不用做端到端测试了”、“另开一个讨论串做埋点”</div>
         </div>
       </div>
     </section>
@@ -1037,7 +1073,7 @@ app.whenReady().then(() =&gt; {
           <div class="kindbar" style="border-top:1px solid var(--line-2);border-bottom:0"><button class="btn" id="rsAdd">+ 加一步</button><label class="hint">验收不通过时 <select class="s" id="rsFail"><option>打回上一步，最多 2 轮</option><option>打回上一步，最多 1 轮</option><option>直接停下问我</option></select></label><span class="spacer" style="flex:1"></span><button class="btn pri" id="rsSave">保存</button></div>
         </div>
       </div>
-      <p class="note">每一步选两样：<b>谁来做</b>（直接调用模型，或者交给某个 agent 去动手）和<b>用哪个模型</b>（可以选分组里的用途，也可以选某个来源里的具体模型）。上一步的输出自动作为下一步的输入。</p>
+      <p class="note">每一步先选<b>用哪个模型</b>（脑子，可以选分组里的用途，也可以选某个来源里的具体模型）；只有这一步要改文件、跑命令时，才需要再选一个 <b>agent</b>（手）去执行，比如 Claude Code、DSH。上一步的输出自动作为下一步的输入。</p>
     </section>
 
     <!-- 连接平台 -->
@@ -1380,9 +1416,62 @@ app.whenReady().then(() =&gt; {
 
   // 下发任务
   const cmd=document.getElementById('cmd');
-  function send(){ const v=cmd.value.trim(); if(!v) return; const th=document.getElementById('thread');
-    th.insertAdjacentHTML('beforeend','<div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p></p></div></div><div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>刚刚</div><p>收到，我会把它加进任务图，影响到的 agent 会在通信总线里收到更新。</p></div></div>');
-    th.querySelectorAll('.msg')[th.querySelectorAll('.msg').length-2].querySelector('p').textContent=v; cmd.value=''; th.scrollTop=th.scrollHeight; }
+
+  // v13：讨论串 + 追加内容自动调整计划
+  const TH=[
+    {n:'手机号登录',st:'进行中',steps:[['T1','数据库迁移：加 phone_verified_at','@backend-01','wait'],['T2','短信发送与校验接口','@backend-01','done'],['T3','登录页手机号表单','@frontend-01','run'],['T4','端到端测试','@qa-01','queue'],['T5','合并与变更说明','@coord-01','queue']],html:null},
+    {n:'登录页埋点',st:'排队',steps:[['T1','确认要埋哪些事件','@coord-01','queue'],['T2','前端加埋点','@frontend-01','queue']],html:'<div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>昨天</div><p>登录页加几个埋点，看看手机号登录的转化。</p></div></div><div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>昨天</div><p>先排在“手机号登录”后面，等表单定下来再埋，免得返工。</p></div></div>'}
+  ];
+  let thI=0, nextT=6, lastUndo=null;
+  const ICON={done:'✓',run:'✱',wait:'⏸',queue:'○'}, STX={done:'完成',run:'进行中',wait:'等你批准',queue:'排队'};
+  function drawCkl(flash){ const t=TH[thI], done=t.steps.filter(x=>x[3]==='done').length;
+    document.getElementById('ckl').innerHTML='<div class="h"><b style="color:var(--ink-2)">计划</b>'+done+' / '+t.steps.length+' 完成 · 你在下面说的话会自动改这里</div><ul>'+t.steps.map(x=>'<li class="'+x[3]+(x[0]===flash?' new':'')+'"><span class="i">'+ICON[x[3]]+'</span><span class="mono hint">'+x[0]+'</span><span class="t">'+esc(x[1])+'</span><span class="hint">'+esc(x[2])+'</span></li>').join('')+'</ul>';
+    document.getElementById('thSt').textContent=t.st; document.getElementById('thSt').className='pill '+(t.st==='进行中'?'run':'idle');
+    // 同步任务图模块
+    const ul=document.querySelector('[data-lp="plan"] ul.plan'); if(ul&&thI===0){ ul.innerHTML=t.steps.map(x=>'<li><span class="k">'+x[0]+'</span><div><div class="t">'+esc(x[1])+'</div><div class="m">'+esc(x[2])+'</div></div><span class="pill '+({done:'done',run:'run',wait:'wait',queue:'idle'})[x[3]]+'">'+STX[x[3]]+'</span></li>').join(''); } }
+  function drawTh(){ document.getElementById('thSel').innerHTML=TH.map((t,i)=>'<option value="'+i+'"'+(i===thI?' selected':'')+'>'+esc(t.n)+'</option>').join('')+'<option value="new">+ 新讨论串</option>';
+    document.getElementById('navTh').innerHTML=TH.map((t,i)=>'<a href="#tasks" class="thl'+(i===thI?' on':'')+'" data-th="'+i+'"># '+esc(t.n)+'</a>').join(''); drawCkl(); }
+  function switchTh(i){ const th=document.getElementById('thread'); TH[thI].html=th.innerHTML; thI=i; th.innerHTML=TH[i].html||''; drawTh(); }
+  document.getElementById('thSel').onchange=e=>{ if(e.target.value==='new'){ newTh('新讨论串'); return; } switchTh(+e.target.value); };
+  document.getElementById('navTh').addEventListener('click',e=>{ const a=e.target.closest('[data-th]'); if(a) switchTh(+a.dataset.th); });
+  function newTh(n,first){ TH.push({n:n,st:'排队',steps:[['T1',first||'和你确认需求','@coord-01','queue']],html:''}); switchTh(TH.length-1); }
+  function coordSay(html){ const th=document.getElementById('thread'); th.insertAdjacentHTML('beforeend','<div class="msg"><div class="av">协</div><div><div class="who"><b>协调者</b>刚刚</div>'+html+'</div></div>'); th.scrollTop=th.scrollHeight; }
+  function send(){ const v=cmd.value.trim(); if(!v) return; const th=document.getElementById('thread'), t=TH[thI];
+    th.insertAdjacentHTML('beforeend','<div class="msg"><div class="av u">我</div><div><div class="who"><b>你</b>刚刚</div><p></p></div></div>'); th.lastElementChild.querySelector('p').textContent=v; cmd.value='';
+    const before=t.steps.map(x=>[...x]); let diff='', flash=null, kind='';
+    if(/另开|新讨论串|单独开/.test(v)){ const n=(v.replace(/.*(另开|新讨论串|单独开)[^做]*做?/,'').trim()||'新需求').slice(0,12);
+      coordSay('<p>这件事和当前计划关系不大，我另开了一个讨论串“'+esc(n)+'”，这里的进度不受影响。</p>'); TH[thI].html=th.innerHTML; newTh(n,'确认“'+n+'”的范围'); return; }
+    if(/不用|不要|取消|算了/.test(v)){ const i=t.steps.findIndex(x=>x[3]==='queue'&&v.includes(x[1].slice(0,3))) ; const j=i>=0?i:t.steps.findIndex(x=>x[3]==='queue');
+      if(j<0){ coordSay('<p>没有还没开始的步骤可以取消了，已经在做的需要你在任务图里手动停。</p>'); return; }
+      const [g]=t.steps.splice(j,1); kind='取消'; diff='<div class="r">− '+g[0]+' '+esc(g[1])+'（'+g[2]+'）</div>';
+      if(t.steps.some(x=>x[0]==='T5')) diff+='<div class="hint">T5 的依赖里去掉了 '+g[0]+'</div>'; }
+    else if(/^先|优先|先做|提前/.test(v)){ const q=t.steps.filter(x=>x[3]==='queue'); if(!q.length){ coordSay('<p>排队里没有可以提前的步骤。</p>'); return; }
+      const score=x=>[...x[1]].filter((c,k,a)=>k<a.length-1&&v.includes(c+a[k+1])).length; const cand=q.filter(x=>!x[1].startsWith('合并')); if(!cand.length){ coordSay('<p>排队里没有可以提前的步骤。</p>'); return; } const g=cand.slice().sort((a,b)=>score(b)-score(a))[0]; const j=t.steps.indexOf(g); t.steps.splice(j,1); const k=t.steps.findIndex(x=>x[3]==='queue'); t.steps.splice(k<0?t.steps.length:k,0,g); flash=g[0]; kind='调整顺序'; diff='<div class="mv">↑ '+g[0]+' '+esc(g[1])+' 提到排队第一位</div>'; }
+    else { const id='T'+(nextT++); const who=/测试|回归/.test(v)?'@qa-01':/页面|前端|样式|按钮/.test(v)?'@frontend-01':/接口|数据库|后端/.test(v)?'@backend-01':'@coord-01';
+      const title=v.replace(/^(顺便|另外|再|还要|帮我)/,'').slice(0,18); const at=t.steps.findIndex(x=>x[0]==='T5'); const step=[id,title,who,'queue']; if(at>=0) t.steps.splice(at,0,step); else t.steps.push(step); flash=id; kind='新增';
+      diff='<div class="a">+ '+id+' '+esc(title)+' → '+who+'</div>'+(at>=0?'<div class="hint">放在 T5 合并之前，T5 会等它做完</div>':''); }
+    lastUndo={i:thI,steps:before};
+    coordSay('<p>我把这句理解为<b>'+kind+'</b>，计划已经改好，正在做的步骤不受影响：</p><div class="diff">'+diff+'</div><div class="acts"><button class="lnk" data-undo>撤销这次调整</button><button class="lnk" data-why>为什么这样理解</button></div>');
+    drawCkl(flash); }
+  document.getElementById('thread').addEventListener('click',e=>{
+    if(e.target.closest('[data-undo]')&&lastUndo){ TH[lastUndo.i].steps=lastUndo.steps; lastUndo=null; drawCkl(); e.target.closest('.acts').innerHTML='<span class="hint">已撤销，计划恢复原样</span>'; }
+    if(e.target.closest('[data-why]')) say('（演示）协调者会给出判断依据：关键词、和现有步骤的相似度、影响到的依赖'); });
+  setTimeout(drawTh);
+
+  // v14：子 agent
+  const SUB={on:true,model:'grp:便宜干活/执行',max:3,budget:2,scope:'只读：查资料、读代码、跑测试',open:false};
+  function drawSub(){ const el=document.getElementById('subag');
+    el.innerHTML='<div class="sh"><button class="tgl" id="subT" aria-pressed="'+SUB.on+'" aria-label="允许协调者分配子 agent"></button><b>子 agent</b><span class="hint">'+(SUB.on?'协调者可以临时拆出子 agent 并行干小活 · 最多 '+SUB.max+' 个 · '+esc(modelLabel(SUB.model)):'关闭：所有活都由团队里固定的 agent 做')+'</span><span class="spacer" style="flex:1"></span>'+(SUB.on?'<button class="lnk" id="subO">'+(SUB.open?'收起':'设置')+'</button>':'')+'</div>'
+      +(SUB.on&&SUB.open?'<div class="sb"><label>子 agent 用什么模型<select class="s" id="subM">'+grpOpts(SUB.model)+'</select></label>'
+        +'<label>最多同时开几个<span class="rg"><input type="range" min="1" max="8" value="'+SUB.max+'" id="subN"><b class="mono" id="subNv">'+SUB.max+'</b></span></label>'
+        +'<label>每个子 agent 的花费上限<select class="s" id="subB">'+[1,2,5,10].map(x=>'<option value="'+x+'"'+(x===SUB.budget?' selected':'')+'>¥'+x+'，超了先停下问我</option>').join('')+'</select></label>'
+        +'<label>它们能做什么<select class="s" id="subS">'+['只读：查资料、读代码、跑测试','可以改文件（在独立工作区里）','和父 agent 权限一样'].map(x=>'<option'+(x===SUB.scope?' selected':'')+'>'+x+'</option>').join('')+'</select></label>'
+        +'<div class="live"><span class="hint">现在在跑：</span><span class="chip">@sub-01 查阿里云短信限流文档</span><span class="chip">@sub-02 读老登录代码</span><span class="hint">每个子 agent 都有自己的编号，消息进通信总线留痕，做完自动销毁</span></div></div>':'');
+  }
+  document.getElementById('subag').addEventListener('click',e=>{ if(e.target.closest('#subT')){ SUB.on=!SUB.on; drawSub(); say(SUB.on?'已允许协调者分配子 agent':'已关闭子 agent'); } if(e.target.closest('#subO')){ SUB.open=!SUB.open; drawSub(); } });
+  document.getElementById('subag').addEventListener('input',e=>{ if(e.target.id==='subN'){ SUB.max=+e.target.value; document.getElementById('subNv').textContent=SUB.max; } });
+  document.getElementById('subag').addEventListener('change',e=>{ if(e.target.id==='subM') SUB.model=e.target.value; if(e.target.id==='subB') SUB.budget=+e.target.value; if(e.target.id==='subS') SUB.scope=e.target.value; if(e.target.id!=='subN') drawSub(); else drawSub(); });
+  setTimeout(drawSub);
   document.getElementById('send').onclick=send; cmd.addEventListener('keydown',e=>{ if(e.key==='Enter') send(); });
 
   // 审批卡
@@ -1694,17 +1783,17 @@ app.whenReady().then(() =&gt; {
   document.getElementById('wzGo').addEventListener('click',()=>{ if(wzCur.length){ mcur=wzCur.map(x=>[...x]); const t=wzT.querySelector('[aria-pressed=true]'); if(t&&TPL[t.dataset.tpl]) wbTpl.value=t.dataset.tpl; render(); } });
 
   // v12：接力预设
-  const AGENTS=['直接调用模型','Claude Code','Codex CLI','OpenCode','DSH','Gemini CLI','Qwen Code','Kimi CLI'];
+  const AGENTS=['不需要，只出文字','Claude Code','Codex CLI','OpenCode','DSH','Gemini CLI','Qwen Code','Kimi CLI'];
   function grpOpts(v){ let h='<optgroup label="用分组里的用途（额度用完自动切备用）">'; GRP.forEach(g=>g.r.forEach(r=>{ const k='grp:'+g.n+'/'+r[0]; const sel=document.querySelector('#pools .msel'); const m=(r[1]||'').split('/')[1]||'未选'; h+='<option value="'+esc(k)+'"'+(k===v?' selected':'')+'>'+esc(g.n+'组 · '+r[0]+'（'+m+'）')+'</option>'; })); return h+'</optgroup>'+opts(v); }
   function modelLabel(v){ if(!v) return '未选'; if(v.startsWith('grp:')) return v.slice(4).replace('/','组 · '); const [id,m]=v.split('/'); const x=SRC.find(q=>q.id===id); return m+(x?'（'+x.n+'）':''); }
   const RL=[
-    {n:'Fable 写提示词 → GLM 干活 → Sonnet 验收',f:0,s:[['写提示词','直接调用模型','grp:代码/写提示词',1],['干活','Claude Code','grp:代码/执行',0],['验收','直接调用模型','grp:代码/审查',1]],c:['≈ ¥4.80','≈ ¥1.15']},
-    {n:'GPT 写提示词 → DeepSeek 干活',f:0,s:[['写提示词','直接调用模型','chatgpt/GPT-5 系列',1],['干活','DSH','ds/DeepSeek V4 Pro',0],['验收','直接调用模型','chatgpt/GPT-5 系列',1]],c:['≈ ¥3.90','≈ ¥0.95']},
-    {n:'调研：Kimi 检索 → DeepSeek 整理 → Opus 统稿',f:2,s:[['检索','OpenCode','kimi/Kimi K3',0],['整理','OpenCode','ocgo/DeepSeek V4.1 Flash',0],['统稿','直接调用模型','claude/Opus',1]],c:['≈ ¥6.20','≈ ¥1.70']}
+    {n:'Fable 写提示词 → GLM 干活 → Sonnet 验收',f:0,s:[['写提示词','不需要，只出文字','grp:代码/写提示词',1],['干活','Claude Code','grp:代码/执行',0],['验收','不需要，只出文字','grp:代码/审查',1]],c:['≈ ¥4.80','≈ ¥1.15']},
+    {n:'GPT 写提示词 → DeepSeek 干活',f:0,s:[['写提示词','不需要，只出文字','chatgpt/GPT-5 系列',1],['干活','DSH','ds/DeepSeek V4 Pro',0],['验收','不需要，只出文字','chatgpt/GPT-5 系列',1]],c:['≈ ¥3.90','≈ ¥0.95']},
+    {n:'调研：Kimi 检索 → DeepSeek 整理 → Opus 统稿',f:2,s:[['检索','OpenCode','kimi/Kimi K3',0],['整理','OpenCode','ocgo/DeepSeek V4.1 Flash',0],['统稿','不需要，只出文字','claude/Opus',1]],c:['≈ ¥6.20','≈ ¥1.70']}
   ];
   function stepHTML(st,i,n,edit){ return '<div class="rstep" data-i="'+i+'"><div class="rh"><span class="k">第 '+(i+1)+' 步</span><input class="inp" value="'+esc(st[0])+'" aria-label="这一步叫什么" data-f="0">'+(edit?'<button data-mv="-1" title="往前">↑</button><button data-mv="1" title="往后">↓</button><button data-x title="删掉">×</button>':'')+'</div>'
-    +'<div class="two"><label>谁来做<select class="s" data-f="1">'+AGENTS.map(a=>'<option'+(a===st[1]?' selected':'')+'>'+a+'</option>').join('')+'</select></label><label>用哪个模型<select class="s" data-f="2">'+grpOpts(st[2])+'</select></label></div>'
-    +(edit?'<label class="check" style="font-size:12px"><input type="checkbox" data-f="3"'+(st[3]?' checked':'')+'>做完这一步停下给我看</label>':'<div class="out">'+esc(st[1]==='直接调用模型'?'直接把上一步的结果交给 '+modelLabel(st[2]):st[1]+' 用 '+modelLabel(st[2])+' 动手做')+'</div>')+'</div>'; }
+    +'<div class="two"><label>用哪个模型<select class="s" data-f="2">'+grpOpts(st[2])+'</select></label><label>交给 agent 动手？（要改文件、跑命令时才需要）<select class="s" data-f="1">'+AGENTS.map(a=>'<option'+(a===st[1]?' selected':'')+'>'+a+'</option>').join('')+'</select></label></div>'
+    +(edit?'<label class="check" style="font-size:12px"><input type="checkbox" data-f="3"'+(st[3]?' checked':'')+'>做完这一步停下给我看</label>':'<div class="out">'+esc(st[1]==='不需要，只出文字'?modelLabel(st[2])+' 直接出文字，交给下一步':modelLabel(st[2])+' 来想，'+st[1]+' 负责动手改文件、跑命令')+'</div>')+'</div>'; }
   function bindSteps(el,arr,redraw){ el.oninput=el.onchange=e=>{ const f=e.target.dataset.f; if(f===undefined) return; const i=+e.target.closest('.rstep').dataset.i; arr[i][f]= f==='3'?(e.target.checked?1:0):e.target.value; if(f!=='0') redraw(); };
     el.onclick=e=>{ const b=e.target.closest('.rh button'); if(!b) return; const i=+b.closest('.rstep').dataset.i; if(b.dataset.x!==undefined) arr.splice(i,1); else { const j=i+(+b.dataset.mv); if(j<0||j>=arr.length) return; [arr[i],arr[j]]=[arr[j],arr[i]]; } redraw(); }; }
   // 团队页里的接力卡
@@ -1732,8 +1821,8 @@ app.whenReady().then(() =&gt; {
     document.getElementById('rsName').value=r.n; document.getElementById('rsFail').selectedIndex=r.f;
     const el=document.getElementById('rsSteps'); el.innerHTML=r.s.map((st,i)=>stepHTML(st,i,r.s.length,true)).join(''); bindSteps(el,r.s,rsDraw); }
   document.getElementById('rsList').onclick=e=>{ const d=e.target.closest('[data-i]'); if(!d) return; rsI=+d.dataset.i; rsDraw(); };
-  document.getElementById('rsNew').onclick=()=>{ RL.push({n:'新流程',f:0,s:[['写提示词','直接调用模型','grp:代码/写提示词',1],['干活','Claude Code','grp:代码/执行',0]],c:['—','—']}); rsI=RL.length-1; rsDraw(); const n=document.getElementById('rsName'); n.focus(); n.select(); };
-  document.getElementById('rsAdd').onclick=()=>{ RL[rsI].s.push(['验收','直接调用模型','grp:代码/审查',1]); rsDraw(); };
+  document.getElementById('rsNew').onclick=()=>{ RL.push({n:'新流程',f:0,s:[['写提示词','不需要，只出文字','grp:代码/写提示词',1],['干活','Claude Code','grp:代码/执行',0]],c:['—','—']}); rsI=RL.length-1; rsDraw(); const n=document.getElementById('rsName'); n.focus(); n.select(); };
+  document.getElementById('rsAdd').onclick=()=>{ RL[rsI].s.push(['验收','不需要，只出文字','grp:代码/审查',1]); rsDraw(); };
   document.getElementById('rsName').oninput=e=>{ RL[rsI].n=e.target.value; document.querySelector('#rsList .on').firstChild.textContent=e.target.value; };
   document.getElementById('rsFail').onchange=e=>RL[rsI].f=e.target.selectedIndex;
   document.getElementById('rsDel').onclick=()=>{ if(RL.length<2){ say('至少留一个预设'); return; } RL.splice(rsI,1); rsI=0; rlI=0; rlWork=null; rsDraw(); rlDraw(); say('已删除'); };
