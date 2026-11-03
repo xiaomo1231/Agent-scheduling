@@ -1,8 +1,9 @@
 import type {
   Actor, Approval, ApprovalState, AllowRule, InstalledSkill, Message, ModelGroup, ModelSource, Policy, Project,
   ProjectSettings, Step, StepState, Thread, Widget, ModelChoice, Worktree, ReviewSetup, SideParent,
-  MemoryEntry, Channel,
+  MemoryEntry, Channel, SearchSettings,
 } from '../model/types.js';
+import type { FlowDef, FlowRun, RunNode } from '../workflow/types.js';
 
 /** 事件正文：已经发生的事。名字用“领域.动作”。 */
 export type EventBody =
@@ -37,7 +38,17 @@ export type EventBody =
   | { type: 'memory.removed'; projectId: string; entryId: string }
   | { type: 'memory.consolidated'; projectId: string; desk: string; entries: MemoryEntry[] }
   | { type: 'channel.saved'; channel: Channel }
-  | { type: 'channel.removed'; channelId: string };
+  | { type: 'channel.removed'; channelId: string }
+  | { type: 'flow.saved'; flow: FlowDef }
+  | { type: 'flow.removed'; flowId: string }
+  /** 一次运行开始：把运行信息挂到讨论串上 */
+  | { type: 'thread.run'; threadId: string; run: FlowRun }
+  /** 某个节点的状态或结果变了；同时把同编号的步骤状态改掉 */
+  | { type: 'run.node'; threadId: string; nodeId: string; patch: Partial<RunNode> }
+  /** 用户在检查点拍板 */
+  | { type: 'run.decided'; threadId: string; nodeId: string; approve: boolean; note?: string; picked?: number[] }
+  | { type: 'search.saved'; search: SearchSettings }
+  | { type: 'search.removed' };
 
 export type EventType = EventBody['type'];
 

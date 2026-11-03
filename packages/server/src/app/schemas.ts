@@ -60,6 +60,24 @@ const PlanOpS = z.union([
   z.object({ op: z.literal('state'), stepId: z.string(), state: z.enum(['queue', 'run', 'wait', 'done', 'cancelled']) }),
 ]);
 const Files = z.record(z.string().max(300), z.string().max(500_000));
+const ToolNameS = z.enum(['read_file', 'write_file', 'edit_file', 'list_files', 'run_command', 'web_fetch', 'web_search', 'send_message']);
+const NodeBaseS = { id: z.string().max(64).min(1), title: text(60), x: z.number(), y: z.number() };
+const FlowNodeS = z.discriminatedUnion('kind', [
+  z.object({ ...NodeBaseS, kind: z.literal('input'), config: z.object({ key: text(60) }) }),
+  z.object({ ...NodeBaseS, kind: z.literal('search'), config: z.object({ queries: z.array(text(300)).max(10), queriesFrom: text(60).optional(), limit: z.number().int().min(1).max(20).optional(), recency: z.enum(['day', 'week', 'month', 'year', 'any']).optional() }) }),
+  z.object({ ...NodeBaseS, kind: z.literal('agent'), config: z.object({
+    instruction: text(8000), tools: z.array(ToolNameS).max(8), model: ModelChoiceS.nullable().optional(), effort: text(20).optional(), output: z.enum(['text', 'table']),
+    sample: z.number().int().min(1).max(500).optional(), each: z.object({ rows: z.union([z.number().int().min(1), text(60)]), from: z.string().max(64).optional() }).optional(),
+  }) }),
+  z.object({ ...NodeBaseS, kind: z.literal('human'), config: z.object({ ask: text(1000), pick: z.boolean().optional() }) }),
+  z.object({ ...NodeBaseS, kind: z.literal('export'), config: z.object({ filename: text(100) }) }),
+]);
+export const FlowDefS = z.object({
+  id: z.string().max(64).min(1), name: text(60), description: text(500), audience: text(60).optional(),
+  inputs: z.array(z.object({ key: text(60), label: text(60), kind: z.enum(['text', 'longtext', 'number', 'select', 'file']), required: z.boolean().optional(), options: z.array(text(60)).max(30).optional(), hint: text(200).optional(), default: text(500).optional() })).max(20),
+  nodes: z.array(FlowNodeS).max(40), edges: z.array(z.object({ from: z.string().max(64), to: z.string().max(64) })).max(100),
+  builtin: z.boolean().optional(), updatedAt: z.number().optional(),
+});
 
 export const CommandS = z.discriminatedUnion('type', [
   z.object({ type: z.literal('project.create'), name: text(60).min(1), color: text(20).optional(), goal: text(500).optional(), template: text(40).optional(), preset: text(40).optional(), folder: text(1000).optional() }),
@@ -117,6 +135,14 @@ export const CommandS = z.discriminatedUnion('type', [
   z.object({ type: z.literal('channel.test'), channelId: id('chn') }),
   z.object({ type: z.literal('channel.pair'), channelId: id('chn') }),
   z.object({ type: z.literal('channel.unpair'), channelId: id('chn') }),
+  z.object({ type: z.literal('flow.save'), flow: FlowDefS }),
+  z.object({ type: z.literal('flow.remove'), flowId: z.string().max(64) }),
+  z.object({ type: z.literal('flow.start'), projectId: id('prj'), flowId: z.string().max(64), inputs: z.record(text(60), z.string().max(2_000_000)), model: ModelChoiceS.nullable().optional() }),
+  z.object({ type: z.literal('flow.decide'), threadId: id('thr'), nodeId: z.string().max(64), approve: z.boolean(), note: text(2000).optional(), picked: z.array(z.number().int().min(0)).max(10_000).optional() }),
+  z.object({ type: z.literal('flow.retry'), threadId: id('thr') }),
+  z.object({ type: z.literal('search.save'), provider: z.enum(['bocha', 'tavily', 'brave']), key: text(500).optional() }),
+  z.object({ type: z.literal('search.remove') }),
+  z.object({ type: z.literal('search.test') }),
 ]);
 
 export type Command = z.infer<typeof CommandS>;

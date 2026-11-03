@@ -85,6 +85,13 @@ export async function startGateway(app: App, o: GatewayOptions = {}): Promise<Ga
         if (!authed(req, url)) return send(res, 401, { ok: false, error: '缺少或错误的 token' });
         if (req.method === 'GET' && url.pathname === '/api/state') return send(res, 200, app.ws.current);
         if (req.method === 'GET' && url.pathname === '/api/audit') return send(res, 200, app.audit());
+        if (req.method === 'GET' && url.pathname === '/api/run-file') {
+          try {
+            return send(res, 200, { ok: true, ...(await app.readRunFile(url.searchParams.get('thread') ?? '', url.searchParams.get('path') ?? '')) });
+          } catch (e) {
+            return send(res, 400, { ok: false, error: (e as Error).message });
+          }
+        }
         if (req.method === 'GET' && url.pathname === '/api/log') {
           const n = Math.min(1000, Number(url.searchParams.get('limit') ?? 200) || 200);
           return send(res, 200, app.ws.allEvents().slice(-n));

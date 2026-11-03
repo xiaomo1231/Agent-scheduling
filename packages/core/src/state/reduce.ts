@@ -1,5 +1,6 @@
 import { defaultPolicy } from '../model/defaults.js';
-import { MEMORY_ENTRY_LIMIT, type Approval, type Channel, type InstalledSkill, type Message, type ModelGroup, type ModelSource, type Policy, type Project, type ProjectMemory, type QuotaWait, type Thread, type UsageRow } from '../model/types.js';
+import { MEMORY_ENTRY_LIMIT, type Approval, type Channel, type InstalledSkill, type Message, type ModelGroup, type ModelSource, type Policy, type Project, type ProjectMemory, type QuotaWait, type SearchSettings, type Thread, type UsageRow } from '../model/types.js';
+import { stepStateFor, type FlowDef } from '../workflow/index.js';
 import type { ZEvent } from '../events/types.js';
 import { GENESIS_HASH } from '../events/chain.js';
 
@@ -19,6 +20,9 @@ export interface State {
   quota: Record<string, QuotaWait>;
   memory: Record<string, ProjectMemory>;
   channels: Record<string, Channel>;
+  /** 用户自建或改过的工作流（内置预设不在这里） */
+  flows: Record<string, FlowDef>;
+  search: SearchSettings | null;
   lastSeq: number;
   lastHash: string;
 }
@@ -26,7 +30,7 @@ export interface State {
 export function emptyState(): State {
   return {
     projects: {}, threads: {}, messages: {}, approvals: {}, policy: defaultPolicy(), sources: {}, groups: {}, skills: {},
-    emergencyStop: false, usage: {}, quota: {}, memory: {}, channels: {}, lastSeq: 0, lastHash: GENESIS_HASH,
+    emergencyStop: false, usage: {}, quota: {}, memory: {}, channels: {}, flows: {}, search: null, lastSeq: 0, lastHash: GENESIS_HASH,
   };
 }
 
@@ -200,6 +204,43 @@ export function reduce(s: State, e: ZEvent): State {
       next.channels = rest;
       break;
     }
+    case 'flow.saved':
+      next.flows = { ...s.flows, [b.flow.id]: b.flow };
+      break;
+    case 'flow.removed': {
+      const { [b.flowId]: _x, ...rest } = s.flows;
+      next.flows = rest;
+      break;
+    }
+    case 'thread.run': {
+      const t = s.threads[b.threadId];
+      if (t) next.threads = { ...s.threads, [t.id]: { ...t, run: b.run, updatedAt: e.ts } };
+      break;
+    }
+    case 'run.node': {
+      const t = s.threads[b.threadId];
+      if (!t?.run) break;
+      const prev = t.run.nodes[b.nodeId] ?? { state: 'queue' as const };
+      // 重新排队就丢掉旧结果，只留意见和次数
+      const node = b.patch.state === 'queue' ? { state: 'queue' as const, ...(prev.attempts ? { attempts: prev.attempts } : {}), ...(b.patch.note ? { note: b.patch.note } : {}) } : { ...prev, ...b.patch };
+      const steps = b.patch.state ? t.steps.map((x) => (x.id === b.nodeId ? { ...x, state: stepStateFor(b.patch.state!) } : x)) : t.steps;
+      next.threads = { ...s.threads, [t.id]: { ...t, steps, run: { ...t.run, nodes: { ...t.run.nodes, [b.nodeId]: node } }, updatedAt: e.ts } };
+      break;
+    }
+    case 'run.decided': {
+      const t = s.threads[b.threadId];
+      if (!t?.run) break;
+      const prev = t.run.nodes[b.nodeId] ?? { state: 'queue' as const };
+      const node = { ...prev, decision: { approve: b.approve, ...(b.note ? { note: b.note } : {}), at: e.ts } };
+      next.threads = { ...s.threads, [t.id]: { ...t, run: { ...t.run, nodes: { ...t.run.nodes, [b.nodeId]: node }, rejects: t.run.rejects + (b.approve ? 0 : 1) }, updatedAt: e.ts } };
+      break;
+    }
+    case 'search.saved':
+      next.search = b.search;
+      break;
+    case 'search.removed':
+      next.search = null;
+      break;
     default: {
       const never: never = b;
       void never;

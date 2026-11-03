@@ -1,4 +1,4 @@
-export type IdPrefix = 'prj' | 'thr' | 'stp' | 'msg' | 'apv' | 'src' | 'grp' | 'agt' | 'rul' | 'wdg' | 'run' | 'skl' | 'mem' | 'chn' | 'rol';
+export type IdPrefix = 'prj' | 'thr' | 'stp' | 'msg' | 'apv' | 'src' | 'grp' | 'agt' | 'rul' | 'wdg' | 'run' | 'skl' | 'mem' | 'chn' | 'rol' | 'flo' | 'nod';
 
 const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 

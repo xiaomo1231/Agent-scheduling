@@ -101,6 +101,9 @@ export const WIDGET_KINDS: Record<string, { label: string; w: number; h: number 
   approvals: { label: '待批准', w: 4, h: 3 },
   activity: { label: '动态', w: 4, h: 3 },
   memory: { label: '项目记忆', w: 4, h: 5 },
+  flows: { label: '工作流台', w: 4, h: 8 },
+  inbox: { label: '待办收件箱', w: 4, h: 8 },
+  outputs: { label: '产出', w: 4, h: 8 },
 };
 
 export const LAYOUT_PRESETS: Record<string, { label: string; widgets: Preset }> = {
@@ -110,6 +113,7 @@ export const LAYOUT_PRESETS: Record<string, { label: string; widgets: Preset }> 
   workbench: { label: '讨论串列表 + 讨论串详情', widgets: [['threads', 0, 0, 4, 8], ['thread', 4, 0, 8, 8]] },
   three: { label: '协调者 + 讨论串 + 详情', widgets: [['coord', 0, 0, 4, 8], ['threads', 4, 0, 3, 8], ['thread', 7, 0, 5, 8]] },
   threadsOnly: { label: '只看讨论串', widgets: [['threads', 0, 0, 12, 8]] },
+  flows: { label: '工作流模式（工作流台 + 待办 + 产出，不用跟协调者说话）', widgets: [['flows', 0, 0, 4, 8], ['inbox', 4, 0, 4, 8], ['outputs', 8, 0, 4, 8]] },
 };
 
 export function presetLayout(name: keyof typeof LAYOUT_PRESETS | string, newId: () => string): Widget[] {

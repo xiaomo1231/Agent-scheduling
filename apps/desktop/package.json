@@ -16,7 +16,7 @@
     "dist:win": "npm run build && electron-builder --config electron-builder.yml --win"
   },
   "devDependencies": {
-    "@zhongshu/server": "0.1.0",
+    "@zhongshu/server": "*",
     "electron": "45.2.1",
     "electron-builder": "^26.18.0",
     "esbuild": "^0.27.0"

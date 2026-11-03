@@ -12,3 +12,5 @@ export * from './memory/index.js';
 export * from './review/index.js';
 export * from './side/index.js';
 export * from './channels/index.js';
+export * from './search/index.js';
+export * from './flows/index.js';
