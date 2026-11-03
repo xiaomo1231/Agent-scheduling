@@ -8,6 +8,7 @@ import { SkillsPage } from './skills';
 import { Toasts } from './toast';
 import { UsagePage } from './usage';
 import { ChannelsPage } from './channels';
+import { FlowEditorPage } from './floweditor';
 
 export function App() {
   const st = useStore();
@@ -30,6 +31,11 @@ export function App() {
   let view;
   switch (page) {
     case 'p': view = <ProjectPage st={st} projectId={a ?? ''} thread={b ?? null} go={go} />; break;
+    case 'flow': {
+      const [id, q] = (a ?? 'new').split('?');
+      view = <FlowEditorPage st={st} flowId={id || 'new'} projectId={new URLSearchParams(q ?? '').get('p')} />;
+      break;
+    }
     case 'models': view = <ModelsPage st={st} />; break;
     case 'security': view = <SecurityPage st={st} />; break;
     case 'skills': view = <SkillsPage st={st} />; break;

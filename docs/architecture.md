@@ -46,6 +46,7 @@ demo/        早期的单文件可点击原型，只作参考
 | `skills/` | SKILL.md 解析、`metadata.zhongshu` 校验、静态扫描、工具名映射、投放目录 |
 | `memory/` | 记忆检索（中文两字切词）、按字节截断、放进提示词的记忆段 |
 | `review/` | 群评审的 7 套预设班子 |
+| `workflow/` | 工作流：定义（表单字段、节点、连线）、校验、拓扑与就绪节点、切批、CSV、内置预设 |
 
 ### server 里有什么
 
@@ -63,6 +64,8 @@ demo/        早期的单文件可点击原型，只作参考
 | `review/` | 群评审：角色轮流发言、唱反调、拍板 |
 | `side/` | 划词追问：侧枝讨论串、关掉时带回结论 |
 | `channels/` | 消息渠道：Telegram 长轮询 + 配对、飞书 / 钉钉 / 企业微信 Webhook |
+| `flows/` | 工作流执行器：开运行（一条 flow 讨论串）、按依赖派节点、人工检查点、切批、产出落盘 |
+| `search/` | 搜索服务：博查 / Tavily / Brave 适配，`web_search` 工具和“搜一搜”节点都走它 |
 | `gateway/` | 本地网关：HTTP API + WebSocket 事件流，只绑 127.0.0.1，带 token，校验 Host 和 Origin |
 | `app/` | 组装：把以上模块接起来，命令的 zod 校验和分发；对外只暴露 `createApp(options)` |
 

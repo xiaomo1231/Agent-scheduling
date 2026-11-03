@@ -235,6 +235,7 @@ export function ThreadList({ st, projectId, selected, onOpen }: { st: State; pro
 function Plan({ t }: { t: Thread }) {
   const apply = (ops: unknown[]) => attempt(send({ type: 'plan.apply', threadId: t.id, ops }));
   const [add, setAdd] = useState('');
+  const flow = t.kind === 'flow';
   return (
     <div className="steps">
       {t.steps.map((s, i) => (
@@ -242,17 +243,18 @@ function Plan({ t }: { t: Thread }) {
           <span className="tn">T{i + 1}</span>
           <span className="tt">{s.title} <span className="muted">{s.assignee}</span></span>
           <span className="acts">
-            {i > 0 && <button className="btn ghost sm" title="往前挪" aria-label="往前挪" onClick={() => apply([{ op: 'move', stepId: s.id, before: t.steps[i - 1]!.id }])}>↑</button>}
-            {i < t.steps.length - 1 && <button className="btn ghost sm" title="往后挪" aria-label="往后挪" onClick={() => apply([{ op: 'move', stepId: s.id, after: t.steps[i + 1]!.id }])}>↓</button>}
-            {s.state !== 'cancelled' && s.state !== 'done' && <button className="btn ghost sm" title="取消这一步" aria-label="取消这一步" onClick={() => apply([{ op: 'cancel', stepId: s.id }])}>✕</button>}
+            {!flow && i > 0 && <button className="btn ghost sm" title="往前挪" aria-label="往前挪" onClick={() => apply([{ op: 'move', stepId: s.id, before: t.steps[i - 1]!.id }])}>↑</button>}
+            {!flow && i < t.steps.length - 1 && <button className="btn ghost sm" title="往后挪" aria-label="往后挪" onClick={() => apply([{ op: 'move', stepId: s.id, after: t.steps[i + 1]!.id }])}>↓</button>}
+            {!flow && s.state !== 'cancelled' && s.state !== 'done' && <button className="btn ghost sm" title="取消这一步" aria-label="取消这一步" onClick={() => apply([{ op: 'cancel', stepId: s.id }])}>✕</button>}
           </span>
           <span className={'pill ' + s.state}>{STATUS_TEXT[s.state]}</span>
         </div>
       ))}
-      <form className="row" onSubmit={(e) => { e.preventDefault(); if (add.trim()) void apply([{ op: 'add', title: add.trim() }]).then(() => setAdd('')); }}>
+      {flow && t.run && <div className="muted" style={{ fontSize: 12, padding: '2px 4px' }}>工作流「{t.run.flowName}」· 产出在 {t.run.dir}/ · 要改流程去工作流台的“编辑编排”</div>}
+      {!flow && <form className="row" onSubmit={(e) => { e.preventDefault(); if (add.trim()) void apply([{ op: 'add', title: add.trim() }]).then(() => setAdd('')); }}>
         <input className="inp" style={{ flex: 1 }} placeholder="加一步（加在合并/发布之前）" value={add} onChange={(e) => setAdd(e.target.value)} aria-label="新步骤" />
         <button className="btn sm" disabled={!add.trim()}>加</button>
-      </form>
+      </form>}
     </div>
   );
 }
@@ -274,7 +276,7 @@ export function ThreadView({ st, threadId, onBack, onOpen }: { st: State; thread
         <b style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.title}</b>
         <span className={'pill ' + s}>{STATUS_TEXT[s]}</span>
         {t.kind !== 'review' && <button className="btn ghost sm" onClick={() => setShowSet(!showSet)} aria-expanded={showSet}>模型</button>}
-        {!t.resolved && hasWait && <button className="btn sm" onClick={() => attempt(send({ type: 'thread.continue', threadId: t.id }))}>继续</button>}
+        {!t.resolved && hasWait && <button className="btn sm" onClick={() => attempt(send({ type: 'thread.continue', threadId: t.id }))}>{t.kind === 'flow' ? '重试' : '继续'}</button>}
         {closed ? null : t.resolved
           ? <button className="btn sm" onClick={() => attempt(send({ type: 'thread.reopen', threadId: t.id }), '已重新打开')}>重新打开</button>
           : <button className="btn sm" onClick={() => attempt(send({ type: 'thread.resolve', threadId: t.id }), '已放到已解决')}>解决</button>}
@@ -312,7 +314,7 @@ export function ThreadView({ st, threadId, onBack, onOpen }: { st: State; thread
         {t.resolved && !closed && <div className="muted" style={{ padding: '6px 12px' }}>{t.resolved.by === 'user' ? '你' : '协调者'}在 {time(t.resolved.at)} 解决了它：{t.resolved.reason}。发消息会重新打开。</div>}
         <Messages st={st} threadId={t.id} onOpen={onOpen} />
       </div>
-      {closed ? null : <Composer threadId={t.id} placeholder={t.kind === 'side' ? '接着追问，回车发送' : '追加要求：“再加一步…”“先做 T3”“取消 T2”，回车发送'} />}
+      {closed || t.kind === 'flow' ? null : <Composer threadId={t.id} placeholder={t.kind === 'side' ? '接着追问，回车发送' : '追加要求：“再加一步…”“先做 T3”“取消 T2”，回车发送'} />}
     </>
   );
 }

@@ -162,3 +162,40 @@ pre.code{background:var(--raise);border:1px solid var(--line);border-radius:6px;
 .quote{margin:4px 0;padding:4px 10px;border-left:3px solid var(--accent);color:var(--ink-2);white-space:pre-wrap;max-height:8em;overflow:auto}
 .sidebar-note{padding:8px 12px;border-bottom:1px solid var(--line-2);display:flex;flex-direction:column;gap:4px}
 .bad{color:var(--bad, #c0392b)}
+
+/* ---------- 工作流 ---------- */
+.flowcard{padding:10px 12px}
+.progress{height:4px;background:var(--line-2);border-radius:2px;overflow:hidden;margin:4px 0}
+.progress i{display:block;height:100%;background:var(--accent)}
+.outrun{padding:10px 12px;border-bottom:1px solid var(--line-2)}
+.tablewrap{overflow:auto;max-height:360px;border:1px solid var(--line);border-radius:6px;background:var(--raise)}
+.tbl{border-collapse:collapse;font-size:12.5px;min-width:100%}
+.tbl th,.tbl td{border-bottom:1px solid var(--line-2);padding:4px 8px;text-align:left;vertical-align:top;max-width:320px;overflow-wrap:anywhere}
+.tbl th{position:sticky;top:0;background:var(--panel);font-weight:600}
+.tbl tr.on td{background:var(--accent-soft)}
+details>summary{cursor:pointer;font-size:12.5px;margin:4px 0}
+.chk.bad{color:var(--bad)}
+.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--ink-2)}
+.f .inp,.f textarea{color:var(--ink)}
+
+.floweditor{flex:1;min-height:0;display:grid;grid-template-columns:1fr 320px;gap:10px}
+.flowcanvas{position:relative;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel);background-image:radial-gradient(var(--line-2) 1px,transparent 1px);background-size:24px 24px;user-select:none;touch-action:none}
+.flowcanvas .edges{position:absolute;left:0;top:0;pointer-events:none;color:var(--ink-3)}
+.flowcanvas .edge{fill:none;stroke:var(--ink-3);stroke-width:1.5;pointer-events:stroke;cursor:pointer}
+.flowcanvas .edge.on{stroke:var(--accent);stroke-width:2.5}
+.flowcanvas .edge.ghost{stroke:var(--accent);stroke-dasharray:5 4}
+.fnode{position:absolute;border:1px solid var(--line);background:var(--raise);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.fnode b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fnode .kind{font-size:11px;color:var(--ink-3)}
+.fnode.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.fnode.k-human{border-left:4px solid var(--warn)}
+.fnode.k-agent{border-left:4px solid var(--accent)}
+.fnode.k-search{border-left:4px solid #3b82f6}
+.fnode.k-export{border-left:4px solid var(--good)}
+.fnode.k-input{border-left:4px solid var(--ink-3)}
+.fnode .port{position:absolute;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--raise);border:2px solid var(--ink-3)}
+.fnode .port.in{left:-7px}
+.fnode .port.out{right:-7px;cursor:crosshair;border-color:var(--accent)}
+.fnode .port.out:hover{background:var(--accent)}
+.flowside{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:12px}
+@media (max-width:760px){.floweditor{grid-template-columns:1fr;grid-template-rows:1fr auto}}
