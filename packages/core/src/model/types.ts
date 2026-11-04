@@ -1,4 +1,5 @@
 // 领域类型。只放数据形状，不放逻辑。
+import type { FlowRun } from '../workflow/types.js';
 
 export type ActorKind = 'user' | 'coordinator' | 'agent' | 'system';
 export interface Actor {
@@ -127,8 +128,8 @@ export type ThreadStatus = 'waiting' | 'running' | 'idle' | 'resolved';
 export interface Thread {
   id: string;
   projectId: string;
-  /** coord 是项目的协调者对话，每个项目一条；work 是普通讨论串。缺省为 work。 */
-  kind?: 'coord' | 'work' | 'review' | 'side';
+  /** coord 是项目的协调者对话，每个项目一条；work 是普通讨论串；flow 是一次工作流运行。缺省为 work。 */
+  kind?: 'coord' | 'work' | 'review' | 'side' | 'flow';
   title: string;
   createdAt: number;
   updatedAt: number;
@@ -144,6 +145,8 @@ export interface Thread {
   review?: ReviewSetup;
   /** kind 为 side 时：从哪条消息的哪段话岔出来 */
   parent?: SideParent;
+  /** kind 为 flow 时：这次运行的输入、目录和每个节点的状态 */
+  run?: FlowRun;
 }
 
 // ---------- 群评审 ----------
@@ -219,6 +222,14 @@ export interface ProjectMemory {
   desk: string;
   entries: MemoryEntry[];
   consolidatedAt?: number;
+}
+
+// ---------- 搜索服务 ----------
+export type SearchProviderKind = 'bocha' | 'tavily' | 'brave';
+export interface SearchSettings {
+  provider: SearchProviderKind;
+  /** key 在密钥库里的引用 */
+  secretRef?: string;
 }
 
 // ---------- 消息渠道 ----------

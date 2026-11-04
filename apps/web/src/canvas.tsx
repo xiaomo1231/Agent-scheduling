@@ -4,6 +4,7 @@ import { GRID_COLS, GRID_ROWS, LAYOUT_PRESETS, MIN_H, MIN_W, WIDGET_KINDS, addWi
 import { send } from './api';
 import { attempt, toast } from './toast';
 import { ActivityPanel, ApprovalsPanel, CoordPanel, ThreadList, ThreadView } from './threads';
+import { FlowsPanel, InboxPanel, OutputsPanel } from './flows';
 
 type Drag = { id: string; mode: 'move' | 'resize'; sx: number; sy: number; orig: Widget; cw: number; ch: number };
 
@@ -81,6 +82,12 @@ export function Canvas({ st, projectId, thread, openThread, head }: { st: State;
         return (<><header><b>动态</b></header><div className="body"><ActivityPanel st={st} projectId={projectId} onOpen={openThread} /></div></>);
       case 'memory':
         return (<><header><b>项目记忆</b></header><div className="body"><MemoryPanel st={st} projectId={projectId} /></div></>);
+      case 'flows':
+        return <FlowsPanel st={st} projectId={projectId} onOpen={(id) => openThread(id)} />;
+      case 'inbox':
+        return <InboxPanel st={st} projectId={projectId} onOpen={(id) => openThread(id)} />;
+      case 'outputs':
+        return <OutputsPanel st={st} projectId={projectId} onOpen={(id) => openThread(id)} />;
       default:
         return (<><header><b>{w.k}</b></header><div className="body"><div className="empty">这个模块还没接上，可以在调整布局时移除</div></div></>);
     }

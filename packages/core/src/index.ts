@@ -12,3 +12,4 @@ export * from './util/index.js';
 export * from './audit/index.js';
 export * from './memory/index.js';
 export * from './review/index.js';
+export * from './workflow/index.js';

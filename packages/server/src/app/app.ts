@@ -16,6 +16,8 @@ import { MemoryService } from '../memory/index.js';
 import { ReviewService, type ModelFor } from '../review/index.js';
 import { SideService } from '../side/index.js';
 import { ChannelService, checkBotToken, checkWebhook } from '../channels/index.js';
+import { SearchService } from '../search/index.js';
+import { FlowService } from '../flows/index.js';
 import { CommandS, type Command } from './schemas.js';
 
 export interface AppOptions {
@@ -60,6 +62,8 @@ export class App {
   readonly reviews: ReviewService;
   readonly sides: SideService;
   readonly channels: ChannelService;
+  readonly search: SearchService;
+  readonly flows: FlowService;
   private readonly rnd: () => number;
   private readonly dataDir: string | undefined;
   private readonly exec: ExecFile;
@@ -97,19 +101,25 @@ export class App {
     this.providerDeps = { secrets: this.secrets, ...(o.fetch ? { fetch: o.fetch } : {}), ...(o.mockProvider ? { mock: o.mockProvider } : {}), meter: this.meter() };
     const providerDeps = this.providerDeps;
     this.skills = new SkillService(this.ws, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'skills'), async () => this.helperModel());
+    this.search = new SearchService(this.ws, this.secrets, o.fetch ?? fetch);
     const builtin = new BuiltinRunner(
       async (t) => providerFor(t.model!.source, providerDeps, { projectId: t.projectId }),
-      { approvals: this.approvals, execShell: o.execShell ?? realExecShell, ...(o.fetch ? { fetch: o.fetch } : {}), allowed: ['read_file', 'write_file', 'edit_file', 'list_files', 'run_command', 'web_fetch'], separateNetworkAndExec: () => this.ws.current.policy.separateNetworkAndExec },
+      {
+        approvals: this.approvals, execShell: o.execShell ?? realExecShell, ...(o.fetch ? { fetch: o.fetch } : {}),
+        allowed: ['read_file', 'write_file', 'edit_file', 'list_files', 'run_command', 'web_fetch', 'web_search'], separateNetworkAndExec: () => this.ws.current.policy.separateNetworkAndExec,
+        search: (q, limit) => this.search.search(q, { ...(limit ? { limit } : {}) }),
+      },
       30,
       { subagents: 3, remember: (t, text, tags) => this.memory.add(t.projectId, text, tags, t.agentId, { kind: 'agent', id: t.agentId }) },
     );
+    const cliRunner = new CliRunner(this.exec);
     this.memory = new MemoryService(this.ws, async () => this.helperModel(), this.rnd);
     const modelFor: ModelFor = (pid, choice) => this.modelFor(pid, choice);
     this.reviews = new ReviewService(this.ws, modelFor, this.rnd);
     this.sides = new SideService(this.ws, modelFor, this.rnd);
     this.coordinator = new Coordinator({
       ws: this.ws, providers: providerDeps, execFile: this.exec,
-      runners: { builtin, cli: new CliRunner(this.exec), sim: new SimRunner(o.simDelayMs ?? 800) },
+      runners: { builtin, cli: cliRunner, sim: new SimRunner(o.simDelayMs ?? 800) },
       folderFor: (p) => this.folderFor(p), simulate: o.simulate ?? false, random: this.rnd,
       skillNotes: () => this.skills.notes(),
       worktrees: new Worktrees(this.exec, join(this.dataDir ?? join(process.cwd(), '.zhongshu-data'), 'worktrees')),
@@ -120,6 +130,9 @@ export class App {
           return { error: (e as Error).message };
         }
       },
+    });
+    this.flows = new FlowService({
+      ws: this.ws, folderFor: (p) => this.folderFor(p), runners: { builtin, cli: cliRunner }, search: this.search, simulate: o.simulate ?? false, random: this.rnd,
     });
     this.channels = new ChannelService(this.ws, this.secrets, {
       approve: (id, ok, actor) => this.approvals.decide(id, ok, actor),
@@ -284,6 +297,10 @@ export class App {
           return;
         }
         if (t.kind === 'review') return; // 评审讨论串只看，不派活
+        if (t.kind === 'flow') {
+          if (/^\s*(继续|重试|continue|retry)\s*$/i.test(c.text)) this.flows.retry(t.id);
+          return; // 工作流运行不经过协调者；要改就打回或改表单重跑
+        }
         if (/^\s*(继续|重试|continue|retry)\s*$/i.test(c.text) && t.steps.some((s) => s.state === 'wait')) {
           this.coordinator.retryWaiting(t.id);
           this.coordinator.dispatch(t.id);
@@ -316,11 +333,15 @@ export class App {
       case 'thread.discard':
         await this.coordinator.discardWorktree(this.thread(c.threadId).id);
         return;
-      case 'thread.stop':
-        this.coordinator.stop(this.thread(c.threadId).id);
+      case 'thread.stop': {
+        const t = this.thread(c.threadId);
+        if (t.kind === 'flow') this.flows.stop(t.id);
+        else this.coordinator.stop(t.id);
         return;
+      }
       case 'thread.continue': {
         const t = this.thread(c.threadId);
+        if (t.kind === 'flow') { this.flows.retry(t.id); return; }
         this.coordinator.retryWaiting(t.id);
         this.coordinator.dispatch(t.id);
         return;
@@ -454,17 +475,50 @@ export class App {
         this.ws.commit({ type: 'channel.saved', channel: rest }, ME);
         return;
       }
+      case 'flow.save':
+        return { flow: this.flows.save(c.flow as never) };
+      case 'flow.remove':
+        this.flows.remove(c.flowId);
+        return;
+      case 'flow.start':
+        this.project(c.projectId);
+        return this.flows.start({ projectId: c.projectId, flowId: c.flowId, inputs: c.inputs, ...(c.model !== undefined ? { model: c.model } : {}) });
+      case 'flow.decide':
+        await this.flows.decide(c.threadId, c.nodeId, c.approve, c.note ?? '', c.picked);
+        return;
+      case 'flow.retry':
+        return { retried: this.flows.retry(c.threadId) };
+      case 'search.save': {
+        const ref = 'search:key';
+        if (c.key) await this.secrets.set(ref, c.key.trim());
+        const has = c.key ? true : st.search?.secretRef ? await this.secrets.has(st.search.secretRef) : false;
+        this.ws.commit({ type: 'search.saved', search: { provider: c.provider, ...(has ? { secretRef: ref } : {}) } }, ME);
+        return;
+      }
+      case 'search.remove':
+        if (st.search?.secretRef) await this.secrets.delete(st.search.secretRef);
+        this.ws.commit({ type: 'search.removed' }, ME);
+        return;
+      case 'search.test':
+        return { text: await this.search.test() };
       case 'system.emergencyStop':
         this.ws.commit({ type: 'system.emergencyStop', on: c.on }, ME);
         if (c.on) {
           this.coordinator.stopAll();
+          this.flows.stopAll();
           this.approvals.denyAll(ME);
         }
         return;
     }
   }
 
+  /** 读某次工作流运行的产出文件 */
+  readRunFile(threadId: string, path: string) {
+    return this.flows.readFile(threadId, path);
+  }
+
   close(): void {
+    this.flows.stopAll();
     this.channels.close();
     this.memory.close();
     this.coordinator.stopAll();

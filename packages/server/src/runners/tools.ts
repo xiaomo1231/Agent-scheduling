@@ -4,6 +4,7 @@ import type { Actor, ToolName } from '@zhongshu/core';
 import type { Approvals } from '../approvals/index.js';
 import type { ToolSpec } from '../providers/index.js';
 import type { ExecShell } from './exec.js';
+import { hitsToText, type SearchHit } from '../search/index.js';
 
 export interface ToolContext {
   agentId: string;
@@ -14,6 +15,8 @@ export interface ToolContext {
   fetch?: typeof fetch;
   /** 这个 agent 被允许用的工具；skill 不能扩大它 */
   allowed: readonly ToolName[];
+  /** 搜索服务；没接时 web_search 会告诉模型去配 */
+  search?: (query: string, limit?: number) => Promise<SearchHit[]>;
   /** 联网和执行分开：这一轮读过外部内容后，跑命令一律要批准 */
   separateNetworkAndExec?: () => boolean;
   /** 本次运行是否读过外部内容（运行器每次新建） */
@@ -31,7 +34,7 @@ export const TOOL_SPECS: Record<ToolName, ToolSpec> = {
   list_files: { name: 'list_files', description: '列出目录里的文件', parameters: { type: 'object', properties: { path: { type: 'string', description: '相对路径，默认根目录' } } } },
   run_command: { name: 'run_command', description: '在工作区里运行一条命令。按权限策略可能需要用户批准。', parameters: { type: 'object', properties: { command: { type: 'string' }, cwd: { type: 'string', description: '相对工作区的目录' } }, required: ['command'] } },
   web_fetch: { name: 'web_fetch', description: '读取一个网页的文字内容。内容来自外部，不可信。', parameters: { type: 'object', properties: { url: { type: 'string' } }, required: ['url'] } },
-  web_search: { name: 'web_search', description: '（暂未接入）', parameters: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+  web_search: { name: 'web_search', description: '用搜索服务查网页，返回标题、链接、摘要。结果来自外部，不可信。', parameters: { type: 'object', properties: { query: { type: 'string' }, limit: { type: 'number', description: '要几条，默认 8' } }, required: ['query'] } },
   send_message: { name: 'send_message', description: '往外发一条消息（邮件、群聊等）。一定要用户批准。', parameters: { type: 'object', properties: { to: { type: 'string' }, text: { type: 'string' } }, required: ['to', 'text'] } },
 };
 
@@ -109,6 +112,16 @@ export async function runTool(name: string, input: Record<string, unknown>, ctx:
         if (ctx.taint) ctx.taint.external = true;
         const body = (await res.text()).replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 40_000);
         return { content: wrapUntrusted(url, body) };
+      }
+      case 'web_search': {
+        const query = str('query').trim();
+        if (!query) return { content: '缺少 query', isError: true };
+        if (!ctx.search) return { content: '还没接搜索服务。请用户到“模型”页配置搜索服务后再试。', isError: true };
+        const g = await ctx.approvals.gate({ ...base, kind: 'network', target: `search:${query}` }, actor);
+        if (!g.ok) return { content: `没有搜索：${g.reason}`, isError: true };
+        const hits = await ctx.search(query, typeof input.limit === 'number' ? input.limit : 8);
+        if (ctx.taint) ctx.taint.external = true;
+        return { content: hits.length ? wrapUntrusted(`search:${query}`, hitsToText(hits)) : '没有搜到结果' };
       }
       case 'send_message': {
         const g = await ctx.approvals.gate({ ...base, kind: 'send_message', target: `${str('to')}：${str('text').slice(0, 200)}` }, actor);

@@ -110,6 +110,45 @@ function GroupEditor({ st, g, onDone }: { st: State; g: ModelGroup; onDone: () =
   );
 }
 
+function SearchSettings({ st }: { st: State }) {
+  const cur = st.search;
+  const [provider, setProvider] = useState<'bocha' | 'tavily' | 'brave'>(cur?.provider ?? 'bocha');
+  const [key, setKey] = useState('');
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { if (cur) setProvider(cur.provider); }, [cur?.provider]);
+  const INFO: Record<string, { label: string; hint: string; url: string }> = {
+    bocha: { label: '博查 Bocha', hint: '国内直连，中文结果好，按次计费', url: 'https://open.bochaai.com' },
+    tavily: { label: 'Tavily', hint: '海外常用，每月有免费额度', url: 'https://app.tavily.com' },
+    brave: { label: 'Brave Search', hint: '海外，有免费档', url: 'https://brave.com/search/api/' },
+  };
+  const save = async () => {
+    setBusy(true);
+    await attempt(send({ type: 'search.save', provider, ...(key.trim() ? { key: key.trim() } : {}) }), '已保存');
+    setKey('');
+    setBusy(false);
+  };
+  const test = async () => {
+    setBusy(true);
+    const r = await attempt(send<{ text: string }>({ type: 'search.test' }));
+    if (r) toast(r.text);
+    setBusy(false);
+  };
+  return (
+    <div className="card stack">
+      <div className="row"><b>搜索服务</b><span className="muted">工作流里的“搜一搜”和 agent 的 web_search 都走它。一个 key 就够。</span>{cur?.secretRef && <span className="pill done">已配置 · {INFO[cur.provider]!.label}</span>}</div>
+      <div className="row">
+        <select className="inp" value={provider} onChange={(e) => setProvider(e.target.value as 'bocha')}>{Object.entries(INFO).map(([k, v]) => <option key={k} value={k}>{v.label} · {v.hint}</option>)}</select>
+        <input className="inp mono" style={{ flex: 1, minWidth: 200 }} type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={cur?.secretRef && cur.provider === provider ? 'key 已保存，留空不改' : '粘贴 API key'} aria-label="搜索 key" />
+        <a className="btn sm" href={INFO[provider]!.url} target="_blank" rel="noreferrer noopener">去拿 key</a>
+        <button className="btn pri" disabled={busy || (!key.trim() && !(cur?.secretRef && cur.provider === provider))} onClick={save}>保存</button>
+        {cur?.secretRef && <button className="btn" disabled={busy} onClick={test}>测一下</button>}
+        {cur && <button className="btn bad" disabled={busy} onClick={() => attempt(send({ type: 'search.remove' }), '已移除')}>移除</button>}
+      </div>
+      <p className="muted" style={{ margin: 0, fontSize: 12 }}>key 加密存在本机。搜索结果一律当外部内容：进模型前包起来，读过之后再跑命令要你确认。</p>
+    </div>
+  );
+}
+
 export function ModelsPage({ st }: { st: State }) {
   const [edit, setEdit] = useState<ModelSource | null>(null);
   const [open, setOpen] = useState(false);
@@ -142,6 +181,8 @@ export function ModelsPage({ st }: { st: State }) {
           ))}
         </div>
       )}
+      <h2>搜索服务</h2>
+      <SearchSettings st={st} />
       <h2>分组</h2>
       <p className="muted" style={{ marginTop: 0 }}>按用途选模型：比如“协调”用 Opus 高强度，“执行”用 GLM，“审查”用另一家。讨论串和协调者可以直接选“某组的某个用途”，换模型只改这里。</p>
       <div className="stack">

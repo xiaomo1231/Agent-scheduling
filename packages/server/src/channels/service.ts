@@ -138,6 +138,11 @@ export class ChannelService {
       const b = e.body;
       if (b.type === 'channel.saved' || b.type === 'channel.removed') channelsChanged = true;
       else if (b.type === 'approval.requested' && b.approval.state === 'pending') this.notifyApproval(b.approval);
+      else if (b.type === 'run.node' && b.patch.state === 'wait') {
+        const t = this.ws.current.threads[b.threadId];
+        const title = t?.steps.find((s) => s.id === b.nodeId)?.title ?? '';
+        if (t) this.broadcast((c) => c.notify.approvals && this.inProject(c, t.projectId), `等你确认：「${t.title}」· ${title}\n${b.patch.note ?? ''}\n到中枢的待办收件箱里处理。`);
+      }
       else if (b.type === 'thread.resolved' && b.by === 'coordinator') {
         const t = this.ws.current.threads[b.threadId];
         if (t) this.broadcast((c) => c.notify.results && this.inProject(c, t.projectId), `「${t.title}」做完了：${b.reason}`);

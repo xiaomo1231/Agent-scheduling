@@ -9,7 +9,7 @@
     "typecheck": "tsc -p . --noEmit"
   },
   "dependencies": {
-    "@zhongshu/core": "0.1.0",
+    "@zhongshu/core": "*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
