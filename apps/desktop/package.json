@@ -1,7 +1,7 @@
 {
   "name": "@zhongshu/desktop",
   "productName": "Zhongshu",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "中枢：管好你的模型账号，再让 AI agent 团队替你干活",
   "private": true,
   "type": "module",
